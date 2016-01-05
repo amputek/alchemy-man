@@ -50,7 +50,7 @@ var Menu = Class.$extend({
 		li.innerHTML = "<em>Unsaved Temporary Level</em>"
 		li.style.display = "none";
 		element("level-list").appendChild(li)
-		element("compile-level").style.display = "none"		
+		element("compile-level").style.display = "none"
 	}
 
 
@@ -66,16 +66,16 @@ var GameManager = Class.$extend({
 
 
 		sound   = new SoundManager();
-		images  = new ImageManager();		
+		images  = new ImageManager();
 		world   = new b2World(new b2Vec2(0, 10),  true );
-		
+
 		debug   = new Debug();
 
 		debug.log("NEW GAME")
 		debug.log("----------------------")
 		debug.log("Loading Images")
 
-		
+
 		factory = new Factory(world)
 		world.SetContactListener( CreateListener() );
 		playerweapon = new PotionManager();
@@ -110,7 +110,7 @@ var GameManager = Class.$extend({
 			world.Step( 1 / 12, 5, 6);
 			currentLevel.update(world)
 			camera.update( player.physicspos, 0.07 );
-		}	
+		}
 		if(debugging) stats.end();
 
 		this.updateMouseOverlay();
@@ -144,7 +144,7 @@ var GameManager = Class.$extend({
 		} else {
 			this.loadLevel( this.currentLevelIndex );
 		}
-		
+
 	},
 
 	loadLevel: function( index ){
@@ -155,14 +155,16 @@ var GameManager = Class.$extend({
 		}
 		console.log("LOADING LEVEL", this.currentLevelIndex)
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(world);
-		currentLevel = levelManager.loadLevelFromData( this.database.getLevel( index ) ); 
-		editor.readFromJSON( this.database.getLevel( index ) );
-    menu.highlight(index);
+		currentLevel = levelManager.loadLevelFromData( this.database.getLevel( index ) );
+
+		if( editon ) editor.readFromJSON( this.database.getLevel( index ) );
+
+    	menu.highlight(index);
 	},
 
 	loadTempLevel: function(){
 		if(currentLevel != undefined) currentLevel.clearLevel(world);
-		currentLevel = levelManager.loadLevelFromData( this.tempLevel ); 
+		currentLevel = levelManager.loadLevelFromData( this.tempLevel );
 		menu.showTemp();
 	},
 
@@ -181,7 +183,7 @@ var GameManager = Class.$extend({
 		menu.addTemp();
 
 		var levellist = element("level-list")
-	
+
 		for (var i = 0; i < levellist.children.length; i++) {
 			(function(i){
 				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
@@ -193,7 +195,7 @@ var GameManager = Class.$extend({
 
 	setupInputs : function(){
 		debug.log("Setting Up Input");
-		input = new Input();	
+		input = new Input();
 		$(document).mousedown( input.mouseDown );
 		$(document).mouseup(   input.mouseUp   );
 		$(document).mousemove( input.mouseMove );
@@ -262,10 +264,7 @@ var GameManager = Class.$extend({
 		},2150);
 
 		setTimeout(function(){ gameOverDom.style.opacity = 0.0;    },2200)
-		setTimeout(function(){ gameOverDom.style.display = "none"; },2700)		
+		setTimeout(function(){ gameOverDom.style.display = "none"; },2700)
 	}
 
 });
-
-
-

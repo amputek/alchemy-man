@@ -5,20 +5,20 @@ var Level = Class.$extend({
 
 		// Do I really need to instansiate these each time???
 		// can they not remain consistent outside of levels?
-    this.floors             = new GameObjectManager();
-    this.movingplatforms    = new GameObjectManager();
-    this.triggeredplatforms = new GameObjectCollectionManager();
-    this.enemies            = new EnemyManager();
-    this.projectiles        = new GameObjectManager();
-    this.fragments          = new GameObjectManager();
-    this.fire               = new FireManager();
-    this.acid               = new AcidManager();
-    this.ice                = new IceManager();
-    this.explosions         = new ExplosionManager();
-    this.fragmentSources    = new FragmentSourceManager();
-    this.enemySources       = new GameObjectCollectionManager();
-    this.tooltips           = new TooltipManager();
-    this.craftingTables     = new CraftingTableManager();
+	    this.floors             = new GameObjectManager();
+	    this.movingplatforms    = new GameObjectManager();
+	    this.triggeredplatforms = new GameObjectCollectionManager();
+	    this.enemies            = new EnemyManager();
+	    this.projectiles        = new GameObjectManager();
+	    this.fragments          = new GameObjectManager();
+	    this.fire               = new FireManager();
+	    this.acid               = new AcidManager();
+	    this.ice                = new IceManager();
+	    this.explosions         = new ExplosionManager();
+	    this.fragmentSources    = new FragmentSourceManager();
+	    this.enemySources       = new GameObjectCollectionManager();
+	    this.tooltips           = new TooltipManager();
+	    this.craftingTables     = new CraftingTableManager();
 
 		this.weather 			= new Weather();
 		this.nolandzones        = [];
@@ -31,7 +31,7 @@ var Level = Class.$extend({
 		this.bottomLimit = 0;
 
 		this.ambientLight = null;
-		
+
 	},
 
 
@@ -80,7 +80,7 @@ var Level = Class.$extend({
 		var vel = source.vel;
 		if(vel == undefined) vel = vector(0,0);
 		if(number == undefined) number = 5;
-		this.explosions.add( source.physicspos , vel , type , ground , number ); 
+		this.explosions.add( source.physicspos , vel , type , ground , number );
 	},
 
 	addFragment: function( pos, vel, type, size ){ this.fragments.add( new Fragment( pos , vel , type , size ) ); },
@@ -155,12 +155,12 @@ var Level = Class.$extend({
 
 		this.gamecanvas.clear();
 		// this.gamecanvas.setAlpha( 1.0 );
-	
+
 		var graveyard = [];
 		this.craftingTables.update(     this.gamecanvas, graveyard );
 		this.movingplatforms.update(    this.gamecanvas, graveyard );
 		this.triggeredplatforms.update( this.gamecanvas, graveyard );
-		this.enemies.update(						this.gamecanvas, graveyard );
+		this.enemies.update(				this.gamecanvas, graveyard );
 		this.updatePlayer(           		this.gamecanvas 			);
 		this.gamecanvas.blendFunction(  "lighter" );
 		this.ice.update(             		this.gamecanvas, graveyard );
