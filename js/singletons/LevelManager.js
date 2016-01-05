@@ -725,10 +725,8 @@ var LevelManager = Class.$extend({
 
         debug.log("--- Level Load Complete")
         debug.log("CURRENT LEVEL: " + data.name);
-    
-        camera = new Camera( levelPhysicsSize, player.physicspos )
 
-        console.log("head")
+        camera = new Camera( levelPhysicsSize, player.physicspos );
 
         return level;
     },
