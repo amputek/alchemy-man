@@ -15,6 +15,15 @@ var EditorLevel = Class.$extend({
     },
 
 
+    redraw: function(){
+        for (var i = 0; i < this.items.length; i++) {
+            this.items[i].updateDom();
+            this.startPoint.updateDom();
+            this.endPoint.updateDom();
+            this.levelboundary.updateDom();
+        }
+    },
+
     clear: function(){
         for (var i = 0; i < this.items.length; i++) {
             element("editor-background").removeChild( this.items[i].dom );
@@ -152,7 +161,7 @@ var EditorLevel = Class.$extend({
         }
 
         level.conveyers = [];
-        
+
         level.supports = [];
         level.doodads = [];
 
@@ -171,8 +180,8 @@ var Editor = Class.$extend({
         this.wrapper    = element("editor-wrapper");
         this.draw_canvas = new Canvas( sizeVector(1080,550) );
         this.draw_canvas.getImage().style.position = "absolute";
-        element("editor-background").appendChild( this.draw_canvas.getImage() )        
-        
+        element("editor-background").appendChild( this.draw_canvas.getImage() )
+
         this.grid = null;
         this.drawGrid();
 
@@ -195,20 +204,22 @@ var Editor = Class.$extend({
         element("tint-g").onchange  = function(){ editor.updateGameEngine() }
         element("tint-b").onchange  = function(){ editor.updateGameEngine() }
         element("tint-a").onchange  = function(){ editor.updateGameEngine() }
-        element("dec-scale").addEventListener(      "mousedown" , function(){ 
+        element("dec-scale").addEventListener(      "mousedown" , function(){
             if(EDITORSCALE >= 5){
-                EDITORSCALE -= 1;   
+                EDITORSCALE -= 1;
                 element("editor-background").removeChild( editor.grid.getImage() );
                 editor.drawGrid();
-                game.loadLevel(game.currentLevelIndex);
+                editor.currentLevel.redraw();
+                //game.loadLevel(game.currentLevelIndex);
             }
         } , false);
-        element("inc-scale").addEventListener(      "mousedown" , function(){ 
-            EDITORSCALE +=1;   
+        element("inc-scale").addEventListener(      "mousedown" , function(){
+            EDITORSCALE +=1;
             element("editor-background").removeChild( editor.grid.getImage() );
             editor.drawGrid();
-            game.loadLevel(game.currentLevelIndex);
-            // editor.updateGameEngine();
+            // game.loadLevel(game.currentLevelIndex);
+            //editor.updateGameEngine();
+            editor.currentLevel.redraw();
         } , false);
 
         element("set-delete").addEventListener(      "mousedown" , function(){ editor.setMode("delete");    } , false);
@@ -231,7 +242,7 @@ var Editor = Class.$extend({
         element("add-icecraftingtable").addEventListener(       "mousedown" , function(){ editor.currentSourceType = "ice" ; editor.setMode("craftingtable");  } , false);
         element("add-usedcraftingtable").addEventListener(      "mousedown" , function(){ editor.currentSourceType = "used"; editor.setMode("craftingtable");  } , false);
         element("compile-level").addEventListener(   "mousedown" , function(){ editor.saveLevel() }, false);
-        element("new-level").addEventListener(       "mousedown" , function(){ 
+        element("new-level").addEventListener(       "mousedown" , function(){
             editor.currentLevel.clear();
             editor.currentLevel = new EditorLevel();
             editor.currentLevel.addItem( new EditorPlatform( vector(0,14), sizeVector(7,1) ) );
@@ -271,7 +282,7 @@ var Editor = Class.$extend({
         if(editor.currentlyDrawingArea == true){
             editor.areasize.w = editor.current.x - editor.start.x;
             editor.areasize.h = editor.current.y - editor.start.y;
-            element("area-size").innerHTML = "( " + editor.areasize.w + " , " + editor.areasize.h + " )";        
+            element("area-size").innerHTML = "( " + editor.areasize.w + " , " + editor.areasize.h + " )";
         }
 
         if(editor.mode == "move"){
@@ -334,11 +345,11 @@ var Editor = Class.$extend({
         } else if(editor.mode == "post-triggered"){
             editor.currentTriggered.ex = editor.current.x;
             editor.currentTriggered.ey = editor.current.y;
-            
+
 
             var sw = confirm("Should it be controlled by a switch?");
             if(sw == true){
-                editor.setMode("post-post-triggered");        
+                editor.setMode("post-post-triggered");
             } else {
                 editor.addTriggeredPlatform( false );
             }
@@ -365,7 +376,7 @@ var Editor = Class.$extend({
         var triggerpos = vector(t.tx,t.ty);
         editor.addItem( new EditorTriggeredPlatform( pos, size, endpos, triggerpos, speed, sw ));
         editor.setMode("triggered");
-        editor.currentTriggered = null;          
+        editor.currentTriggered = null;
     },
 
     startDrawingArea: function(){
@@ -503,7 +514,7 @@ var Editor = Class.$extend({
             this.draw_canvas.solidCircle(this.current.x*EDITORSCALE + EDITORSCALE/2,this.current.y*EDITORSCALE + EDITORSCALE/2,EDITORSCALE/2)
         } else if(this.mode == "fragmentsource"){
             this.draw_canvas.setFill('rgba(250,50,250,0.5')
-            this.draw_canvas.solidCircle(this.current.x*EDITORSCALE,this.current.y*EDITORSCALE,3);    
+            this.draw_canvas.solidCircle(this.current.x*EDITORSCALE,this.current.y*EDITORSCALE,3);
         } else if(this.mode == "post-fragmentsource"){
             this.draw_canvas.setStroke('rgba(250,50,250,0.5')
             this.draw_canvas.line(this.start.x*EDITORSCALE, this.start.y*EDITORSCALE,v.x,v.y);
@@ -523,7 +534,7 @@ var Editor = Class.$extend({
             this.draw_canvas.setFill('transparent');
         }
 
-        
+
     }
 
 });

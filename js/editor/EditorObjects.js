@@ -11,12 +11,12 @@ var EditorObject = Class.$extend({
         var _this = this;
         this.dom.addEventListener("mousedown",function(e){
             if(editor.mode == "delete"){
-                editor.removeItem(_this); 
+                editor.removeItem(_this);
             }
             if(editor.mode == "move"){
                 var x = $(_this.dom).offset().left - e.pageX
                 var y = $(_this.dom).offset().top  - e.pageY
-                editor.pickupItem(_this,vector(x,y));   
+                editor.pickupItem(_this,vector(x,y));
             }
         }, false );
 
@@ -189,7 +189,7 @@ var EditorTriggeredPlatform = EditorArea.$extend({
         this.target_dom.style.top = (this.e.y * EDITORSCALE) + "px";
         this.target_dom.style.width = this.dom.style.width;
         this.target_dom.style.height = this.dom.style.height;
-        this.target_dom.style.opacity = 0.3;      
+        this.target_dom.style.opacity = 0.3;
 
 
     },
@@ -208,7 +208,7 @@ var EditorTriggeredPlatform = EditorArea.$extend({
             ty:         this.trigger.y - editor.currentLevel.levelboundary.pos.y,
             time:       this.speed
         }
-    }    
+    }
 
 
 
@@ -234,7 +234,7 @@ var EditorLadder = EditorArea.$extend({
 
     getJSON: function(){
         return {x: this.pos.x - editor.currentLevel.levelboundary.pos.x ,y: this.pos.y -  editor.currentLevel.levelboundary.pos.y, h: this.size.h };
-    }    
+    }
 });
 
 var EditorBoundary = EditorArea.$extend({
@@ -243,7 +243,7 @@ var EditorBoundary = EditorArea.$extend({
         element("editor-background").removeChild( this.dom )
         this.dom = element("boundary");
         this.updateDom();
-    }, 
+    },
 
     setStart: function(pos){
         this.start = vector(pos.x,pos.y)
@@ -261,10 +261,12 @@ var Door = Class.$extend({
         this.dom.style.top = (pos.y-1) * EDITORSCALE;
     },
 
-    update: function(pos ){
-        this.pos = vector(pos.x,pos.y)
-        this.dom.style.left = pos.x * EDITORSCALE;
-        this.dom.style.top = (pos.y-1) * EDITORSCALE;
+    updateDom: function(){
+        // this.pos = vector(this.pos.x,this.pos.y)
+        this.dom.style.left = this.pos.x * EDITORSCALE;
+        this.dom.style.top = (this.pos.y-1) * EDITORSCALE;
+        this.dom.style.width = EDITORSCALE;
+        this.dom.style.height = EDITORSCALE*3;
     },
 
     getJSON: function(){
