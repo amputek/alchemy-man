@@ -7,20 +7,6 @@ var Camera = Class.$extend({
 		this.topLimit = 32;
 		this.bottomLimit = this.size.h - 38;
 		this.setPos( target )
-		this.focusTarget = vector(0,0)
-		this.focusTimer = 0;
-		this.focusLength = 0;
-
-
-
-		
-	},
-
-	focusOn: function( target, time){
-		this.focusTarget = target;
-		this.focusTimer = 0;
-		this.focusLength = time;
-		this.speed = 0.002;
 	},
 
 	setPos: function( target ){
@@ -35,18 +21,9 @@ var Camera = Class.$extend({
 		var targetx = target.x;
 		var targety = target.y;
 
-		
 
-		if(this.focusTarget != null){
-			targetx = this.focusTarget.x;
-			targety = this.focusTarget.y;
-			this.focusTimer++;
-			if(this.focusTimer >= this.focusLength ) this.focusTarget = null;
-		} else {
-			if(this.speed < 0.07) this.speed += (0.07 - this.speed) * 0.003
-		}
-
-
+		if(this.speed < 0.07) this.speed += (0.07 - this.speed) * 0.003
+	
 		if( targetx > this.rightLimit ) targetx = this.rightLimit;
 		if( targetx < this.leftLimit  ) targetx = this.leftLimit;
 

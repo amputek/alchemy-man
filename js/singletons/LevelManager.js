@@ -37,7 +37,7 @@ var LevelDatabase = Class.$extend({
                     _this.parseLevel(filenames[i], i );
                 };
 
-            }        
+            }
         }
 
     },
@@ -72,7 +72,7 @@ var LevelDatabase = Class.$extend({
         var _index = i;
         debug.log(  "Parsing " + filename + " from JSON into database of pre-loaded levels.");
         var filename = 'js/levels/' + filename + '?nocache=(' + (new Date()).getTime()
-        $.getJSON(filename, function(data){ 
+        $.getJSON(filename, function(data){
         }).success( function(data){
             _this.loadSuccess(data, _index);
         });
@@ -215,7 +215,7 @@ var LevelManager = Class.$extend({
 
             var x = m.physicspos.x;
             var y = m.physicspos.y - m.physicssize.h;
-            
+
             var currenty = 0;
             for (var n = 0; n < floors.length; n++) {
                 var f = floors[n];
@@ -226,7 +226,7 @@ var LevelManager = Class.$extend({
                     }
                 }
             }
-        
+
             m.setTopPos( vector( m.worldpos.x - m.physicssize.w*SCALE,currenty*SCALE ) );
         }
     },
@@ -234,26 +234,26 @@ var LevelManager = Class.$extend({
 
 
     loadLadder: function( f, canvas ){
-        
+
         var pos = vector( (f.x * 5) + 2.5, (f.y * 5) + (f.h * 2.5) );
         var worldpos = toWorld(pos);
 
         var drawsize = sizeVector(20, f.h * SCALE * 2.5 );
         canvas.save();
         canvas.translate( worldpos.x,  worldpos.y);
-        
+
         canvas.setFill( 'black' );
         for(var i = -drawsize.h; i < drawsize.h; i+= 20){
             canvas.solidRect( -22 , i-2  , 44 , 6  );
             canvas.solidRect( -17 , i-22 , 6  , 46 );
-            canvas.solidRect( 13  , i-22 , 6  , 46 ); 
+            canvas.solidRect( 13  , i-22 , 6  , 46 );
         }
-        
+
         canvas.setFill( 'rgb(100,65,30)' );
         for(var i = -drawsize.h; i < drawsize.h; i+= 20){
             canvas.solidRect( -20 , i    , 40 , 2  );
             canvas.solidRect( -15 , i-20 , 2  , 40 );
-            canvas.solidRect( 15  , i-20 , 2  , 40 ); 
+            canvas.solidRect( 15  , i-20 , 2  , 40 );
         }
         canvas.restore();
 
@@ -267,7 +267,7 @@ var LevelManager = Class.$extend({
 
 
         var ax = d.x;
-        
+
 
         for(var ay = 0; ay < d.h; ay++){
             if(ay == 0){
@@ -284,7 +284,7 @@ var LevelManager = Class.$extend({
         for(var ay = 1.5; ay < d.h - 3; ay+=random(1.5,2.5)){
             if( coin(0.2) ) draw_temp.drawImage( images.doodad.poster[ randomInt(3,4) ], vector(84,ay * 5 * SCALE ));
         }
-        
+
         draw_temp.drawImage( images.doodad.lampfitting_l, vector(80 - 78, 0 ) );
         draw_temp.drawImage( images.doodad.lampfitting_r, vector(80 + 38, 0 ) );
 
@@ -441,8 +441,8 @@ var LevelManager = Class.$extend({
         for(var x = 0; x < 250; x++){
             for(var y = 0; y < 250; y ++){
                 if(brickArray[x][y] == 1){
-                    
-         
+
+
                     if(brickArray[x-1][y] == 0 && brickArray[x+1][y] == 0){
                         if(brickArray[x][y+1] == 0){
                             canvas.setFill("pink")
@@ -571,21 +571,21 @@ var LevelManager = Class.$extend({
                         for(var x = f.physicspos.x - f.physicssize.w; x < f.physicspos.x + f.physicssize.w; x+=5){
                             if(x >= f2.physicspos.x - f2.physicssize.w && x < f2.physicspos.x + f2.physicssize.w){
                                 var loc = toGrid(x,f2.physicspos.y + f2.physicssize.h,5);
-                                
+
                                 zones.push( loc );
-    
+
 
                                 // draw shadow underneath floorboards
                                 if(f2.physicssize.h == 2.5 && f.physicssize.h != 2.5){
                                     var shadowHeight = 8
                                     if(x == f2.physicspos.x - f2.physicssize.w){
                                         canvas.solidRect( loc.x * SCALE * 5, loc.y * SCALE * 5 - 26, 20,shadowHeight)
-                                        canvas.solidRect( loc.x * SCALE * 5 + 20, loc.y * SCALE * 5, 20,shadowHeight)   
+                                        canvas.solidRect( loc.x * SCALE * 5 + 20, loc.y * SCALE * 5, 20,shadowHeight)
                                     } else if(x == f2.physicspos.x + f2.physicssize.w-5){
                                         canvas.solidRect( loc.x * SCALE * 5 + 20, loc.y * SCALE * 5 - 26, 20,shadowHeight)
-                                        canvas.solidRect( loc.x * SCALE * 5, loc.y * SCALE * 5, 20,shadowHeight)    
+                                        canvas.solidRect( loc.x * SCALE * 5, loc.y * SCALE * 5, 20,shadowHeight)
                                     } else {
-                                        canvas.solidRect( loc.x * SCALE * 5, loc.y * SCALE * 5, 40,shadowHeight)    
+                                        canvas.solidRect( loc.x * SCALE * 5, loc.y * SCALE * 5, 40,shadowHeight)
                                     }
                                 }
                             }
@@ -641,7 +641,7 @@ var LevelManager = Class.$extend({
         var levelSize = sizeVector( data.width * 5 * SCALE, data.height * 5 * SCALE )
         var startpos  = toPhysics( data.start )
         var endpos    = toPhysics( data.end )
-    
+
         level.weather.setAmount(data.weather)
         level.setEnd( endpos );
         level.setSize( levelPhysicsSize );
@@ -688,9 +688,9 @@ var LevelManager = Class.$extend({
         for( var i = 0; i < data.conveyers.length;          i++) {  level.floors.add(              this.loadConveyer(          data.conveyers[i ]         , floorcanvas ) ) }
         for( var i = 0; i < data.ladders.length;            i++) {  level.floors.add(              this.loadLadder(            data.ladders[i]            , floorcanvas ) ) }
         for( var i = 0; i < data.platforms.length;          i++) {  level.floors.add(              this.loadPlatform(          data.platforms[i]          , floorcanvas ) ) }
-        
 
-        
+
+
 
 
         // NOW ADD ALL OTHER GAME OBJECTS - THESE ARE NOT DRAWN NOW BUT NEED TO BE ADDED TO MANAGERS
@@ -706,7 +706,7 @@ var LevelManager = Class.$extend({
         this.drawBrick( level.floors.getCollection(), floorcanvas )
         this.addPlatformShadows( level.floors.getCollection(), floorcanvas, level.nolandzones)
         this.drawLedges( level.floors.getCollection(), floorcanvas )
-        
+
 
         // TINT CANVASES
         level.canvas[0].tint( ambientLight  , 0.7+darkness );
@@ -716,22 +716,24 @@ var LevelManager = Class.$extend({
         level.canvas[3].tint( ambientLight  , 0.3+darkness );
         level.canvas[5].tint( ambientLight  , 0.5+darkness );
 
-        
-       
+
+
         // Start Level
 
         this.initPlayer( startpos, level.floors.getCollection() )
-        this.initSound( data.weather.severity, data.soundtrack)    
+        this.initSound( data.weather.severity, data.soundtrack)
 
         debug.log("--- Level Load Complete")
         debug.log("CURRENT LEVEL: " + data.name);
 
-        if( level.enemySources.collection.length > 0 && playerdeaths == 0){
-            camera = new Camera( levelPhysicsSize, level.enemySources.collection[0].physicspos )
-            camera.focusOn( level.enemySources.collection[0].physicspos, 1030 );
-        } else {
+        //some stupid cinematic code. stop overcomplicating things you over excitable twat
+
+        // if( level.enemySources.collection.length > 0 && playerdeaths == 0){
+            // camera = new Camera( levelPhysicsSize, level.enemySources.collection[0].physicspos )
+            // camera.focusOn( level.enemySources.collection[0].physicspos, 1030 );
+        // } else {
             camera = new Camera( levelPhysicsSize, player.physicspos )
-        }
+        // }
 
         console.log("head")
 
@@ -761,5 +763,3 @@ var LevelManager = Class.$extend({
 
     }
 });
-
-
