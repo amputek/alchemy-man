@@ -725,15 +725,8 @@ var LevelManager = Class.$extend({
 
         debug.log("--- Level Load Complete")
         debug.log("CURRENT LEVEL: " + data.name);
-
-        //some stupid cinematic code. stop overcomplicating things you over excitable twat
-
-        // if( level.enemySources.collection.length > 0 && playerdeaths == 0){
-            // camera = new Camera( levelPhysicsSize, level.enemySources.collection[0].physicspos )
-            // camera.focusOn( level.enemySources.collection[0].physicspos, 1030 );
-        // } else {
-            camera = new Camera( levelPhysicsSize, player.physicspos )
-        // }
+    
+        camera = new Camera( levelPhysicsSize, player.physicspos )
 
         console.log("head")
 
