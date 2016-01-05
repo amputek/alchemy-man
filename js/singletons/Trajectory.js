@@ -66,7 +66,7 @@ var Trajectory = Class.$extend({
       }
 
       var vel = distance( startx + offset.x, starty + offset.y, mousepos.x, mousepos.y)*0.3;
-      number = 300;
+
       lastr = vector(startx,starty)
 
       var i = 0;
@@ -81,35 +81,50 @@ var Trajectory = Class.$extend({
       canvas.solidCircle(startx,starty,5);
 
 
+      //draw trajectory
+
+      number = 1300;
 
       while( done == false ){
 
         var op = (1.0) - (i/number)*1.0;
 
+
+        //for testing
+        op = 1.0;
+
         if( playerweapon.currentlySelected == "fire") canvas.setStroke( rgba(this.fire.r, this.fire.g, this.fire.b, op) );
         if( playerweapon.currentlySelected == "ice")  canvas.setStroke( rgba(this.ice.r , this.ice.g , this.ice.b , op) );
         if( playerweapon.currentlySelected == "acid") canvas.setStroke( rgba(this.acid.r, this.acid.g, this.acid.b, op) );
 
+
+        // WTF is going on here?
         var poo = 20;
         var r = this.getPoint( startx , starty , cos(input.shootAngle) * vel, sin(input.shootAngle) * vel - poo, i);
         if(vel > poo) r = this.getPoint( startx , starty , cos(input.shootAngle) * vel, sin(input.shootAngle) * vel - poo + ((vel-poo)*0.05), i);
 
+
         var interrupt =  lineOfSight(lastr,r)
+
         if( interrupt == null){
-          canvas.line(lastr.x,lastr.y,r.x,r.y)
+
+            canvas.line(lastr.x,lastr.y,r.x,r.y)
+
         } else {
 
-          var fraction = interrupt;
-          var colpointx = lastr.x + (r.x - lastr.x) * fraction;
-          var colpointy = lastr.y + (r.y - lastr.y) * fraction;
+            //draw end circle
 
-          if( playerweapon.currentlySelected == "fire") canvas.setFill( rgba(this.fire.r, this.fire.g, this.fire.b, op) );
-          if( playerweapon.currentlySelected == "ice")  canvas.setFill( rgba(this.ice.r , this.ice.g , this.ice.b , op) );
-          if( playerweapon.currentlySelected == "acid") canvas.setFill( rgba(this.acid.r, this.acid.g, this.acid.b, op) );
+            var fraction = interrupt;
+            var colpointx = lastr.x + (r.x - lastr.x) * fraction;
+            var colpointy = lastr.y + (r.y - lastr.y) * fraction;
 
-          canvas.solidCircle(colpointx,colpointy,5)
-          canvas.line(lastr.x,lastr.y,colpointx,colpointy)
-          done = true;
+            if( playerweapon.currentlySelected == "fire") canvas.setFill( rgba(this.fire.r, this.fire.g, this.fire.b, op) );
+            if( playerweapon.currentlySelected == "ice")  canvas.setFill( rgba(this.ice.r , this.ice.g , this.ice.b , op) );
+            if( playerweapon.currentlySelected == "acid") canvas.setFill( rgba(this.acid.r, this.acid.g, this.acid.b, op) );
+
+            canvas.solidCircle(colpointx,colpointy,5)
+            canvas.line(lastr.x,lastr.y,colpointx,colpointy)
+            done = true;
         }
         i+=15;
         if(i >= number ) done = true

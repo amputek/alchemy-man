@@ -47,7 +47,7 @@ function toGrid(x,y){     return {x: Math.floor( x / 5 ), y: Math.round( y / 5 )
 function equalVector(a,b){  return a.x == b.x && a.y == b.y; }
 function vDistance(a,b){  return distance(a.x,a.y,b.x,b.y); }
 function vAngle(a,b){  return angle(a.x,a.y,b.x,b.y); }
-    
+
 
 
 function lineOfSight(source, dest){
@@ -59,17 +59,19 @@ function lineOfSight(source, dest){
   for(var i = 0; i < currentLevel.floors.collection.length; i++){
     var f = currentLevel.floors.collection[i];
     if( f instanceof Ladder == false){
-      var output = new b2RayCastOutput    
+      var output = new b2RayCastOutput
       if( f.body.GetFixtureList().RayCast(output,input) ){
-        return output.fraction; 
-        } 
-      } 
+        return output.fraction;
+        }
+      }
     }
   return null;
 }
 
 
 
+
+// why is this here?
 function updateHealthDom(health){
   if(health == 0){
     element("health-0").children[0].style.marginTop = "28px"
@@ -106,7 +108,7 @@ function updateHealthDom(health){
     element("health-1").children[0].style.marginTop = "4px"
     element("health-2").children[0].style.marginTop = "4px"
   }
-} 
+}
 
 
 function getDir(pos,platform){
@@ -132,15 +134,15 @@ function getDir(pos,platform){
   var nearest = "left"
   var max = 1000;
   if(dToLeft < max){
-    nearest = "left"; 
+    nearest = "left";
     max = dToLeft;
   }
   if(dToTop < max){
-    nearest = "top"; 
+    nearest = "top";
     max = dToTop;
   }
   if(dToBottom < max){
-    nearest = "bottom"; 
+    nearest = "bottom";
     max = dToBottom;
   }
   if(dToRight < max){
@@ -175,4 +177,3 @@ function loadImage(url){
   img.src = url;
   return img;
 }
-
