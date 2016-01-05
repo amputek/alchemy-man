@@ -3,34 +3,34 @@
     "ambientLight": {
         "r": "5",
         "g": "5",
-        "b": "45",
-        "darkness": 0
+        "b": "15",
+        "darkness": 0.0
     },
     "start": {
-        "x": 3,
+        "x": 2,
         "y": 9,
         "type": "door"
     },
     "end": {
-        "x": 76,
+        "x": 27,
         "y": 15,
         "type": "door"
     },
-    "width": 78,
-    "height": 20,
+    "width": 28,
+    "height": 18,
     "setting": "exterior",
-    "weather": "1",
+    "weather": 0,
     "soundtrack": "alice",
     "enemies": [],
     "platforms": [{
-        "x": -3,
+        "x": -1,
         "y": 11,
         "w": 7,
         "h": 1
     }, {
         "x": -1,
         "y": 17,
-        "w": 81,
+        "w": 30,
         "h": 1
     }],
     "jumpboxes": [],
