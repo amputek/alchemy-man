@@ -1,6 +1,6 @@
 function CreateListener(){
 	var listener = new Box2D.Dynamics.b2ContactListener();
-	
+
 
 	ledge = function(character,other){
 		if(other instanceof IceBlock && character.getBottom() <= other.getTop() + 5) return true;
@@ -32,7 +32,7 @@ function CreateListener(){
 		if( projectile instanceof Gum ){
 			if( other instanceof Floor )                Gum_Floor(                    projectile, other )
 			if( other instanceof Player )               Gum_Player(                   projectile, other )
-		}	
+		}
 	}
 
 	Potion_TriggerPoint = function(potion,triggerpoint){
@@ -83,7 +83,7 @@ function CreateListener(){
 		if(character instanceof Gumball){
 			if( other instanceof Gumball ) Gumball_Gumball( character, other )
 			if( other instanceof Floor   ) Gumball_Floor( character, other )
-			if( other instanceof Player  ) contact.SetEnabled(false)			
+			if( other instanceof Player  ) contact.SetEnabled(false)
 		}
 		if( character instanceof Chomper ){
 			if( other instanceof Floor     ) character.turn();
@@ -91,20 +91,16 @@ function CreateListener(){
 			if( other instanceof Chomper   ) Chomper_Chomper( character, other );
 		}
 		if(character instanceof Player ){
-			if( other instanceof PlatformTriggerPoint ){ 
-	
-				
+			if( other instanceof PlatformTriggerPoint ){
+
+
 				other.trigger();
-				
-				contact.SetEnabled(false); 
+
+				contact.SetEnabled(false);
 			}
 			if( other instanceof Gumball              ) contact.SetEnabled(false)
-			if( other instanceof CraftingTable        ) currentLevel.craftingTables.use(other)
 		}
 		if( other instanceof Character ) contact.SetEnabled( false )
-		if( other instanceof CraftingTable ){
-			contact.SetEnabled( false )
-		}
 	}
 
 	Character_Floor =  function( character, floor, contact ){
@@ -175,7 +171,7 @@ function CreateListener(){
 	listener.PreSolve = function(contact, oldManifold){
 		var a = getData( contact.GetFixtureA() );
 		var b = getData( contact.GetFixtureB() );
-	
+
 		var character = null;
 		var other = null;
 		if( a instanceof Character){
@@ -187,7 +183,7 @@ function CreateListener(){
 		}
 
 		if(a instanceof Character && b instanceof Character) contact.SetEnabled(false)
-		
+
 		if( character !== null ){
 			if( other instanceof Character ) contact.SetEnabled(false)
 			if( other instanceof Ladder) contact.SetEnabled(false);
@@ -196,7 +192,6 @@ function CreateListener(){
 		}
 
 		if( a instanceof Projectile           || b instanceof Projectile           ) contact.SetEnabled(false);
-		if( a instanceof CraftingTable        || b instanceof CraftingTable        ) contact.SetEnabled(false);
 		if( a instanceof TriggerPoint         || b instanceof TriggerPoint         ) contact.SetEnabled(false);
 		if( a instanceof PlatformTriggerPoint || b instanceof PlatformTriggerPoint ) contact.SetEnabled(false);
 	};

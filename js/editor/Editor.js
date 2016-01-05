@@ -110,11 +110,6 @@ var EditorLevel = Class.$extend({
             this.addItem( new EditorFragmentSource( vector(p.x+3,p.y+3), vector(p.vx,p.vy), p.frequency, p.type ) );
         };
 
-        for (var i = 0; i < data.craftingtables.length; i++) {
-            var p = data.craftingtables[i];
-            this.addItem( new EditorCraftingTable( vector(p.x+2,p.y+4) , p.type ) );
-        };
-
         for (var i = 0; i < data.enemysources.length; i++) {
             var p = data.enemysources[i];
             this.addItem( new EditorEnemySource( vector(p.x-2,p.y+0) , p.type ) );
@@ -145,7 +140,6 @@ var EditorLevel = Class.$extend({
         level.ladders = [];
         level.fragmentsources = [];
         level.triggeredplatforms = [];
-        level.craftingtables = [];
         level.enemysources = [];
 
         for (var i = 0; i < this.items.length; i++) {
@@ -156,7 +150,6 @@ var EditorLevel = Class.$extend({
             if(p instanceof EditorLadder) level.ladders.push( p.getJSON() );
             if(p instanceof EditorFragmentSource) level.fragmentsources.push( p.getJSON() );
             if(p instanceof EditorEnemySource) level.enemysources.push( p.getJSON() )
-            if(p instanceof EditorCraftingTable) level.craftingtables.push( p.getJSON() );
             if(p instanceof EditorTriggeredPlatform)  level.triggeredplatforms.push( p.getJSON() );
         }
 
@@ -237,10 +230,6 @@ var Editor = Class.$extend({
         element("add-spawner").addEventListener(   "mousedown" , function(){ editor.setMode("enemysource")  } , false);
         element("add-firefragmentsource").addEventListener(     "mousedown" , function(){ editor.currentSourceType = "fire"; editor.setMode("fragmentsource");  } , false);
         element("add-acidfragmentsource").addEventListener(     "mousedown" , function(){ editor.currentSourceType = "acid"; editor.setMode("fragmentsource");  } , false);
-        element("add-firecraftingtable").addEventListener(      "mousedown" , function(){ editor.currentSourceType = "fire"; editor.setMode("craftingtable");  } , false);
-        element("add-acidcraftingtable").addEventListener(      "mousedown" , function(){ editor.currentSourceType = "acid"; editor.setMode("craftingtable");  } , false);
-        element("add-icecraftingtable").addEventListener(       "mousedown" , function(){ editor.currentSourceType = "ice" ; editor.setMode("craftingtable");  } , false);
-        element("add-usedcraftingtable").addEventListener(      "mousedown" , function(){ editor.currentSourceType = "used"; editor.setMode("craftingtable");  } , false);
         element("compile-level").addEventListener(   "mousedown" , function(){ editor.saveLevel() }, false);
         element("new-level").addEventListener(       "mousedown" , function(){
             editor.currentLevel.clear();
@@ -308,8 +297,6 @@ var Editor = Class.$extend({
             editor.addItem( new EditorJumpbox( editor.current ) );
         } else if(editor.mode == "enemysource"){
             editor.addItem( new EditorEnemySource( editor.current, 400, 5 ) );
-        } else if(editor.mode == "craftingtable"){
-            editor.addItem( new EditorCraftingTable( editor.current ) );
         } else if(editor.mode == "enemy"){
             editor.addItem( new EditorEnemy( editor.current, editor.currentEnemyType) );
         } else if(editor.mode == "fragmentsource"){
@@ -432,7 +419,6 @@ var Editor = Class.$extend({
         if(this.mode == "boundary")            text = "Draw Level boundaries";
         if(this.mode == "ladder")              text = "Place Ladder";
         if(this.mode == "jumpbox")             text = "Place 1x1 Jumpbox";
-        if(this.mode == "craftingtable")       text = "Place " + editor.currentSourceType + " Crafting Table";
         if(this.mode == "triggered")           text = "Place start position of triggered platform";
         if(this.mode == "post-triggered")      text = "Place end position of triggered platform";
         if(this.mode == "post-post-triggered") text = "Place Switch position";
@@ -506,9 +492,6 @@ var Editor = Class.$extend({
         } else if(this.mode =="enemysource"){
             this.draw_canvas.setFill('rgba(200,250,20,0.5');
             this.rect( this.current, sizeVector(16,7) )
-        } else if(this.mode =="craftingtable"){
-            this.draw_canvas.setFill('rgba(50,250,200,0.5');
-            this.rect( this.current, sizeVector(2,1) )
         } else if(this.mode == "enemy"){
             this.draw_canvas.setFill('rgba(250,50,50,0.5')
             this.draw_canvas.solidCircle(this.current.x*EDITORSCALE + EDITORSCALE/2,this.current.y*EDITORSCALE + EDITORSCALE/2,EDITORSCALE/2)

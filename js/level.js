@@ -18,7 +18,6 @@ var Level = Class.$extend({
 	    this.fragmentSources    = new FragmentSourceManager();
 	    this.enemySources       = new GameObjectCollectionManager();
 	    this.tooltips           = new TooltipManager();
-	    this.craftingTables     = new CraftingTableManager();
 
 		this.weather 			= new Weather();
 		this.nolandzones        = [];
@@ -128,7 +127,6 @@ var Level = Class.$extend({
 		this.ice.getBodies(                graveyard )
 		this.enemies.getBodies(            graveyard )
 		this.enemySources.getBodies(       graveyard )
-		this.craftingTables.getBodies(     graveyard )
 		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
 		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
 		sound.play("door", 0.3, 0.0)
@@ -157,7 +155,6 @@ var Level = Class.$extend({
 		// this.gamecanvas.setAlpha( 1.0 );
 
 		var graveyard = [];
-		this.craftingTables.update(     this.gamecanvas, graveyard );
 		this.movingplatforms.update(    this.gamecanvas, graveyard );
 		this.triggeredplatforms.update( this.gamecanvas, graveyard );
 		this.enemies.update(				this.gamecanvas, graveyard );

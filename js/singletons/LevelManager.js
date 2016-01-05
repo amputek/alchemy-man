@@ -302,10 +302,6 @@ var LevelManager = Class.$extend({
         return new FragmentSource( vector(d.x * 5,d.y * 5), vector(d.vx,d.vy), d.type, d.frequency)
     },
 
-    loadCraftingTable: function(ct){
-        if(ct !=null) return new CraftingTable( vector(ct.x * 5,ct.y * 5), ct.type);
-    },
-
     loadEnemySource: function(es){
         if(es != null) return new EnemySource( vector(es.x * 5,es.y * 5), 400, 4 );
     },
@@ -697,7 +693,6 @@ var LevelManager = Class.$extend({
         for( var i = 0; i < data.triggeredplatforms.length; i++) {  level.triggeredplatforms.add(  this.loadMovingPlatform(    data.triggeredplatforms[i] ) ) }
         for( var i = 0; i < data.enemies.length;            i++) {  level.enemies.add(             this.loadEnemy(             data.enemies[i]            ) ) }
         for( var i = 0; i < data.fragmentsources.length;    i++) {  level.fragmentSources.add(     this.loadFragmentSource(    data.fragmentsources[i]    ) ) }
-        for( var i = 0; i < data.craftingtables.length;     i++) {  level.craftingTables.add(      this.loadCraftingTable(     data.craftingtables[i]     ) ) }
         for( var i = 0; i < data.enemysources.length;       i++) {  level.enemySources.add(        this.loadEnemySource(       data.enemysources[i]       ) ) }
 
 

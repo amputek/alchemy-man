@@ -55,15 +55,15 @@ var GameObjectManager = Manager.$extend({
 		},
 	update: function( ctx , graveyard ){
 		this.removers = [];
-		for(var i = 0; i < this.collection.length; i++){ this.updateIndividual( this.collection[i], ctx , graveyard) } 
+		for(var i = 0; i < this.collection.length; i++){ this.updateIndividual( this.collection[i], ctx , graveyard) }
 		this.collectGarbage();
 	},
-	kill: function( obj, graveyard ){ 
-		graveyard.push( obj.body ); 
+	kill: function( obj, graveyard ){
+		graveyard.push( obj.body );
 		this.$super( obj )
 	},
 	getBodies: function( graveyard){
-		for (var i = 0; i < this.collection.length; i++) { this.kill( this.collection[i], graveyard ); } 
+		for (var i = 0; i < this.collection.length; i++) { this.kill( this.collection[i], graveyard ); }
 		this.collection = [];
 	}
 });
@@ -71,7 +71,7 @@ var GameObjectManager = Manager.$extend({
 var GameObjectCollectionManager = DynamicManager.$extend({
 	kill: function( obj, graveyard ){ obj.getBodies( graveyard ); },
 	getBodies: function( graveyard){
-		for (var i = 0; i < this.collection.length; i++) { this.kill( this.collection[i], graveyard ); } 
+		for (var i = 0; i < this.collection.length; i++) { this.kill( this.collection[i], graveyard ); }
 		this.collection = [];
 	}
 });
@@ -151,8 +151,8 @@ var ExplosionManager = Manager.$extend({
 var TooltipManager = Manager.$extend({
 	collectGarbage: function( ){
 		for(var i = 0; i < this.removers.length; i++){
-			element("game-wrapper").removeChild( this.removers[i].dom ) 
-			this.collection.splice( this.collection.indexOf( this.removers[i]), 1 ); 
+			element("game-wrapper").removeChild( this.removers[i].dom )
+			this.collection.splice( this.collection.indexOf( this.removers[i]), 1 );
 		}
 	}
 });
@@ -231,8 +231,8 @@ var EnemyManager = GameObjectManager.$extend({
 	kill: function( e, graveyard ){
 		currentLevel.addTooltip( e.worldpos, "+10" );
 		if( e instanceof Gumball )  for (var i = 0; i < 30; i++) {  currentLevel.addFragment( e.physicspos, randomVector(15) , "gumball" , "big" ) }
-		if( e instanceof Chomper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, randomVector(15) , "gumball" , "big" ) }  
-		if( e instanceof Creeper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, randomVector(15) , (coin(0.5) ? "fire" : "gumball") , "big" ) }  
+		if( e instanceof Chomper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, randomVector(15) , "gumball" , "big" ) }
+		if( e instanceof Creeper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, randomVector(15) , (coin(0.5) ? "fire" : "gumball") , "big" ) }
 		currentLevel.addExplosion( e , "fire" , null )
 		this.$super( e, graveyard )
 	},
@@ -241,7 +241,7 @@ var EnemyManager = GameObjectManager.$extend({
 		this.$super( e , canvas, graveyard );
 	},
 	getBodies: function( graveyard){
-		for (var i = 0; i < this.collection.length; i++) { graveyard.push(this.collection[i].body) } 
+		for (var i = 0; i < this.collection.length; i++) { graveyard.push(this.collection[i].body) }
 		this.collection = [];
 	}
 });
@@ -265,15 +265,5 @@ var IceManager = GameObjectManager.$extend({
 
 		// console.log(this.collection.length)
 
-	}
-});
-
-var CraftingTableManager = GameObjectManager.$extend({
-	use: function( table ){
-		if(table.used == false){
-			table.use();
-			currentLevel.addTooltip( vector(table.worldpos.x, table.worldpos.y), "you walked in front of a crafting table!" );
-			playerweapon.enable(table.type);
-		}
 	}
 });

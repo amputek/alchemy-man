@@ -77,18 +77,6 @@ var EditorFragmentSource = EditorObject.$extend({
     }
 })
 
-var EditorCraftingTable = EditorObject.$extend({
-    __init__:function( pos , type){
-        this.$super(pos, sizeVector(2,1) )
-        this.type = type;
-        this.dom.className += "craftingtable"
-    },
-
-    getJSON: function(){
-        return {x: this.pos.x + 1 - editor.currentLevel.levelboundary.pos.x, y: this.pos.y - 1 + editor.currentLevel.levelboundary.pos.y , type: this.type }
-    }
-});
-
 
 var EditorEnemySource = EditorObject.$extend({
     __init__:function( pos , frq , limit){
@@ -103,22 +91,6 @@ var EditorEnemySource = EditorObject.$extend({
         return {x: this.pos.x - editor.currentLevel.levelboundary.pos.x + 5, y: this.pos.y -  editor.currentLevel.levelboundary.pos.y + 3, type: "gumball"};
     }
 })
-
-var EditorCraftingTable = EditorObject.$extend({
-    __init__:function( pos , type){
-        this.$super(pos, sizeVector(2,1) )
-        this.type = type;
-        this.dom.className += "craftingtable"
-    },
-
-    getJSON: function(){
-        return {x: this.pos.x + 1 - editor.currentLevel.levelboundary.pos.x, y: this.pos.y - 1 + editor.currentLevel.levelboundary.pos.y , type: this.type }
-    }
-});
-
-
-
-
 
 var EditorArea = EditorObject.$extend({
    __init__:function( pos, size ){
