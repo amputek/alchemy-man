@@ -1,0 +1,426 @@
+
+#editor-wrapper{
+  position: relative;
+
+  width: 1320px;
+  height: 550px;
+  font-family: Helvetica;
+  font-size: 11px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  /*background: white;*/
+  border: 1px solid white;
+  display: none;
+  -webkit-user-select: none;
+}
+
+#editor-wrapper div{}
+
+
+#editor-background{
+  position: absolute;
+  left: 240px;
+  top: 0px;
+  margin: 0;
+  /*border: 1px solid white;*/
+  padding: 0;
+  width: 1080px;
+  height: 550px;
+  overflow: hidden;
+  background: #222;
+  /*cursor: none;*/
+}
+
+#finalcanvas{
+
+}
+
+#weather{
+  color: white;
+  background: #333;
+  width: 70px;
+}
+
+.door{
+  position: absolute;
+  width: 15px;
+  height: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#start-point{
+  box-shadow: inset 0 0 0 1px rgba(50,250,250,0.8);
+  background: rgba(50,250,250,0.3);
+}
+
+#end-point{
+  box-shadow: inset 0 0 0 1px rgba(250,150,50,0.8);
+  background: rgba(250,150,50,0.3);
+}
+
+
+
+#boundary{
+  position: absolute;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,1.0), 0 0 0 2000px rgba(0,0,0,0.8);
+  -webkit-user-select: none;
+  color: white;
+  line-height: 20px;
+}
+
+.editor-object{
+  position: absolute;
+  -webkit-user-select: none;
+  cursor: move;
+  box-sizing: border-box;
+  border: 0px solid white;
+  overflow: hidden;
+}
+
+.editor-object:hover{
+  /*background: rgba(255,255,255,0.3);*/
+  border-width: 5px;
+}
+
+.jumpbox{
+  background: rgba(200,55,200,0.3);
+  box-shadow: inset 0 0 0 1px rgba(200,55,200,1.0);
+}
+
+
+.enemysource{
+  background: rgba(200,255,50,0.3);
+  box-shadow: inset 0 0 0 1px rgba(200,255,50,1.0);
+}
+
+
+
+.craftingtable{
+  background: rgba(55,255,200,0.3);
+  box-shadow: inset 0 0 0 1px rgba(50,255,200,1.0);
+}
+
+
+.enemy{
+  background: rgba(200,55,20,0.3);
+  box-shadow: inset 0 0 0 1px rgba(200,55,20,1.0);
+  border-radius: 100%;
+
+}
+
+
+.ladder{
+	background: rgba(255,255,150,0.3);
+	box-shadow: inset 0 0 0 1px yellow;
+}
+
+
+.triggered{
+	background: rgba(255,100,50,0.3);
+	box-shadow: inset 0 0 0 1px rgb(255,100,50);
+}
+
+
+
+.platform{
+	background: rgba(100,255,150,0.2);
+	box-shadow: inset 0 0 0 1px green;
+}
+
+
+
+#finalcanvas{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 1000px;
+  height: 800px;
+}
+
+#foreground{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.fragmentsource{
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-top: -4px;
+  border-radius: 100%;
+  background: purple;
+  box-shadow: inset 0 0 0 2px rgb(255,50,255);
+}
+
+
+#all-entities{
+  font-family: Courier;
+  width: 200px;
+  height: 30px;
+  overflow: auto;
+}
+
+#editor canvas{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 1000px;
+  height: 800px;
+  z-index: 1;
+}
+
+input[type=number] {
+  width: 42px;
+  margin-left: 3px;
+  padding: 3px;
+  border: 1px solid white;
+  margin-bottom: 5px;
+  color: white;
+  -webkit-user-select: none;
+}
+
+#tint-r{ background: rgb(180,20,10);}
+#tint-g{ background: green;}
+#tint-b{ background: rgb(0,100,255);}
+#tint-a{ background: rgb(40,40,40);}
+
+#editor-wrapper .button{
+  /*padding: 5px;*/
+  position: relative;
+  display: inline-block;
+  text-align: left;
+  padding: 3px;
+  background: #999;
+  cursor: pointer;
+  color: black;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 2px;
+  height: 35px;
+  margin-right: 5px;
+  width: 35px;
+  color: transparent;
+  border-radius: 8px;
+  border: 1px solid #666;
+  text-align: left;
+  line-height: 95px;
+  white-space: nowrap;
+}
+
+#editor-wrapper .button:hover{
+  box-shadow: 0 0 0 2px white;
+  /*text-shadow: 0 0 2px white;*/
+  color: white;
+}
+
+select {
+   /*background: #999;*/
+   width: auto;
+   padding: 6px;
+   font-size: 10px;
+   line-height: 1;
+   border: 0;
+   margin-bottom: 5px;
+   border-radius: 3;
+   height: auto;
+   border: 1px solid white;
+   /*-webkit-appearance: none;*/
+}
+
+
+#set-move{
+  background: transparent url('images/icons/move.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#set-delete{
+  background: transparent url('images/icons/delete.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#inc-scale{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  background: transparent url('images/icons/incgrid.png') no-repeat center !important;
+  background-size: cover !important;
+  margin-left: 0px !important;
+}
+
+#dec-scale{
+  margin-right: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  background: transparent url('images/icons/decgrid.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+
+
+
+
+#set-boundary{
+  background: white url('images/icons/setboundary.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#add-platform{
+  background: white url('images/environment/brick/brick_middle_0.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#add-ladder{
+ background: white url('images/environment/ladder.png') no-repeat center !important; 
+ background-size: cover !important;
+}
+
+#add-triggered{
+ background: transparent url('images/icons/moving.png') no-repeat center !important; 
+ background-size: cover !important;
+}
+
+
+
+#add-acidfragmentsource{
+  background: transparent url('images/icons/acid.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#add-firefragmentsource{
+ background: transparent url('images/icons/fire.png') no-repeat center !important; 
+ background-size: cover !important;
+}
+
+
+#add-jumpbox{
+  background: transparent url('images/environment/jumpbox.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#set-start-point{
+  background: transparent url('images/doodods/door.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+
+#set-end-point{
+  background: transparent url('images/doodods/door_open.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+
+#add-chomper{
+  background: transparent url('images/enemy/walk.png') no-repeat center !important;
+  background-size: 4000% !important;
+}
+
+#add-creeper{
+ background: transparent url('images/enemy/creeper.png') no-repeat center !important; 
+ background-size: contain !important;
+}
+
+#add-gumball{
+  background: transparent url('images/enemy/gumball.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+#add-spawner{
+  background: transparent url('images/icons/spawner.png') no-repeat center !important;
+  background-size: cover !important;
+}
+
+
+#add-firecraftingtable, #add-acidcraftingtable, #add-icecraftingtable, #add-usedcraftingtable{
+  background: transparent url('images/icons/crafting.png') no-repeat center !important;
+  background-size: contain !important;  
+}
+
+
+#add-firecraftingtable{
+  background-color: rgb(255,50,20) !important;
+}
+#add-acidcraftingtable{
+  background-color: rgb(120,255,80) !important;
+}
+#add-icecraftingtable{
+  background-color: rgb(25,120,220) !important;
+}
+#add-usedcraftingtable{
+  background-color: rgb(100,100,100) !important;
+}
+
+
+#editor-wrapper .active{
+  padding: 5px;
+  position: relative;
+  display: inline-block;
+  background: #666;
+  box-shadow: inset 1px 1px 1px black, inset -1px -1px 1px white;
+  cursor: pointer;
+  color: black;
+  font-weight: 700;
+  margin-top: 5px;
+  border-radius: 4px;
+}
+
+#control-wrapper{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: #444;
+  font-size: 11px;
+  width: 240px;
+  height: auto;
+  overflow: hidden;
+  color: white;
+  padding: 0px;
+}
+
+.button-section{
+  border: 1px solid #777;
+  width: 220px;
+  height: auto;
+  padding: 6px;
+  margin: 3px;
+  text-align: center;
+  padding-bottom: 0px;
+}
+
+
+.text-area{
+  position: relative;
+  background: #333;
+  box-shadow: inset 1px 1px 1px black;
+  color: white;
+  height: auto;
+  width: 60px;
+  padding: 3px;
+  display: inline-block;
+  margin-bottom: 0px;
+}
+
+#level-name{
+	width: 120px;
+  -webkit-user-select: text;
+}
+
+#current-mode{
+  position: absolute;
+  display: inline-block;
+  z-index: 100;
+  right: 230px;
+  height: auto;
+  width: auto;
+  font-size: 20px;
+  box-shadow: none;
+  border: none;
+  pointer-events:none;
+  background: transparent;
+}
+
+#current-point{
+
+}

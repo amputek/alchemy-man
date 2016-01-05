@@ -1,0 +1,194 @@
+<html>
+    <head>
+        <title>Mark Brawlberg</title>
+
+        <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
+        <link href="editor.css" rel="stylesheet" type="text/css" media="screen" />
+
+        <script type="text/javascript" src="js/libs/stats.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-1.10.2.js"></script>
+        <script type="text/javascript" src='js/libs/Box2dWeb-2.1.a.3.min.js'></script>
+        <script type="text/javascript" src="js/libs/classy.js"></script>
+        <script type="text/javascript" src="js/libs/soundjs-0.5.2.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery.mousewheel.js"></script>
+
+        <script type="text/javascript" src="js/canvas-functions.js"></script>
+        
+        <script type="text/javascript" src="js/singletons/factory.js"></script>
+        <script type="text/javascript" src="js/singletons/globals.js"></script>
+        <script type="text/javascript" src="js/singletons/Debug.js"></script>
+        <script type="text/javascript" src="js/singletons/Camera.js"></script>
+        <script type="text/javascript" src="js/singletons/LevelManager.js"></script>
+        <script type="text/javascript" src="js/singletons/SoundManager.js"></script>
+        <script type="text/javascript" src="js/singletons/ImageManager.js"></script>
+
+        <script type="text/javascript" src="js/gameobjects/GameObject.js"></script>
+        <script type="text/javascript" src="js/gameobjects/DynamicObject.js"></script>
+        <script type="text/javascript" src="js/gameobjects/Doodad.js"></script>
+        <script type="text/javascript" src="js/gameobjects/CraftingTable.js"></script>
+        <script type="text/javascript" src="js/gameobjects/Item.js"></script>
+        <script type="text/javascript" src="js/gameobjects/FragmentSource.js"></script>
+        <script type="text/javascript" src="js/gameobjects/fx/Acid.js"></script>
+        <script type="text/javascript" src="js/gameobjects/fx/Explosion.js"></script>
+        <script type="text/javascript" src="js/gameobjects/fx/Fragment.js"></script>
+        <script type="text/javascript" src="js/gameobjects/fx/Fire.js"></script>
+        <script type="text/javascript" src="js/gameobjects/Projectiles.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/Floor.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/Ledge.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/Platform.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/MovingPlatform.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/IceBlock.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/Ladder.js"></script>
+        <script type="text/javascript" src="js/gameobjects/floor/Conveyer.js"></script>
+        <script type="text/javascript" src="js/gameobjects/EnemySource.js"></script>
+
+        <script type="text/javascript" src="js/gameobjects/character/character.js"></script>
+        <script type="text/javascript" src="js/gameobjects/character/GroundCharacter2.js"></script>
+        <script type="text/javascript" src="js/gameobjects/character/ClimbingCharacter.js"></script>
+        <script type="text/javascript" src="js/gameobjects/character/Chomper.js"></script>
+        <script type="text/javascript" src="js/gameobjects/character/player.js"></script>
+        <script type="text/javascript" src="js/gameobjects/character/GumballMachine.js"></script>
+
+        <script type="text/javascript" src="js/EntityManagers.js"></script>
+
+        <script type="text/javascript" src="js/singletons/PotionManager.js"></script>
+        <script type="text/javascript" src="js/Weather.js"></script>
+        <script type="text/javascript" src="js/GameCanvas.js"></script>
+        <script type="text/javascript" src="js/Tooltip.js"></script>
+        <script type="text/javascript" src="js/level.js"></script>
+        <script type="text/javascript" src="js/Animation.js"></script>
+
+        <script type="text/javascript" src="js/singletons/input.js"></script>
+        <script type="text/javascript" src="js/singletons/listener.js"></script>
+        <script type="text/javascript" src="js/editor/Editor.js"></script>
+        <script type="text/javascript" src="js/editor/EditorObjects.js"></script>
+        <script type="text/javascript" src="js/singletons/Trajectory.js"></script>
+        <script type="text/javascript" src="js/singletons/interact.js"></script>
+
+    </head>
+    
+    <body>
+        <div id = "wrapper">
+            <div id = "game-wrapper">
+
+                <div id = "lightning"></div>
+                <canvas id = "debug"></canvas>
+                <div id = "health-ui">
+                    <div class = "health" id = "health-0"><div class ="health-inner"></div></div>
+                    <div class = "health" id = "health-1"><div class ="health-inner"></div></div>
+                    <div class = "health" id = "health-2"><div class ="health-inner"></div></div>
+                </div>
+                
+
+                <!-- <canvas id = "mouse-overlay"></canvas> -->
+            </div>
+            
+            <div id = "game-over">TRY AGAIN!</div>
+            <div id = "loading">
+                <div id = "loadbar">Loading...<div id = "loadbar-inner"></div></div>
+            </div>
+            
+            <div id = "debug-wrapper">
+                <div id = "debug-text"></div>
+                <div id = "time">time</div>
+                <div id = "body-count">bodies:</div>
+                <div class = "button" id = "mute">MUTE</div>
+                <div class = "button" id = "awesome">AWESOMIFY</div>
+            </div>
+
+            <div id = "menu">
+                    <div id = "new-level"> CREATE NEW BLANK LEVEL </div>
+                    <div id = "load-level">
+                        LOAD LEVEL
+                        <br/><br/>
+                        <ul id = "level-list">
+
+                        </ul>
+                    </div>
+                    <div id = "compile-level">SAVE LEVEL</div>
+                    
+            </div>
+
+
+
+
+        </div>
+
+
+
+        <div id = "editor-wrapper">
+            
+
+            <div id = "editor-background">
+                <div class = "door" id = "start-point"></div>
+                <div class = "door" id = "end-point"></div>
+                <div id = "boundary"></div>
+            </div>
+            <div class ="text-area" id = "current-mode">No Mode active</div><br/>
+            <div id = "control-wrapper">
+                
+                <div class = "button-section">
+                    <div class ="text-area" id = "current-point">( x , y )</div>
+                    <div class ="text-area" id = "area-size">( x , y )</div>
+                </div>
+                <div class = "button-section">
+                    <b>BACKDROP </b>
+                    <select id = "setting">
+                      <option value="interior">interior</option>
+                      <option value="exterior">exterior</option>
+                    </select>
+                    <br/>
+
+                    <b>WEATHER </b><input type="number" name="weather" id="weather" value="0.0" min="0.0" max="1.0" step="0.1">
+                    <br/>
+                    <b>TINT</b>
+                    <input type="number" name="tint" id="tint-r" value="5" min="1" max="255">
+                    <input type="number" name="tint" id="tint-g" value="5" min="1" max="255">
+                    <input type="number" name="tint" id="tint-b" value="5" min="1" max="255">
+                    <input type="number" name="tint" id="tint-a" value="0.0" min="-1.0" max="1.0" step="0.05">
+                </div>
+                <div class = "button-section">
+                    <!-- <b>TOOLS</b><br/> -->
+                    <div class = "button" id = "set-delete">DELETE</div>
+                    <div class = "button" id = "set-move">MOVE</div>
+                    <div class = "button" id = "dec-scale">SCALE-</div>
+                    <div class = "button" id = "inc-scale">SCALE+</div>
+                </div>
+                <div class = "button-section">
+                    <div class = "button" id = "set-boundary">SET BOUNDARY</div>
+                    <div class = "button" id = "set-start-point">START</div>
+                    <div class = "button" id = "set-end-point">END</div>
+                </div>
+                <div class = "button-section">
+                    <!-- <b>PLATFORMS</b><br/> -->
+                    <div class = "button" id = "add-platform">PLATFORM</div>
+                    <div class = "button" id = "add-jumpbox">JUMPBOX</div>
+                    <div class = "button" id = "add-ladder">LADDER</div>
+                    <div class = "button" id = "add-triggered">MOBILE</div>
+                </div>
+                <div class = "button-section">
+                    <!-- <b>ENEMIES</b><br/> -->
+                    <div class = "button" id = "add-chomper">CHOMPER</div>
+                    <div class = "button" id = "add-creeper">CREEPER</div>
+                    <div class = "button" id = "add-gumball">GUMBALL</div>
+                    <div class = "button" id = "add-spawner">SPAWNER</div>
+                </div>
+                <div class = "button-section">
+                    <div class = "button" id = "add-firefragmentsource">FIRE SOURCE</div>
+                    <div class = "button" id = "add-acidfragmentsource">ACID SOURCE</div>
+                </div>
+                <div class = "button-section">
+                    <div class = "button" id = "add-firecraftingtable">FIRE</div>
+                    <div class = "button" id = "add-acidcraftingtable">ACID</div>
+                    <div class = "button" id = "add-icecraftingtable">ICE</div>
+                    <div class = "button" id = "add-usedcraftingtable">USED</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id = "reticule"><div id = "reticule-inner"></div></div>
+
+    </body>
+</html>
