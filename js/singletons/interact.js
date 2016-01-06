@@ -62,7 +62,6 @@ var GameManager = Class.$extend({
 
 	__init__: function(){
 
-		sound   = new SoundManager();
 		images  = new ImageManager();
 		world   = new b2World(new b2Vec2(0, 10),  true );
 

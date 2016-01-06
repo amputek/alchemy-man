@@ -67,7 +67,6 @@ var PotionManager = Class.$extend({
     if(this.currentlySelected != null){
       var potion = new Potion( vector(x,y),this.currentlySelected);
       potion.impulse(vx,vy);
-      sound.play("throw",1.0,0.0);
       this.cooldown=0;
       return potion;
     }

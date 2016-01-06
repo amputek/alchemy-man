@@ -129,8 +129,6 @@ var Level = Class.$extend({
 		this.enemySources.getBodies(       graveyard )
 		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
 		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
-		sound.play("door", 0.3, 0.0)
-		sound.endLevel();
 	},
 
 	pain: function( canvas ){

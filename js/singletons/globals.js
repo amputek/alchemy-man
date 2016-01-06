@@ -10,7 +10,6 @@ var world = null;
 
 var game; //Game Manager
 var images; //Image Manager
-var sound; //Sound Manager
 var debug; //Debug Manager
 
 var inControl = true;

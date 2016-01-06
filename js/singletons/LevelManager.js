@@ -716,7 +716,6 @@ var LevelManager = Class.$extend({
         // Start Level
 
         this.initPlayer( startpos, level.floors.getCollection() )
-        this.initSound( data.weather.severity, data.soundtrack)
 
         debug.log("--- Level Load Complete")
         debug.log("CURRENT LEVEL: " + data.name);
@@ -734,18 +733,6 @@ var LevelManager = Class.$extend({
         if(player.currentAction == "idle") player.animation.current = player.animation.idle;
         if(player.currentAction == "run") player.animation.current = player.animation.run;
         player.animation.current.reset();
-
-    },
-
-    initSound: function(weather,soundtrack){
-        if(weather > 0.0){
-            setTimeout(function(){
-                sound.loop("rain", 0.1, 0.0, 10000);
-            },100);
-        }
-        setTimeout(function(){
-            sound.loop(soundtrack,0.1,0.0)
-        },100)
 
     }
 });
