@@ -1,16 +1,17 @@
 var ImageManager = Class.$extend({
 
 	__init__: function(){
-	
+
+
 		this.numImages = 0;
 		this.totalImages = 0;
-		
+
 		this.potion = [];
 		this.potion.fire       = this.createImage('images/potions/bottle_fire.png');
 		this.potion.ice        = this.createImage('images/potions/bottle_ice.png');
 		this.potion.poison     = this.createImage('images/potions/bottle_acid.png');
 		this.potion.shine			 = this.createImage('images/potions/bottle_shine.png')
-		
+
 		this.gum = [];
 		this.gum[0]  		= this.createImage('images/potions/gumballs/red.png');
 		this.gum[1]  	  = this.createImage('images/potions/gumballs/green.png');
@@ -30,7 +31,7 @@ var ImageManager = Class.$extend({
 		this.player.climb        = this.createImage('images/character/climb.png');
 		this.player.idle_aim 			 = this.createImage('images/character/idle_aim.png');
 		this.player.idle_release 	 = this.createImage('images/character/idle_release.png');
-	
+
 		this.arm = [];
 		this.arm.idle   			 = this.createImage('images/character/arm/idle.png');
 		this.arm.run    			 = this.createImage('images/character/arm/run.png');
@@ -103,13 +104,13 @@ var ImageManager = Class.$extend({
 		this.env.scaffold         = this.createImage('images/doodods/scaffold.png')
 
 		this.env.triggered = [];
-		this.env.triggered.left             = this.createImage('images/environment/triggered/left.png' ) 
-		this.env.triggered.right            = this.createImage('images/environment/triggered/right.png') 
+		this.env.triggered.left             = this.createImage('images/environment/triggered/left.png' )
+		this.env.triggered.right            = this.createImage('images/environment/triggered/right.png')
 		this.env.triggered.main             = this.createImage('images/environment/triggered/main.png' )
 		this.env.triggered.decoration_left  = this.createImage('images/environment/triggered/decoration_left.png' )
 		this.env.triggered.decoration_right = this.createImage('images/environment/triggered/decoration_right.png' )
 		this.env.triggered.chain            = this.createImage('images/environment/triggered/chain.png' )
-		this.env.triggered.chain_bottom     = this.createImage('images/environment/triggered/chain_bottom.png' ) 
+		this.env.triggered.chain_bottom     = this.createImage('images/environment/triggered/chain_bottom.png' )
 
 		this.env.brick_middle = [];
 		this.env.brick_middle[0]			= this.createImage('images/environment/brick/brick_middle_0.png');
@@ -305,4 +306,3 @@ var ImageManager = Class.$extend({
 	},
 
 });
-

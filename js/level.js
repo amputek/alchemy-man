@@ -34,6 +34,44 @@ var Level = Class.$extend({
 	},
 
 
+
+	// PRIVATE
+	effectEntity : function(entity, type){
+		if(type == "fire") entity.setFire();
+		if(type == "acid") entity.setAcid();
+	},
+
+
+
+
+	updatePlayer : function( canvas ){
+		player.update();
+  		if(player.worldpos.y > this.bottomLimit )	player.getHit(6)
+		player.draw( canvas );
+	},
+
+
+	updateShake : function(){
+		if(this.shakeAmount > 0){
+			// element("wrapper").style.webkitTransform = "rotateZ(" + random(-this.shakeAmount*0.2, this.shakeAmount*0.2) + "deg)"
+			this.shakeAmount--;
+		}
+	},
+
+
+	pain: function( canvas ){
+		if(this.painCounter > 0.01){
+			canvas.blendFunction("lighter");
+			canvas.fill( 'rgba(255,50,30,' + this.painCounter + ')' );
+			canvas.blendFunction("source-over");
+			this.painCounter-=0.02;
+			if(this.painCounter <= 0.0) this.painCounter = 0;
+		}
+	},
+
+
+	//called from listener class
+
 	detonatePotionOnFloor: function( potion, floor ){
 		this.addExplosion( potion , potion.type , floor );
 		potion.kill();
@@ -54,7 +92,6 @@ var Level = Class.$extend({
 		this.addExplosion( potion , potion.type, null, 0 );
 	},
 
-
 	fragmentOnFloor: function( fragment, floor ){
 		if( notMovingOrIce( floor ) && !fragment.isDead() ){
 			if( fragment.type == "fire") this.fire.add( fragment.physicspos, floor );
@@ -69,11 +106,8 @@ var Level = Class.$extend({
 		fragment.kill();
 	},
 
-	effectEntity : function(entity, type){
-		if(type == "fire") entity.setFire();
-		if(type == "acid") entity.setAcid();
-	},
 
+	// called from listener, and entity manager
 	addExplosion: function( source , type , ground , number ){
 		this.shake(5)
 		var vel = source.vel;
@@ -82,17 +116,20 @@ var Level = Class.$extend({
 		this.explosions.add( source.physicspos , vel , type , ground , number );
 	},
 
+	// called from entity manager
 	addFragment: function( pos, vel, type, size ){ this.fragments.add( new Fragment( pos , vel , type , size ) ); },
+
+	//called from entity manager ()
 	addTooltip: function( pos, text ){ this.tooltips.add( new Tooltip( pos, text) ); },
 
-	occupied: function( pos ){
-		for (var i = 0; i < this.nolandzones.length; i++) { if( equalVector( pos , this.nolandzones[i] ) ) return true;  }
-		return false;
-	},
 
+	//called by Chomper ONLY
 	getFloors: function(){
 		return this.floors.collection;
 	},
+
+
+    //called  levelmanager
 
 	setEnd : function( pos ){
 		this.endpos = new b2Vec2(pos.x,pos.y);
@@ -102,19 +139,21 @@ var Level = Class.$extend({
 		this.bottomLimit = size.h * SCALE + 100;
 	},
 
-	checkEnd : function(){
-		if(player.isDead() == false) return vDistance( player.physicspos, this.endpos ) < 5;
+	occupied: function( pos ){
+		for (var i = 0; i < this.nolandzones.length; i++) { if( equalVector( pos , this.nolandzones[i] ) ) return true;  }
+		return false;
 	},
 
+
+	// called by player
 	shake: function(a){
 		this.shakeAmount = a;
 	},
 
-	updateShake : function(){
-		if(this.shakeAmount > 0){
-			// element("wrapper").style.webkitTransform = "rotateZ(" + random(-this.shakeAmount*0.2, this.shakeAmount*0.2) + "deg)"
-			this.shakeAmount--;
-		}
+
+    //called by game
+	checkEnd : function(){
+		if(player.isDead() == false) return vDistance( player.physicspos, this.endpos ) < 5;
 	},
 
 	clearLevel: function(world){
@@ -129,22 +168,6 @@ var Level = Class.$extend({
 		this.enemySources.getBodies(       graveyard )
 		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
 		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
-	},
-
-	pain: function( canvas ){
-		if(this.painCounter > 0.01){
-			canvas.blendFunction("lighter");
-			canvas.fill( 'rgba(255,50,30,' + this.painCounter + ')' );
-			canvas.blendFunction("source-over");
-			this.painCounter-=0.02;
-			if(this.painCounter <= 0.0) this.painCounter = 0;
-		}
-	},
-
-	updatePlayer : function( canvas ){
-		player.update();
-  	if(player.worldpos.y > this.bottomLimit )	player.getHit(6)
-		player.draw( canvas );
 	},
 
 	update: function(world){
@@ -166,8 +189,8 @@ var Level = Class.$extend({
 		this.explosions.update(      		this.gamecanvas, graveyard );
 		this.gamecanvas.blendFunction(  "source-over"  );
 		this.projectiles.update(     		this.gamecanvas, graveyard );
-		this.enemySources.update(				this.gamecanvas, graveyard );
-		this.tooltips.update( 					this.gamecanvas, graveyard );
+		this.enemySources.update(			this.gamecanvas, graveyard );
+		this.tooltips.update( 				this.gamecanvas, graveyard );
 
 		trajectory.draw(              		this.gamecanvas       			);
 
@@ -185,4 +208,5 @@ var Level = Class.$extend({
 
 		for (var i = 0; i < graveyard.length; i++){	world.DestroyBody( graveyard[i] ) }
 	}
+
 });

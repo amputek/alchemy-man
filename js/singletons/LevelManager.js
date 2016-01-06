@@ -1,6 +1,8 @@
 
 // CONTAINS THE RAW JSON DATA FOR EACH LEVEL
 var LevelDatabase = Class.$extend({
+
+    //takes a callback function for when levels have finished loading
     __init__: function( callback ){
         this.data = [];
         this.databaseSize = 0;
@@ -9,6 +11,8 @@ var LevelDatabase = Class.$extend({
         this.parseLevels();
     },
 
+
+    // creates levels from JSON data
     parseLevels: function(){
 
         element("level-list").innerHTML = "";
@@ -19,21 +23,33 @@ var LevelDatabase = Class.$extend({
 
         var _this = this;
 
+        //get levels from js/levels directory
         var xhr = new XMLHttpRequest();
         xhr.open('POST','js/levels/get.php',true);
         xhr.send();
         xhr.onreadystatechange = function() {
-            if(xhr.readyState==4 && xhr.status==200){
-                var foo = $.parseJSON(xhr.responseText);
-                for(var i =0; i < foo.length; i++){
-                    if( foo[i].split('.').pop() == "json"){
-                        filenames.push( foo[i] )
+            if(xhr.readyState == 4 && xhr.status == 200){
+
+                //get list of files in level directory
+                var fileList = $.parseJSON(xhr.responseText);
+
+                //get all json files from directory
+                for(var i = 0; i < fileList.length; i++){
+                    if( fileList[i].split('.').pop() == "json"){
+                        filenames.push( fileList[i] )
                     }
                 }
+
                 _this.databaseSize = filenames.length;
-                for (var i = 0; i < filenames.length; i++) {
+
+
+                for (var i = 0; i < _this.databaseSize; i++) {
+
+                    //create dom in menu
                     var list = document.createElement("li");
-                    element("level-list").appendChild(list)
+                    element("level-list").appendChild(list);
+
+                    //parse level
                     _this.parseLevel(filenames[i], i );
                 };
 
@@ -89,7 +105,7 @@ var LevelDatabase = Class.$extend({
 
 //CONVERTS JSON DATA INTO GAMEOBJECTS.
 //PREPARES LEVEL FOR ENGINE
-var LevelManager = Class.$extend({
+var LevelLoader = Class.$extend({
     __init__: function(){
         this.posterCount = 0;
     },

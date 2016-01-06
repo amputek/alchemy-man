@@ -69,7 +69,7 @@ var Player = ClimbingCharacter.$extend({
 	// called once at moment of death
 	kill: function(){
 		currentLevel.painCounter = 0.8;
-		inControl = false;
+		allowControl = false;
 		this.state = "dead"
 
 		// stop all actions

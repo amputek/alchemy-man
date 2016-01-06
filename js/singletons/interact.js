@@ -1,88 +1,81 @@
-window.onload = function(){
+// Simplify Box2D variables --- do these all need to be here??????
+var b2RayCastInput = Box2D.Collision.b2RayCastInput;
+var b2RayCastOutput = Box2D.Collision.b2RayCastOutput;
+var b2Vec2 = Box2D.Common.Math.b2Vec2;
 
-	// var str = window.location.search.substring(1), i, val, params = str.split("&");
-	// editon = (str == "editor" || str == "edit" || str == "e")
-	// debugging = (str == "debug" || str == "d")
 
-	// element("level-list").children[0].addEventListener("mousedown",function(){ window.location.href = window.location.href; }, false)
-	// element("level-list").children[1].addEventListener("mousedown",function(){ window.location.href = window.location.href; }, false)
-	// console.log(window.location.href)
+var SCALE = 8;
 
-	game = new GameManager();
-
-}
-
-var playerweapon;
-var camera;
+//toooooo many singletons
+// SINGLETONS - can be accessed globally
+var game; //Game Manager
+var images; // accessed by game objects and level manager
+var debug; // accessed by everything
+var camera; // accesed by: GAME, and Level Manager
 var trajectory;
-var playerdeaths = 0;
+var player; // accessed everywhere apparently
+var input; //accessed by: Player (needs shoot angle?), Trajectory, Potion Manager (tells reticule what colour to be),
+var factory; //called from many game objects. could make this a class variable for game object?
+var playerweapon; //gamecanvas, trajectory, game, input
+
+var editor; //not currently in use
+
+
+//GLOBAL VARIABLES
+var gamespeed = 1.0;
+var offset = vector(0,0)
+var now = Date.now();
+var currentLevel;
+var debugging = false;
+
+
+
 var mouseOverlay;
+//var menu;
 
 
 
-var Menu = Class.$extend({
-	__init__: function(){
-		this.tempDom = element("temp-dom");
-		this.levelList = element("level-list").children;
-		this.saveButton = element("compile-level");
-	},
 
-	hideTemp : function(){
-		element("temp-dom").style.display = "none";
-		element("compile-level").style.display = "none";
-	},
-
-	highlight: function(index){
-		for (var i = 0; i < element("level-list").children.length; i++) { element("level-list").children[i].style.background = "#555" }
-    	element("level-list").children[index].style.background = "#fff"
-	},
-
-	showTemp: function(){
-		for (var i = 0; i < element("level-list").children.length; i++) { element("level-list").children[i].style.background = "#555" }
-		element("temp-dom").style.background = "#fff"
-		element("temp-dom").style.display = "block";
-		element("compile-level").style.display = "block"
-	},
-
-	addTemp: function(){
-		var li = document.createElement("li")
-		li.id = "temp-dom"
-		li.innerHTML = "<em>Unsaved Temporary Level</em>"
-		li.style.display = "none";
-		element("level-list").appendChild(li)
-		element("compile-level").style.display = "none"
-	}
-
-
-});
-
-var menu;
+window.onload = function(){
+	game = new GameManager();
+}
 
 var GameManager = Class.$extend({
 
+
+	//Create Physics World, Singletons (Image manager, factory, player weapon, camera, trajectory)
 	__init__: function(){
 
-		images  = new ImageManager();
-		world   = new b2World(new b2Vec2(0, 10),  true );
+		this.levelLoader = null;
 
+		// create debugger
 		debug   = new Debug();
 
-		debug.log("NEW GAME")
-		debug.log("----------------------")
-		debug.log("Loading Images")
+		// create image manager
+		images  = new ImageManager();
 
+		// create world
+		this.world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true );
 
-		factory = new Factory(world)
-		world.SetContactListener( CreateListener() );
+		// create factory
+		factory = new Factory(this.world);
+
+		// set up listener for world
+		this.world.SetContactListener( CreateListener() );
+
 		playerweapon = new PotionManager();
-		camera = new Camera( vector(0,0), vector(0,0) );
-		trajectory = new Trajectory();
 
-		menu = new Menu();
+		//create camera
+		camera = new Camera( vector(0,0), vector(0,0) );
+
+		//set up trajectory manager
+		trajectory = new Trajectory( this.world.GetGravity() );
+
+		//menu = new Menu();
 
 		this.currentLevelIndex = 0;
 		this.gamestarted = false;
-		this.tempLevel = null;
+		//this.tempLevel = null;
 
 		//if(editon == true) editor = new Editor();
 
@@ -99,24 +92,25 @@ var GameManager = Class.$extend({
 
 	// Main Game update function
 	update : function(){
-		loop = window.requestAnimationFrame( function(){ game.update() } );
-		if(debugging) stats.begin();
+		window.requestAnimationFrame( function(){ game.update() } );
+		if(debugging) debug.stats.begin();
 
 		//check if current level has finished
 		if( currentLevel.checkEnd() ){
 			this.nextLevel();
 		} else {
 			debug.update();
-			world.Step( 1 / 12, 5, 6);
-			currentLevel.update(world)
+			this.world.Step( 1 / 12, 5, 6);
+			currentLevel.update(this.world)
 			camera.update( player.physicspos, 0.07 );
 		}
-		if(debugging) stats.end();
+		if(debugging) debug.stats.end();
 
 		this.updateMouseOverlay();
 
 	},
 
+	//functions called from Editor
 	setTempLevel: function( level ){
 		element("temp-dom").innerHTML = '<em>"' + level.name + '" edit (unsaved)</em>'
 		this.tempLevel = level;
@@ -129,11 +123,17 @@ var GameManager = Class.$extend({
 		menu.hideTemp();
 	},
 
+	loadTempLevel: function(){
+		if(currentLevel != undefined) currentLevel.clearLevel(this.world);
+		currentLevel = levelManager.loadLevelFromData( this.tempLevel );
+		menu.showTemp();
+	},
+
+
+
 	nextLevel : function(){
-		playerdeaths = 0;
 		this.currentLevelIndex++;
 
-		// console.log(this.currentLevelIndex, this.databaseSize)
 		if(this.currentLevelIndex = this.database.databaseSize){
 			if(this.tempLevel != null){
 				this.loadTempLevel();
@@ -154,33 +154,26 @@ var GameManager = Class.$extend({
 			menu.hideTemp();
 		}
 		console.log("LOADING LEVEL", this.currentLevelIndex)
-		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(world);
-		currentLevel = levelManager.loadLevelFromData( this.database.getLevel( index ) );
+		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(this.world);
+		currentLevel = this.levelLoader.loadLevelFromData( this.database.getLevel( index ) );
 
 		//if( editon ) editor.readFromJSON( this.database.getLevel( index ) );
 
-    	menu.highlight(index);
+    	//menu.highlight(index);
 	},
 
-	loadTempLevel: function(){
-		if(currentLevel != undefined) currentLevel.clearLevel(world);
-		currentLevel = levelManager.loadLevelFromData( this.tempLevel );
-		menu.showTemp();
-	},
 
 	// Now Images Have Finished Loading
 	loadLevelManager : function(){
-		player = new Player( vector(0,0), world )
-		levelManager = new LevelManager();
-		var _this = this;
+		player = new Player( vector(0,0), this.world )
+		this.levelLoader = new LevelLoader();
 		this.database = new LevelDatabase( this.finishedLoadingLevels );
 
 	},
 
 	finishedLoadingLevels: function(){
 
-
-		menu.addTemp();
+		//menu.addTemp();
 
 		var levellist = element("level-list")
 
@@ -194,14 +187,8 @@ var GameManager = Class.$extend({
 	},
 
 	setupInputs : function(){
-		debug.log("Setting Up Input");
 		input = new Input();
-		$(document).mousedown( input.mouseDown );
-		$(document).mouseup(   input.mouseUp   );
-		$(document).mousemove( input.mouseMove );
-		$(document).keydown(   input.keyDown   );
-		$(document).keyup(     input.keyUp     );
-    	$(document).mousewheel(input.wheel     );
+		input.addDomEvents();
     	playerweapon.equip("fire")
 		this.startGame()
 	},
@@ -226,8 +213,6 @@ var GameManager = Class.$extend({
 
 	playerDeath: function(){
 
-		playerdeaths++;
-
 		var tempLevelIndex = game.currentLevelIndex;
 		console.log("player death", tempLevelIndex)
 
@@ -245,16 +230,15 @@ var GameManager = Class.$extend({
 
 		setTimeout(function(){
 			webkitCancelAnimationFrame(loop);
-			world.DestroyBody(player.body);
+			game.world.DestroyBody(player.body);
 			player = null;
-			currentLevel.clearLevel(world);
+			currentLevel.clearLevel(game.world);
 		},2100);
 
 		setTimeout(function(){
 			currentLevel = null;
-			player = new Player( vector(0,0), world )
+			player = new Player( vector(0,0), game.world )
 			game.currentLevelIndex = tempLevelIndex;
-			inControl = true;
 			updateHealthDom(player.health);
 			game.setupInputs();
 		},2150);

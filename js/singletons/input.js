@@ -1,5 +1,14 @@
+
+
+
 var Input = Class.$extend({
     __init__: function(){
+
+        debug.log("Setting Up Input");
+
+
+        this.allowControl = true;
+
         this.pressed = [];
         this.pressed.right = false;
         this.pressed.left = false;
@@ -15,7 +24,15 @@ var Input = Class.$extend({
         reticule.style.webkitTransform = "translate3d(" + (this.wrapperoffset.x+100) + "px," + (this.wrapperoffset.y+100) + "px,0px)";
 
         this.wheelcooldown = 0;
+    },
 
+    addDomEvents: function(){
+        $(document).mousedown( input.mouseDown );
+        $(document).mouseup(   input.mouseUp   );
+        $(document).mousemove( input.mouseMove );
+        $(document).keydown(   input.keyDown   );
+        $(document).keyup(     input.keyUp     );
+        $(document).mousewheel(input.wheel     );
     },
 
 
@@ -57,7 +74,8 @@ var Input = Class.$extend({
 
     keyDown : function(e) {
         var code = e.keyCode;
-        if(inControl){
+
+        if(input.allowControl){
             if(code == 32){
                 e.preventDefault();
                 player.start('jump');
@@ -83,7 +101,7 @@ var Input = Class.$extend({
     },
 
     keyUp : function(e) {
-        if(inControl){
+        if(input.allowControl){
             var code = e.keyCode;
             if(code == 32){
                 e.preventDefault();
@@ -114,7 +132,7 @@ var Input = Class.$extend({
     mouseDown : function(e){
         if(input.inBound()){
             if(e.target.className != "button"){
-                if(inControl){   
+                if(input.allowControl){
                     if (e.which === 1 && playerweapon.currentlySelected != null && playerweapon.cooldown <= 0) {
                         input.pressed.leftmouse = true;
                         this.timeHeld = 30;
@@ -129,11 +147,11 @@ var Input = Class.$extend({
     mouseUp : function(e) {
         if(input.inBound()){
             if(e.target.className != "button"){
-                if(inControl){
+                if(input.allowControl){
                     if (e.which == 1 && playerweapon.currentlySelected != null && playerweapon.cooldown <= 0) {
                         input.timeHeld = 30;
                         input.pressed.leftmouse = false;
-    
+
                         currentLevel.projectiles.add( player.shoot(input.shootAngle) );
                     }
                 }

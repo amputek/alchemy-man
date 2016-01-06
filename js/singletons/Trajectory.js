@@ -25,11 +25,11 @@ var MouseBlip = Class.$extend({
 });
 
 var Trajectory = Class.$extend({
-  __init__: function(){
+  __init__: function( worldGravity ){
     this.timestep = 1/60;
     var timestepSquared = this.timestep * this.timestep;
-    var gx = world.GetGravity().x;
-    var gy = world.GetGravity().y;
+    var gx = worldGravity.x;
+    var gy = worldGravity.y;
     this.stepGravityx = timestepSquared * gx;
     this.stepGravityy = timestepSquared * gy;
 
