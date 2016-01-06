@@ -33,6 +33,4 @@ var input;
 var offset = vector(0,0)
 var now = Date.now();
 
-
-
 var editor;

@@ -33,8 +33,8 @@ var Menu = Class.$extend({
 	},
 
 	highlight: function(index){
-	  for (var i = 0; i < element("level-list").children.length; i++) { element("level-list").children[i].style.background = "#555" }
-    element("level-list").children[index].style.background = "#fff"
+		for (var i = 0; i < element("level-list").children.length; i++) { element("level-list").children[i].style.background = "#555" }
+    	element("level-list").children[index].style.background = "#fff"
 	},
 
 	showTemp: function(){
@@ -61,9 +61,6 @@ var menu;
 var GameManager = Class.$extend({
 
 	__init__: function(){
-		this.loadbar     = element("loadbar-inner");
-		this.loadOverlay = element("loading");
-
 
 		sound   = new SoundManager();
 		images  = new ImageManager();
@@ -88,7 +85,7 @@ var GameManager = Class.$extend({
 		this.gamestarted = false;
 		this.tempLevel = null;
 
-		if(editon == true) editor = new Editor();
+		//if(editon == true) editor = new Editor();
 
 		mouseOverlay = new GameCanvas( sizeVector(1080,550), 0);
 		mouseOverlay.canvas.style.zIndex = 300
@@ -100,9 +97,13 @@ var GameManager = Class.$extend({
 		mouseBlips.update( mouseOverlay );
 	},
 
+
+	// Main Game update function
 	update : function(){
 		loop = window.requestAnimationFrame( function(){ game.update() } );
 		if(debugging) stats.begin();
+
+		//check if current level has finished
 		if( currentLevel.checkEnd() ){
 			this.nextLevel();
 		} else {
@@ -157,7 +158,7 @@ var GameManager = Class.$extend({
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(world);
 		currentLevel = levelManager.loadLevelFromData( this.database.getLevel( index ) );
 
-		if( editon ) editor.readFromJSON( this.database.getLevel( index ) );
+		//if( editon ) editor.readFromJSON( this.database.getLevel( index ) );
 
     	menu.highlight(index);
 	},
@@ -201,8 +202,8 @@ var GameManager = Class.$extend({
 		$(document).mousemove( input.mouseMove );
 		$(document).keydown(   input.keyDown   );
 		$(document).keyup(     input.keyUp     );
-    $(document).mousewheel(input.wheel     );
-    playerweapon.equip("fire")
+    	$(document).mousewheel(input.wheel     );
+    	playerweapon.equip("fire")
 		this.startGame()
 	},
 
@@ -211,17 +212,13 @@ var GameManager = Class.$extend({
 		debug.log( "-----------------------------" );
 		debug.log( "LOAD SUCCESFUL. STARING GAME." );
 		debug.log( "-----------------------------" );
-		console.log(this.tempLevel, this.currentLevelIndex);
+		debug.log(this.tempLevel, this.currentLevelIndex);
 		(this.tempLevel == null ? this.loadLevel( this.currentLevelIndex ) : this.loadTempLevel() );
 		this.update();
-		element("loadbar").style.opacity = 0.0;
-		setTimeout(function(){ game.loadOverlay.style.opacity = 0.0; },500);
-		setTimeout(function(){ game.loadOverlay.style.display = "none"; },6500)
 	},
 
 	finishedLoadingImage: function(num,total){
 		debug.log("Loading Images (" + num + "/" + total + ")",false);
-		this.loadbar.style.height = ((num / total ) * 300) + "px";
 		if( num == total ){
 			debug.log("--- Finished loading images");
 			game.loadLevelManager();
