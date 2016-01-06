@@ -1,3 +1,6 @@
+//a gameobject that moves
+//has methods for physically affecting the body
+
 var DynamicObject = GameObject.$extend({
 	__init__: function(body){
 		this.$super(body);

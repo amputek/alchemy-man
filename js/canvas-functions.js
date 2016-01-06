@@ -41,11 +41,21 @@ function sizeVector(w,h){  return {w:w,h:h}; }
 
 
 // vector operations
+
+//converts a position in the rendered world, to a position in the physics world
 function toPhysics(pos){  return vector(pos.x * 5, pos.y * 5); }
+
+//converts a position in the physics world, to a position in the rendered world
 function toWorld(pos){    return {x: round(pos.x*SCALE) ,y: round(pos.y*SCALE) }; }
+
+// converts a position in the ..... world to a position on the grid
 function toGrid(x,y){     return {x: Math.floor( x / 5 ), y: Math.round( y / 5 )}; }
+
+// returns true if vectors are equal
 function equalVector(a,b){  return a.x == b.x && a.y == b.y; }
+
 function vDistance(a,b){  return distance(a.x,a.y,b.x,b.y); }
+
 function vAngle(a,b){  return angle(a.x,a.y,b.x,b.y); }
 
 
