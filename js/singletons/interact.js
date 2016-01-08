@@ -18,8 +18,6 @@ var input; //accessed by: Player (needs shoot angle?), Trajectory, Potion Manage
 var factory; //called from many game objects. could make this a class variable for game object?
 var playerweapon; //gamecanvas, trajectory, game, input
 
-var editor; //not currently in use
-
 
 //GLOBAL VARIABLES
 var gamespeed = 1.0;
@@ -122,13 +120,8 @@ var GameManager = Class.$extend({
 		//set up trajectory manager
 		trajectory = new Trajectory( this.world.GetGravity() );
 
-		//menu = new Menu();
-
 		this.currentLevelIndex = 0;
 		this.gamestarted = false;
-		//this.tempLevel = null;
-
-		//if(editon == true) editor = new Editor();
 
 		mouseOverlay = new GameCanvas( sizeVector(1080,550), 0);
 		mouseOverlay.canvas.style.zIndex = 300
@@ -165,12 +158,8 @@ var GameManager = Class.$extend({
 		this.currentLevelIndex++;
 
 		if(this.currentLevelIndex = this.database.databaseSize){
-			if(this.tempLevel != null){
-				this.loadTempLevel();
-			} else {
-				this.currentLevelIndex = 0;
-				this.loadLevel( this.currentLevelIndex );
-			}
+			this.currentLevelIndex = 0;
+			this.loadLevel( this.currentLevelIndex );
 		} else {
 			this.loadLevel( this.currentLevelIndex );
 		}
@@ -179,10 +168,6 @@ var GameManager = Class.$extend({
 
 	loadLevel: function( index ){
 		this.currentLevelIndex = index;
-		if(this.tempLevel != null){
-			this.tempLevel = null;
-			menu.hideTemp();
-		}
 		console.log("LOADING LEVEL", this.currentLevelIndex)
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(this.world);
 		currentLevel = this.levelLoader.loadLevelFromData( this.database.getLevel( index ) );
@@ -222,8 +207,7 @@ var GameManager = Class.$extend({
 		debug.log( "-----------------------------" );
 		debug.log( "LOAD SUCCESFUL. STARING GAME." );
 		debug.log( "-----------------------------" );
-		debug.log(this.tempLevel, this.currentLevelIndex);
-		(this.tempLevel == null ? this.loadLevel( this.currentLevelIndex ) : this.loadTempLevel() );
+		this.loadLevel( this.currentLevelIndex );
 		this.update();
 	},
 
