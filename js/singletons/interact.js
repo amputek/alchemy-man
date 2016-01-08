@@ -28,17 +28,68 @@ var now = Date.now();
 var currentLevel;
 var debugging = false;
 
-
-
 var mouseOverlay;
-//var menu;
-
 
 
 
 window.onload = function(){
 	game = new GameManager();
 }
+
+// function Setup(){
+//
+// 	this.levelLoader = null;
+// 	debug   = new Debug(); // create debugger
+// 	images  = new ImageManager(); // create image manager
+// 	var world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true ); // create world
+// 	factory = new Factory(this.world); // create factory
+// 	world.SetContactListener( CreateListener() ); // set up listener for world
+// 	playerweapon = new PotionManager();
+// 	camera = new Camera( vector(0,0), vector(0,0) ); //create camera
+// 	trajectory = new Trajectory( this.world.GetGravity() ); //set up trajectory manager
+//
+// 	mouseOverlay = new GameCanvas( sizeVector(1080,550), 0);
+// 	mouseOverlay.canvas.style.zIndex = 300
+//
+// 	game = new GameManager( world );
+// }
+//
+//
+// var GameManager = Class.$extend({
+// 	__init__: function( world ){
+// 		this.world = world;
+// 		this.currentLevelIndex = 0;
+// 		this.gamestarted = false;
+// 	},
+//
+// 	// Update Mouse Overlay
+// 	updateMouseOverlay: function(){
+// 		mouseOverlay.clear();
+// 		mouseOverlay.setFill( "red" )
+// 		mouseBlips.update( mouseOverlay );
+// 	},
+//
+// 	// Main Game update function
+// 	update : function(){
+// 		window.requestAnimationFrame( function(){ game.update() } );
+// 		if(debugging) debug.stats.begin();
+//
+// 		//check if current level has finished
+// 		if( currentLevel.checkEnd() ){
+// 			this.nextLevel();
+// 		} else {
+// 			debug.update();
+// 			this.world.Step( 1 / 12, 5, 6);
+// 			currentLevel.update(this.world)
+// 			camera.update( player.physicspos, 0.07 );
+// 		}
+// 		if(debugging) debug.stats.end();
+//
+// 		this.updateMouseOverlay();
+//
+// 	}
+//
+// });
 
 var GameManager = Class.$extend({
 
@@ -110,27 +161,6 @@ var GameManager = Class.$extend({
 
 	},
 
-	//functions called from Editor
-	setTempLevel: function( level ){
-		element("temp-dom").innerHTML = '<em>"' + level.name + '" edit (unsaved)</em>'
-		this.tempLevel = level;
-		this.loadTempLevel();
-	},
-
-	saveLevel: function( level , a ){
-		this.setTempLevel( level );
-		game.database.saveLevel( JSON.stringify(level), a );
-		menu.hideTemp();
-	},
-
-	loadTempLevel: function(){
-		if(currentLevel != undefined) currentLevel.clearLevel(this.world);
-		currentLevel = levelManager.loadLevelFromData( this.tempLevel );
-		menu.showTemp();
-	},
-
-
-
 	nextLevel : function(){
 		this.currentLevelIndex++;
 
@@ -156,10 +186,6 @@ var GameManager = Class.$extend({
 		console.log("LOADING LEVEL", this.currentLevelIndex)
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(this.world);
 		currentLevel = this.levelLoader.loadLevelFromData( this.database.getLevel( index ) );
-
-		//if( editon ) editor.readFromJSON( this.database.getLevel( index ) );
-
-    	//menu.highlight(index);
 	},
 
 
@@ -172,8 +198,6 @@ var GameManager = Class.$extend({
 	},
 
 	finishedLoadingLevels: function(){
-
-		//menu.addTemp();
 
 		var levellist = element("level-list")
 
@@ -203,12 +227,9 @@ var GameManager = Class.$extend({
 		this.update();
 	},
 
-	finishedLoadingImage: function(num,total){
-		debug.log("Loading Images (" + num + "/" + total + ")",false);
-		if( num == total ){
-			debug.log("--- Finished loading images");
-			game.loadLevelManager();
-		}
+	finishedLoadingImages: function(){
+		debug.log("--- Finished loading images");
+		game.loadLevelManager();
 	},
 
 	playerDeath: function(){
