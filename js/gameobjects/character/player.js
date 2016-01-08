@@ -3,10 +3,9 @@ var Player = ClimbingCharacter.$extend({
 		this.$super(pos,sizeVector(2.0,5.5));
 
 		this.moveSpeed = 10;
-		this.jumpHeight = 16;	
+		this.jumpHeight = 16;
 		this.health = 6;
 
-  
 		this.animation.run          = new Animation( images.player.run,          3  , true,  12 );
 		this.animation.idle         = new Animation( images.player.idle,         5  , true,  12 );
 		this.animation.takeoffrun   = new Animation( images.player.takeoffrun,   2  , false, 7  );
@@ -80,7 +79,6 @@ var Player = ClimbingCharacter.$extend({
 			if(this.facing == 1 ) this.stop("right")
 		}
 		this.animation.current = this.animation.death;
-		game.playerDeath();
 	},
 
 	make: function(type){
@@ -103,7 +101,7 @@ var Player = ClimbingCharacter.$extend({
 
 	update: function(){
 		this.animation.current.incFrame();
-		this.armanimation.current.incFrame();      
+		this.armanimation.current.incFrame();
 		playerweapon.update();
 		this.$super();
 	},
@@ -114,9 +112,9 @@ var Player = ClimbingCharacter.$extend({
 		if(this.onLadder()){
 			if(this.climbing != "off"){
 				if(this.climbing == "up" || this.climbing == "down"){
-					this.animation.current = this.animation.climbmove; 
+					this.animation.current = this.animation.climbmove;
 				} else {
-					this.animation.current = this.animation.climbidle; 
+					this.animation.current = this.animation.climbidle;
 				}
 			}
 		}

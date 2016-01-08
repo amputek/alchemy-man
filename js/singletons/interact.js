@@ -12,7 +12,7 @@ var game; //Game Manager
 var images; // accessed by game objects and level manager
 var debug; // accessed by everything
 var camera; // accesed by: GAME, and Level Manager
-var trajectory;
+var trajectory
 var player; // accessed everywhere apparently
 var input; //accessed by: Player (needs shoot angle?), Trajectory, Potion Manager (tells reticule what colour to be),
 var factory; //called from many game objects. could make this a class variable for game object?
@@ -26,111 +26,88 @@ var now = Date.now();
 var currentLevel;
 var debugging = false;
 
-var mouseOverlay;
-
+var setup;
 
 
 window.onload = function(){
 	game = new GameManager();
+	setup = new SetupGame( game.startGame );
 }
 
-// function Setup(){
-//
-// 	this.levelLoader = null;
-// 	debug   = new Debug(); // create debugger
-// 	images  = new ImageManager(); // create image manager
-// 	var world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true ); // create world
-// 	factory = new Factory(this.world); // create factory
-// 	world.SetContactListener( CreateListener() ); // set up listener for world
-// 	playerweapon = new PotionManager();
-// 	camera = new Camera( vector(0,0), vector(0,0) ); //create camera
-// 	trajectory = new Trajectory( this.world.GetGravity() ); //set up trajectory manager
-//
-// 	mouseOverlay = new GameCanvas( sizeVector(1080,550), 0);
-// 	mouseOverlay.canvas.style.zIndex = 300
-//
-// 	game = new GameManager( world );
-// }
-//
-//
-// var GameManager = Class.$extend({
-// 	__init__: function( world ){
-// 		this.world = world;
-// 		this.currentLevelIndex = 0;
-// 		this.gamestarted = false;
-// 	},
-//
-// 	// Update Mouse Overlay
-// 	updateMouseOverlay: function(){
-// 		mouseOverlay.clear();
-// 		mouseOverlay.setFill( "red" )
-// 		mouseBlips.update( mouseOverlay );
-// 	},
-//
-// 	// Main Game update function
-// 	update : function(){
-// 		window.requestAnimationFrame( function(){ game.update() } );
-// 		if(debugging) debug.stats.begin();
-//
-// 		//check if current level has finished
-// 		if( currentLevel.checkEnd() ){
-// 			this.nextLevel();
-// 		} else {
-// 			debug.update();
-// 			this.world.Step( 1 / 12, 5, 6);
-// 			currentLevel.update(this.world)
-// 			camera.update( player.physicspos, 0.07 );
-// 		}
-// 		if(debugging) debug.stats.end();
-//
-// 		this.updateMouseOverlay();
-//
-// 	}
-//
-// });
+function SetupGame( finishedLoadingCallback ){
+	this.finishedLoadingCallback = finishedLoadingCallback;
+
+	this.startLoading = function(){
+		debug   = new Debug(); // create debugger
+		images  = new ImageManager( this.loadWorld ); // create image manager, with a callback to load world when finished
+	}
+
+	this.loadWorld = function(){
+		debug.log("--- Finished loading images");
+		debug.log("Loading World");
+		game.world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true ); // create world
+		factory = new Factory(game.world); // create factory
+		game.world.SetContactListener( CreateListener() ); // set up listener for world
+		playerweapon = new PotionManager();
+		camera = new Camera( vector(0,0), vector(0,0) );  //create camera
+		trajectory = new Trajectory( game.world.GetGravity() );
+		setup.loadLevelManager();
+	}
+
+	// Now Images Have Finished Loading
+	this.loadLevelManager = function(){
+		debug.log("--- Finished loading world");
+		debug.log("Loading Levels");
+		player = new Player( vector(0,0), game.world )
+		game.levelGenerator = new LevelGenerator();
+		game.JSONdatabase = new LevelDatabase( setup.finishedLoadingLevels );
+	}
+
+	//called once levels having finished loading
+	this.finishedLoadingLevels = function(){
+		debug.log("--- Finished loading levels");
+		var levellist = element("level-list")
+		for (var i = 0; i < levellist.children.length; i++) {
+			(function(i){
+				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
+			}(i));
+		};
+		setup.setupInputs();
+	}
+
+	//now levels have finished loading
+	this.setupInputs = function(){
+		debug.log("Loading Inputs");
+		input = new Input();
+		input.addDomEvents();
+    	playerweapon.equip("fire")
+		debug.log("--- finished loading inputs");
+		setup.finishedLoadingCallback();
+	}
+
+	this.startLoading();
+}
+
+
+
+
 
 var GameManager = Class.$extend({
 
-
 	//Create Physics World, Singletons (Image manager, factory, player weapon, camera, trajectory)
 	__init__: function(){
-
-		this.levelLoader = null;
-
-		// create debugger
-		debug   = new Debug();
-
-		// create image manager
-		images  = new ImageManager();
-
-		// create world
-		this.world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true );
-
-		// create factory
-		factory = new Factory(this.world);
-
-		// set up listener for world
-		this.world.SetContactListener( CreateListener() );
-
-		playerweapon = new PotionManager();
-
-		//create camera
-		camera = new Camera( vector(0,0), vector(0,0) );
-
-		//set up trajectory manager
-		trajectory = new Trajectory( this.world.GetGravity() );
-
-		this.currentLevelIndex = 0;
-		this.gamestarted = false;
-
-		mouseOverlay = new GameCanvas( sizeVector(1080,550), 0);
-		mouseOverlay.canvas.style.zIndex = 300
+		this.currentLevelIndex = 1;
+		this.levelGenerator = null;
+		this.JSONdatabase = null;
 	},
 
-	updateMouseOverlay: function(){
-		mouseOverlay.clear();
-		mouseOverlay.setFill( "red" )
-		mouseBlips.update( mouseOverlay );
+	//now inputs have been set up
+	startGame : function(){
+		debug.log( "-----------------------------" );
+		debug.log( "LOAD SUCCESFUL. STARING GAME." );
+		debug.log( "-----------------------------" );
+		game.loadLevel( game.currentLevelIndex );
+		game.update();
 	},
 
 
@@ -147,17 +124,17 @@ var GameManager = Class.$extend({
 			this.world.Step( 1 / 12, 5, 6);
 			currentLevel.update(this.world)
 			camera.update( player.physicspos, 0.07 );
+			if( player.isDead() ) game.playerDeath();
 		}
 		if(debugging) debug.stats.end();
-
-		this.updateMouseOverlay();
-
 	},
 
+	//called by this.update when current level's end is reached
 	nextLevel : function(){
 		this.currentLevelIndex++;
 
-		if(this.currentLevelIndex = this.database.databaseSize){
+		//loop round to level 0 when last level is finished
+		if(this.currentLevelIndex == this.JSONdatabase.databaseSize){
 			this.currentLevelIndex = 0;
 			this.loadLevel( this.currentLevelIndex );
 		} else {
@@ -166,54 +143,18 @@ var GameManager = Class.$extend({
 
 	},
 
+	//loadl level of specified index
 	loadLevel: function( index ){
 		this.currentLevelIndex = index;
-		console.log("LOADING LEVEL", this.currentLevelIndex)
+		debug.log("LOADING LEVEL " + this.currentLevelIndex)
+
+		//if no current level "exists", clear it. Otherwise do nothing (eg at start of game)
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(this.world);
-		currentLevel = this.levelLoader.loadLevelFromData( this.database.getLevel( index ) );
-	},
 
-
-	// Now Images Have Finished Loading
-	loadLevelManager : function(){
-		player = new Player( vector(0,0), this.world )
-		this.levelLoader = new LevelLoader();
-		this.database = new LevelDatabase( this.finishedLoadingLevels );
-
-	},
-
-	finishedLoadingLevels: function(){
-
-		var levellist = element("level-list")
-
-		for (var i = 0; i < levellist.children.length; i++) {
-			(function(i){
-				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
-			}(i));
-		};
-
-		if(game.gamestarted == false) game.setupInputs();
-	},
-
-	setupInputs : function(){
-		input = new Input();
-		input.addDomEvents();
-    	playerweapon.equip("fire")
-		this.startGame()
-	},
-
-	startGame : function(){
-		this.gamestarted = true;
-		debug.log( "-----------------------------" );
-		debug.log( "LOAD SUCCESFUL. STARING GAME." );
-		debug.log( "-----------------------------" );
-		this.loadLevel( this.currentLevelIndex );
-		this.update();
-	},
-
-	finishedLoadingImages: function(){
-		debug.log("--- Finished loading images");
-		game.loadLevelManager();
+		//load new data from level.
+		// get json data from database, pass json data to level loader. set level as current level
+		currentLevel = this.levelGenerator.generateLevelFromJSONData( this.JSONdatabase.getLevel( index ) );
+		// camera = new Camera( levelPhysicsSize, player.physicspos );
 	},
 
 	playerDeath: function(){
@@ -223,12 +164,7 @@ var GameManager = Class.$extend({
 
 		var gameOverDom = element("game-over")
 
-		$(document).unbind( "mousedown"  , input.mouseDown );
-		$(document).unbind( "mouseup"    , input.mouseUp   );
-		$(document).unbind( "mousemove"  , input.mouseMove );
-		$(document).unbind( "keydown"    , input.keyDown   );
-		$(document).unbind( "keyup"      , input.keyUp     );
-		$(document).unbind( "mousewheel" , input.wheel     );
+		input.removeDomEvents();
 
 		setTimeout(function(){ gameOverDom.style.display = "block" } , 1500);
 		setTimeout(function(){ gameOverDom.style.opacity = 1.0;    } , 1600);
@@ -242,7 +178,7 @@ var GameManager = Class.$extend({
 
 		setTimeout(function(){
 			currentLevel = null;
-			player = new Player( vector(0,0), game.world )
+			player = new Player( vector(0,0), game.world );
 			game.currentLevelIndex = tempLevelIndex;
 			updateHealthDom(player.health);
 			game.setupInputs();
@@ -251,5 +187,4 @@ var GameManager = Class.$extend({
 		setTimeout(function(){ gameOverDom.style.opacity = 0.0;    },2200)
 		setTimeout(function(){ gameOverDom.style.display = "none"; },2700)
 	}
-
 });

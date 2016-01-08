@@ -3,7 +3,9 @@
 var ImageManager = Class.$extend({
 
 	//this should take a callback?
-	__init__: function(){
+	__init__: function( callback ){
+
+		this.finishedLoadingCallback = callback;
 
 
 		this.numImages = 0;
@@ -295,7 +297,7 @@ var ImageManager = Class.$extend({
 
 		img.onload = function(){
 			images.numImages++;
-			if( images.numImages === images.totalImages ) game.finishedLoadingImages();
+			if( images.numImages === images.totalImages ) images.finishedLoadingCallback();
 		}
 
 		img.onerror = function(){

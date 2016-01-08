@@ -4,9 +4,6 @@
 var Input = Class.$extend({
     __init__: function(){
 
-        debug.log("Setting Up Input");
-
-
         this.allowControl = true;
 
         this.pressed = [];
@@ -35,6 +32,14 @@ var Input = Class.$extend({
         $(document).mousewheel(input.wheel     );
     },
 
+    removeDomEvents: function(){
+        $(document).unbind( "mousedown"  , input.mouseDown );
+        $(document).unbind( "mouseup"    , input.mouseUp   );
+        $(document).unbind( "mousemove"  , input.mouseMove );
+        $(document).unbind( "keydown"    , input.keyDown   );
+        $(document).unbind( "keyup"      , input.keyUp     );
+        $(document).unbind( "mousewheel" , input.wheel     );
+    },
 
 
     wheel : function(e){

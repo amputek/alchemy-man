@@ -1,28 +1,28 @@
-var mouseBlips = new Manager();
-
-var MouseBlip = Class.$extend({
-  __init__: function(pos,type){
-    this.pos = vector(pos.x+4,pos.y+3);
-    this.life = 10;
-    this.col = {r:255,g:50,b:20}
-
-    if(type == "ice" ) this.col = {r:50  , g:155 , b:255};
-    if(type == "acid") this.col = {r:100 , g:255 , b:50};
-  },
-  update: function(){
-    this.life++;
-  },
-  isDead: function(){
-    return(this.life >= 30);
-  },
-  draw: function(ctx){
-    ctx.context.lineWidth = 3.0
-    ctx.setStroke( rgba( this.col.r, this.col.g, this.col.b, (30-this.life) / 30 ) );
-    ctx.setFill(   rgba( this.col.r, this.col.g, this.col.b, (30-this.life) / 90 ) );
-    ctx.strokedCircle( this.pos.x, this.pos.y, this.life)
-    ctx.solidCircle( this.pos.x, this.pos.y, this.life)
-  }
-});
+// var mouseBlips = new Manager();
+//
+// var MouseBlip = Class.$extend({
+//   __init__: function(pos,type){
+//     this.pos = vector(pos.x+4,pos.y+3);
+//     this.life = 10;
+//     this.col = {r:255,g:50,b:20}
+//
+//     if(type == "ice" ) this.col = {r:50  , g:155 , b:255};
+//     if(type == "acid") this.col = {r:100 , g:255 , b:50};
+//   },
+//   update: function(){
+//     this.life++;
+//   },
+//   isDead: function(){
+//     return(this.life >= 30);
+//   },
+//   draw: function(ctx){
+//     ctx.context.lineWidth = 3.0
+//     ctx.setStroke( rgba( this.col.r, this.col.g, this.col.b, (30-this.life) / 30 ) );
+//     ctx.setFill(   rgba( this.col.r, this.col.g, this.col.b, (30-this.life) / 90 ) );
+//     ctx.strokedCircle( this.pos.x, this.pos.y, this.life)
+//     ctx.solidCircle( this.pos.x, this.pos.y, this.life)
+//   }
+// });
 
 var Trajectory = Class.$extend({
   __init__: function( worldGravity ){

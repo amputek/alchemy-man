@@ -105,7 +105,7 @@ var LevelDatabase = Class.$extend({
 
 //CONVERTS JSON DATA INTO GAMEOBJECTS.
 //PREPARES LEVEL FOR ENGINE
-var LevelLoader = Class.$extend({
+var LevelGenerator = Class.$extend({
     __init__: function(){
         this.posterCount = 0;
     },
@@ -639,14 +639,13 @@ var LevelLoader = Class.$extend({
 
     },
 
-    loadLevelFromData: function( data ){
+    generateLevelFromJSONData: function( data ){
 
         var level = new Level();
         // var data = jsondata;
 
 
         debug.log("Loading Level from pre-parsed Level Data")
-        debug.log(data.start);
 
 
         var levelPhysicsSize = sizeVector( data.width * 5, data.height * 5)

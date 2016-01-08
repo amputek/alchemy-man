@@ -59,7 +59,7 @@ var PotionManager = Class.$extend({
       input.reticule.style.boxShadow = "0 0 0px rgba(100,255,50, 1.0)";
     }
 
-    mouseBlips.add( new MouseBlip( input.mousepos, this.currentlySelected) )
+    //mouseBlips.add( new MouseBlip( input.mousepos, this.currentlySelected) )
 
   },
 
