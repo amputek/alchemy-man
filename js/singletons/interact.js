@@ -98,12 +98,14 @@ function SetupGame( finishedLoadingCallback ){
 var GameManager = Class.$extend({
 
 	__init__: function(){
-		this.currentLevelIndex = 0;
+		this.currentLevelIndex = 1;
 		this.levelGenerator = null;
-		this.camera = null;
-		this.trajectory = null;
-		this.playerDying = false;
+		this.camera = null; //in gameplay manager ?
+		this.trajectory = null; //in gameplay manager?
+		this.playerDying = false; //in gameplay manager?
 		this.loop = null;
+
+		currentLevel = new GameplayManager();
 	},
 
 	//now inputs have been set up
@@ -158,7 +160,7 @@ var GameManager = Class.$extend({
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(this.world);
 
 		// get json data from database, pass json data to level loader. set level as current level
-		currentLevel = this.levelGenerator.generateLevelFromJSONData( index );
+		this.levelGenerator.generateLevelFromJSONData( index, currentLevel );
 
 		//probably dont need to make new camera each time?
 		this.camera.reset( currentLevel.physicsSize, player.physicspos );
@@ -170,7 +172,7 @@ var GameManager = Class.$extend({
 		this.playerDying = true;
 
 		var tempLevelIndex = game.currentLevelIndex;
-		console.log("player death", tempLevelIndex)
+		debug.log("player death " +  tempLevelIndex);
 
 		var gameOverDom = element("game-over")
 

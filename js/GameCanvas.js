@@ -118,6 +118,10 @@ var GameCanvas = Canvas.$extend({
 		element("game-wrapper").appendChild(this.canvas);
 	},
 
+	setSize: function(size){
+		this.$super(  sizeVector(1080 + size.w * this.offsetMod, 550 + size.h * this.offsetMod ) );
+	},
+
 	delete: function(){
 		element("game-wrapper").removeChild(this.canvas);
 	},

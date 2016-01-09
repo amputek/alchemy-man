@@ -11,7 +11,6 @@ var LevelJSONDatabase = Class.$extend({
         this.parseLevels();
     },
 
-
     // creates levels from JSON data
     parseLevels: function(){
 
@@ -69,7 +68,6 @@ var LevelJSONDatabase = Class.$extend({
         var _this = this;
         setTimeout(function(){ _this.parseLevels() },500);
     },
-
 
     loadSuccess: function( data, ind ){
         debug.log("- Finished parsing level " + ind + ": '" + data.name + "'");
@@ -639,11 +637,11 @@ var LevelGenerator = Class.$extend({
 
     },
 
-    generateLevelFromJSONData: function( index ){
+    generateLevelFromJSONData: function( index, level ){
 
         var data = this.database.getLevel( index );
 
-        var level = new Level();
+        // var level = new Level();
 
         level.name = data.name;
 
@@ -732,9 +730,8 @@ var LevelGenerator = Class.$extend({
 
         this.initPlayer( startpos, level.floors.getCollection() )
 
-        return level;
+        // return level;
     },
-
 
     // a bit hacky, this?? should i move this out of levelmanager
     initPlayer: function( startpos, floors ){

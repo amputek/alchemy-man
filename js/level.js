@@ -1,6 +1,14 @@
 
 // does this even need to exist?????????? you massive twat <3 love from liffey x
-var Level = Class.$extend({
+
+//this is now a SINGLETON. The collectionos are cleared/refilled each new level load - NOT completely recreated.
+//used to be called "Level"
+
+//this could still be merged with Game Manager. Need to work out what separates this from Game Manager.
+var GameplayManager = Class.$extend({
+
+
+	//this now gets called ONCE when the game starts
 	__init__: function(){
 
 		// ENTITIES
@@ -28,6 +36,10 @@ var Level = Class.$extend({
 		this.endpos = null;
 		this.shakeAmount = 0;
 		this.canvas  = [];
+
+
+
+
 		this.gamecontext = null;
 		this.painCounter = 0.0;
 		this.bottomLimit = 0;
@@ -167,6 +179,13 @@ var Level = Class.$extend({
 		this.ice.getBodies(                graveyard )
 		this.enemies.getBodies(            graveyard )
 		this.enemySources.getBodies(       graveyard )
+
+		//need to get rid of FX too 9/1/16
+		this.fire.emptyCollection();
+		this.ice.emptyCollection();
+		this.acid.emptyCollection();
+		this.explosions.emptyCollection();
+
 		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
 		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
 	},
