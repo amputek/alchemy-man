@@ -11,6 +11,12 @@ var Camera = Class.$extend({
 		this.setPos( target );
 	},
 
+	reset: function( size, target ){
+		this.size = size;
+		this.rightLimit = this.size.w - 73;
+		this.bottomLimit = this.size.h - 38;
+		this.setPos( target );
+	},
 
 	// instantly set the position of the camera to a target location
 	setPos: function( target ){

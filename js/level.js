@@ -1,5 +1,5 @@
 
-// does this even need to exist??????????
+// does this even need to exist?????????? you massive twat <3 love from liffey x
 var Level = Class.$extend({
 	__init__: function(){
 
@@ -7,6 +7,7 @@ var Level = Class.$extend({
 
 		// Do I really need to instansiate these each time???
 		// can they not remain consistent outside of levels?
+		// They could... but why? They need to be cleared every time.
 	    this.floors             = new GameObjectManager();
 	    this.movingplatforms    = new GameObjectManager();
 	    this.triggeredplatforms = new GameObjectCollectionManager();
@@ -31,6 +32,9 @@ var Level = Class.$extend({
 		this.painCounter = 0.0;
 		this.bottomLimit = 0;
 
+		this.name = "";
+		this.physicsSize = null;
+
 		this.ambientLight = null;
 
 	},
@@ -44,8 +48,6 @@ var Level = Class.$extend({
 	},
 
 
-
-
 	updatePlayer : function( canvas ){
 		player.update();
   		if(player.worldpos.y > this.bottomLimit )	player.getHit(6)
@@ -54,12 +56,8 @@ var Level = Class.$extend({
 
 
 	updateShake : function(){
-		if(this.shakeAmount > 0){
-			// element("wrapper").style.webkitTransform = "rotateZ(" + random(-this.shakeAmount*0.2, this.shakeAmount*0.2) + "deg)"
-			this.shakeAmount--;
-		}
+		if(this.shakeAmount > 0) this.shakeAmount--;
 	},
-
 
 	pain: function( canvas ){
 		if(this.painCounter > 0.01){
@@ -138,6 +136,7 @@ var Level = Class.$extend({
 	},
 
 	setSize: function( size ){
+		this.physicsSize = size;
 		this.bottomLimit = size.h * SCALE + 100;
 	},
 
@@ -194,7 +193,7 @@ var Level = Class.$extend({
 		this.enemySources.update(			this.gamecanvas, graveyard );
 		this.tooltips.update( 				this.gamecanvas, graveyard );
 
-		trajectory.draw(              		this.gamecanvas       			);
+		game.trajectory.draw(              		this.gamecanvas       			);
 
 
 		// FIND A WAY OF STRORING AMBIENT LIGHT INSIDE GAME CANVAS. NO NEED TO KEEP IT STORED IN LEVEL CLASS JUST FOR THIS LINE:

@@ -2,7 +2,7 @@
 
 
 var Input = Class.$extend({
-    __init__: function(){
+    __init__: function( playerweapon ){
 
         this.allowControl = true;
 
@@ -18,7 +18,9 @@ var Input = Class.$extend({
         this.wrapper = element('wrapper');
         this.wrapperoffset = {x:wrapper.offsetLeft, y:wrapper.offsetTop};
 
-        reticule.style.webkitTransform = "translate3d(" + (this.wrapperoffset.x+100) + "px," + (this.wrapperoffset.y+100) + "px,0px)";
+        this.reticule.style.webkitTransform = "translate3d(" + (this.wrapperoffset.x+100) + "px," + (this.wrapperoffset.y+100) + "px,0px)";
+
+        this.playerweapon = playerweapon;
 
         this.wheelcooldown = 0;
     },
@@ -46,30 +48,30 @@ var Input = Class.$extend({
         if(input.wheelcooldown <= 0){
             var delta = e.deltaY;
             if( delta > 15  ){
-                if( playerweapon.currentlySelected == "fire" ){
-                    playerweapon.make( true, "ice")
+                if( input.playerweapon.currentlySelected == "fire" ){
+                    input.playerweapon.make( true, "ice")
                     input.wheelcooldown = 60;
                     setTimeout(function(){ input.wheelcooldown = 0 }, 200)
-                } else if( playerweapon.currentlySelected == "ice" ){
-                    playerweapon.make( true, "acid")
+                } else if( input.playerweapon.currentlySelected == "ice" ){
+                    input.playerweapon.make( true, "acid")
                     input.wheelcooldown = 60;
                     setTimeout(function(){ input.wheelcooldown = 0 }, 200)
-                } else if( playerweapon.currentlySelected == "acid" ){
-                    playerweapon.make( true, "fire")
+                } else if( input.playerweapon.currentlySelected == "acid" ){
+                    input.playerweapon.make( true, "fire")
                     input.wheelcooldown = 60;
                     setTimeout(function(){ input.wheelcooldown = 0 }, 200)
                 }
             } else if( delta < -15){
-                if( playerweapon.currentlySelected == "fire" ){
-                    playerweapon.make( true, "acid")
+                if( input.playerweapon.currentlySelected == "fire" ){
+                    input.playerweapon.make( true, "acid")
                     input.wheelcooldown = 60;
                     setTimeout(function(){ input.wheelcooldown = 0 }, 200)
-                } else if( playerweapon.currentlySelected == "ice" ){
-                    playerweapon.make( true, "fire")
+                } else if( input.playerweapon.currentlySelected == "ice" ){
+                    input.playerweapon.make( true, "fire")
                     input.wheelcooldown = 60;
                     setTimeout(function(){ input.wheelcooldown = 0 }, 200)
-                } else if( playerweapon.currentlySelected == "acid" ){
-                    playerweapon.make( true, "ice")
+                } else if( input.playerweapon.currentlySelected == "acid" ){
+                    input.playerweapon.make( true, "ice")
                     input.wheelcooldown = 60;
                     setTimeout(function(){ input.wheelcooldown = 0 }, 200)
                 }
@@ -96,11 +98,11 @@ var Input = Class.$extend({
                 player.start('left');
                 input.pressed.left = true;
             } else if(code == 49){
-                playerweapon.make(true, "fire");
+                input.playerweapon.make(true, "fire");
             } else if(code == 50){
-                playerweapon.make(true, "ice");
+                input.playerweapon.make(true, "ice");
             } else if(code == 51){
-                playerweapon.make(true, "acid");
+                input.playerweapon.make(true, "acid");
             }
         }
     },
@@ -123,11 +125,11 @@ var Input = Class.$extend({
                 player.stop('left');
                 input.pressed.left = false;
             } else if(code == 49){
-                playerweapon.make(false,null);
+                input.playerweapon.make(false,null);
             } else if(code == 50){
-                playerweapon.make(false,null);
+                input.playerweapon.make(false,null);
             } else if(code == 51){
-                playerweapon.make(false,null);
+                input.playerweapon.make(false,null);
             }
             if (input.pressed.left === true) player.start('left');
             if (input.pressed.right === true) player.start('right');
@@ -138,7 +140,7 @@ var Input = Class.$extend({
         if(input.inBound()){
             if(e.target.className != "button"){
                 if(input.allowControl){
-                    if (e.which === 1 && playerweapon.currentlySelected != null && playerweapon.cooldown <= 0) {
+                    if (e.which === 1 && input.playerweapon.currentlySelected != null && input.playerweapon.cooldown <= 0) {
                         input.pressed.leftmouse = true;
                         this.timeHeld = 30;
                         input.mouseMove(e);
@@ -153,7 +155,7 @@ var Input = Class.$extend({
         if(input.inBound()){
             if(e.target.className != "button"){
                 if(input.allowControl){
-                    if (e.which == 1 && playerweapon.currentlySelected != null && playerweapon.cooldown <= 0) {
+                    if (e.which == 1 && input.playerweapon.currentlySelected != null && input.playerweapon.cooldown <= 0) {
                         input.timeHeld = 30;
                         input.pressed.leftmouse = false;
 

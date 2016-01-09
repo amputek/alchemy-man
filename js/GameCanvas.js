@@ -9,7 +9,9 @@ var Canvas = Class.$extend({
 
 	setAlpha:      function(   a   ){ this.context.globalAlpha = a;	                                    },
 	setFill:       function( color ){ this.context.fillStyle = color;	                                  },
+	setFill:       function( co,op ){ this.context.fillStyle = rgba(co.r,co.g,co.b,op || co.a || 1);				},
 	setStroke:     function( color ){ this.context.strokeStyle = color;	                                },
+	setStroke:     function( co,op ){ this.context.strokeStyle = rgba(co.r,co.g,co.b,op || co.a || 1);				},
 	setWidth:      function(   w   ){ this.context.lineWidth = w;	                                      },
 	blendFunction: function( blend ){ this.context.globalCompositeOperation = blend	                    },
 	translate:     function( x , y ){ this.context.translate(x,y)	                                      },
@@ -18,7 +20,7 @@ var Canvas = Class.$extend({
 	restore:       function(       ){ this.context.restore();	                                          },
 	rotate:        function( r     ){ this.context.rotate(r)	                                          },
 	clear: 				 function(       ){ this.canvas.width = this.canvas.width                           	},
-	
+
 	setSize: function(size){
 		this.canvas.width = size.w;
 		this.canvas.height = size.h;
@@ -49,7 +51,7 @@ var Canvas = Class.$extend({
 	},
 
 	circle: function( x, y, r, fill ){
-		if( r > 0){ 
+		if( r > 0){
 			this.context.beginPath();
 	  	this.context.arc(x, y, r, 0, 2 * Math.PI, false);
 	  	if( fill ){ this.context.fill(); } else { this.context.stroke() }
@@ -117,7 +119,7 @@ var GameCanvas = Canvas.$extend({
 	},
 
 	delete: function(){
-		element("game-wrapper").removeChild(this.canvas);	
+		element("game-wrapper").removeChild(this.canvas);
 	},
 
 	update: function(shake){
@@ -130,7 +132,7 @@ var GameCanvas = Canvas.$extend({
 
 
 
-
+//this isn't used anywhere???
 var LightCanvas = GameCanvas.$extend({
 	__init__: function(w,h,lights,floors){
 		this.$super(w,h,1.0);
@@ -188,7 +190,7 @@ var LightCanvas = GameCanvas.$extend({
 
 		var lx = light.x;
 		var ly = light.y;
-		
+
 		ctx.fillStyle = 'rgba(0,0,0,0.96)'
 		// ctx.strokeStyle = 'blue'
 
@@ -196,7 +198,7 @@ var LightCanvas = GameCanvas.$extend({
 			var f = floors[n];
 
 			var fx = f.worldpos.x;
-			var fy = f.worldpos.y;         
+			var fy = f.worldpos.y;
 
 
 			// draw the ledge onto canvas (blockot entire ledge)

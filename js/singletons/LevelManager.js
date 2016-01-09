@@ -1,6 +1,6 @@
 
 // CONTAINS THE RAW JSON DATA FOR EACH LEVEL
-var LevelDatabase = Class.$extend({
+var LevelJSONDatabase = Class.$extend({
 
     //takes a callback function for when levels have finished loading
     __init__: function( callback ){
@@ -72,12 +72,20 @@ var LevelDatabase = Class.$extend({
 
 
     loadSuccess: function( data, ind ){
-        debug.log("Finished loading Level " + ind + ". " + data.name)
+        debug.log("- Finished parsing level " + ind + ": '" + data.name + "'");
         this.data[ind] = data;
         // sortFloors( data.platforms );
         element("level-list").children[ind].innerHTML = '"' + data.name + '"';
         this.successfulLoads++;
         if(this.successfulLoads == this.databaseSize){
+
+            var levellist = element("level-list")
+    		for (var i = 0; i < levellist.children.length; i++) {
+    			(function(i){
+    				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
+    			}(i));
+    		};
+
             this.finishedLoadingCallback();
         }
     },
@@ -86,7 +94,7 @@ var LevelDatabase = Class.$extend({
     parseLevel: function( filename, i ){
         var _this = this;
         var _index = i;
-        debug.log(  "Parsing " + filename + " from JSON into database of pre-loaded levels.");
+        debug.log(  "- Parsing '" + filename + "' from JSON file into JSON database of levels.");
         var filename = 'js/levels/' + filename + '?nocache=(' + (new Date()).getTime()
         $.getJSON(filename, function(data){
         }).success( function(data){
@@ -106,7 +114,9 @@ var LevelDatabase = Class.$extend({
 //CONVERTS JSON DATA INTO GAMEOBJECTS.
 //PREPARES LEVEL FOR ENGINE
 var LevelGenerator = Class.$extend({
-    __init__: function(){
+
+    __init__: function( callback ){
+        this.database = new LevelJSONDatabase( callback );
         this.posterCount = 0;
     },
 
@@ -121,13 +131,11 @@ var LevelGenerator = Class.$extend({
         return new Platform( vectors.pos, vectors.size );
     },
 
-
     loadJumpBox: function( f , canvas ){
         var vectors = this.getVectors(f);
         canvas.drawImage( images.env.jumpbox, vector(vectors.pos.x*SCALE - 22 , vectors.pos.y*SCALE - 20 ));
         return new JumpBox( vectors.pos , vectors.size );
     },
-
 
     loadLedge: function( f , canvas ){
         var vectors = this.getVectors(f)
@@ -223,12 +231,8 @@ var LevelGenerator = Class.$extend({
 
     drawMovingPlatforms: function(movers, floors, canvas){
 
-
         for(var i = 0; i < movers.length; i++){
             var m = movers[i];
-
-
-
             var x = m.physicspos.x;
             var y = m.physicspos.y - m.physicssize.h;
 
@@ -246,8 +250,6 @@ var LevelGenerator = Class.$extend({
             m.setTopPos( vector( m.worldpos.x - m.physicssize.w*SCALE,currenty*SCALE ) );
         }
     },
-
-
 
     loadLadder: function( f, canvas ){
 
@@ -331,7 +333,6 @@ var LevelGenerator = Class.$extend({
         if(f.physicssize.w == 2.5 && f.physicssize.h > 15) return true;
         return false;
     },
-
 
     drawLedges: function(floors,canvas){
 
@@ -571,7 +572,6 @@ var LevelGenerator = Class.$extend({
 
     },
 
-
     addPlatformShadows: function(floors,canvas,zones){
         canvas.setFill( 'rgba(0,0,0,0.6)' );
         for (var i = 0; i < floors.length; i++) {
@@ -639,13 +639,13 @@ var LevelGenerator = Class.$extend({
 
     },
 
-    generateLevelFromJSONData: function( data ){
+    generateLevelFromJSONData: function( index ){
+
+        var data = this.database.getLevel( index );
 
         var level = new Level();
-        // var data = jsondata;
 
-
-        debug.log("Loading Level from pre-parsed Level Data")
+        level.name = data.name;
 
 
         var levelPhysicsSize = sizeVector( data.width * 5, data.height * 5)
@@ -671,8 +671,8 @@ var LevelGenerator = Class.$extend({
         element("game-wrapper").appendChild(light)
         level.canvas[1] = new GameCanvas( canvasSize , 0.5  );    //far background
         level.canvas[2] = new GameCanvas( canvasSize , 0.75 );    //near background
-        var floorcanvas  = level.canvas[3] = new GameCanvas( canvasSize , 1    );    //static middleground
-        level.gamecanvas = level.canvas[4] = new GameCanvas( canvasSize , 1    );    //game middleground
+        var floorcanvas  = level.canvas[3] = new GameCanvas( canvasSize , 1 );    //static middleground
+        level.gamecanvas = level.canvas[4] = new GameCanvas( canvasSize , 1 );    //game middleground
         level.canvas[5] = new GameCanvas( canvasSize , 1.2  );
 
 
@@ -731,11 +731,6 @@ var LevelGenerator = Class.$extend({
         // Start Level
 
         this.initPlayer( startpos, level.floors.getCollection() )
-
-        debug.log("--- Level Load Complete")
-        debug.log("CURRENT LEVEL: " + data.name);
-
-        camera = new Camera( levelPhysicsSize, player.physicspos );
 
         return level;
     },
