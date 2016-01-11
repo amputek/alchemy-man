@@ -1,6 +1,7 @@
-var Splash = Doodad.$extend({
-  __init__: function(pos){
-    this.$super(pos);
+var Splash = new JS.Class(Doodad,{
+
+  initialize: function(pos){
+    this.callSuper(pos);
     this.life = 0;
   },
 
@@ -21,8 +22,8 @@ var Splash = Doodad.$extend({
 });
 
 
-var Weather = Class.$extend({
-  __init__: function(){
+var Weather = new JS.Class({
+  initialize: function(){
     this.lightning = 0;
     this.splashes = new DynamicManager();
     this.angle = 0;
@@ -30,12 +31,13 @@ var Weather = Class.$extend({
     this.splashAmount = 0;
     this.rainAmount = 0;
     this.lightningDom = element("lightning")
+    console.log("weather")
   },
 
   update: function(context,floors){
-    this.light( )
+    this.light( );
     this.splash(context, floors)
-    this.rain(context); 
+    this.rain(context);
   },
 
   setAmount: function(i){
@@ -47,7 +49,7 @@ var Weather = Class.$extend({
 
   rain: function(ctx){
     for(var i = 1; i < 5; i++){
-      ctx.setStroke('rgba(255,255,255,' + (0.06 * i) + ')');
+      ctx.setStroke( {r:255,g:255,b:255} ,0.06 * i);
       ctx.setWidth( i*0.6 );
       for (var n = 0; n < this.rainAmount; n++) {
         var x = random(0,3000);
@@ -77,15 +79,15 @@ var Weather = Class.$extend({
           }
         }
       }
-  
+
       // ctx.setWidth( 2.0 );
       // this.splashes.update( ctx );
-    
+
     }
   },
 
   light: function(){
-    
+
     if(this.severity > 0.8){
       if(this.lightning == 0){
         if(coin(0.01)){

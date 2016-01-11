@@ -1,12 +1,12 @@
-var Doodad = Class.$extend({
-	__init__: function(pos){
+var Doodad = new JS.Class({
+	initialize: function(pos){
 		this.worldpos = toWorld( pos );
 	}
 });
 
-var ScorchedGround = Doodad.$extend({
-	__init__: function(pos){
-		this.$super(pos);
+var ScorchedGround = new JS.Class( Doodad, {
+	initialse: function(pos){
+		this.callSuper(pos);
 		this.animation = new Animation( images.fx.scorched, 4, false, 62);
 		this.canvas = createCanvas();
 		this.context = this.canvas.getContext('2d');

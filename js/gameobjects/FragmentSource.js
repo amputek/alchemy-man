@@ -1,6 +1,6 @@
-var FragmentSource = Doodad.$extend({
-  __init__: function(pos,vel,type,frq){
-    this.$super(pos.x,pos.y,1);
+var FragmentSource = new JS.Class(Doodad,{
+  initialise: function(pos,vel,type,frq){
+    this.callSuper(pos.x,pos.y,1);
     this.physicspos = pos;
     this.vel = vel;
     this.type = type;

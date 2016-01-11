@@ -1,14 +1,21 @@
-var Camera = Class.$extend({
+// var Singleton = JS.require('jsclass/src/core').Singleton;
+
+// console.log(JS.Singleton());
+
+var camera = new JS.Singleton(JS.Class,{
 
 	//camera gets initalised with a level size and a starting position
-	__init__: function( size, target ){
-		this.size = size;
+	initialize: function(){
+		// this.size = size;
+		this.size = vector(100,100);
 		this.speed = 0.07;
-		this.rightLimit = this.size.w - 73;
+		// this.rightLimit = this.size.w - 73;
+		this.rightLimit = 0;
 		this.leftLimit = 64;
 		this.topLimit = 32;
-		this.bottomLimit = this.size.h - 38;
-		this.setPos( target );
+		// this.bottomLimit = this.size.h - 38;
+		this.bottomLimit = 64;
+		// this.setPos( target );
 	},
 
 	reset: function( size, target ){
