@@ -445,10 +445,6 @@ var LevelGenerator = Class.$extend({
 
 
 
-
-
-
-
         for(var x = 0; x < 250; x++){
             for(var y = 0; y < 250; y ++){
                 if(brickArray[x][y] == 1){
@@ -497,7 +493,7 @@ var LevelGenerator = Class.$extend({
 
 
 
-
+        // draw posters
         for(var x = 0; x < 250; x+=1){
             for(var y = 0; y < 250; y+=1){
                 if(brickArray[x][y] == 1){
@@ -508,6 +504,7 @@ var LevelGenerator = Class.$extend({
             }
         }
 
+        // draw exposed pipe area
         for(var x = randomInt(-4,0); x < 250; x+=randomInt(4,6)){
             for(var y = randomInt(-4,0); y < 250; y+=randomInt(2,4)){
                 if(brickArray[x][y] == 1){
@@ -608,12 +605,16 @@ var LevelGenerator = Class.$extend({
 
     },
 
+
+    //TODO: this in unnecessarily long-winded. do the "highest" check on-the-fly
     findClosestPlatform: function( pos, floors ){
 
         var closefloors = [];
+
+        //get all platforms that are directly below the position
         for(var i = 0; i < floors.length; i++){
             var f = floors[i];
-            if(f.physicspos.y >=  pos.y ){
+            if(f.physicspos.y >= pos.y ){
                 if( pos.x > f.physicspos.x - f.physicssize.w){
                     if( pos.x < f.physicspos.x + f.physicssize.w){
                         closefloors.push(f);
@@ -639,9 +640,8 @@ var LevelGenerator = Class.$extend({
 
     generateLevelFromJSONData: function( index, level ){
 
+        //get json data from database
         var data = this.database.getLevel( index );
-
-        // var level = new Level();
 
         level.name = data.name;
 
@@ -658,21 +658,8 @@ var LevelGenerator = Class.$extend({
 
         var ambientLight = level.ambientLight = data.ambientLight;
         var darkness = ambientLight.darkness;
-        var canvasSize = sizeVector( levelSize.w - 1080, levelSize.h - 550 )
 
-        level.canvas[0] = new GameCanvas( canvasSize , 0.2  );
-
-
-        element("game-wrapper").removeChild( element("lightning"))
-        var light = document.createElement("div");
-        light.id = "lightning"
-        element("game-wrapper").appendChild(light)
-        level.canvas[1] = new GameCanvas( canvasSize , 0.5  );    //far background
-        level.canvas[2] = new GameCanvas( canvasSize , 0.75 );    //near background
-        var floorcanvas  = level.canvas[3] = new GameCanvas( canvasSize , 1 );    //static middleground
-        level.gamecanvas = level.canvas[4] = new GameCanvas( canvasSize , 1 );    //game middleground
-        level.canvas[5] = new GameCanvas( canvasSize , 1.2  );
-
+        var floorcanvas  = level.canvas[3];
 
         // draw doors
         if(data.start.type == "door") level.canvas[3].drawImage( images.doodad.door,      vector(startpos.x * SCALE - 90, startpos.y * SCALE - 160 ) );
@@ -682,6 +669,7 @@ var LevelGenerator = Class.$extend({
         for( var i = 0; i < data.supports.length; i++) { this.loadSupport( data.supports[i], level.canvas[3]                     ) }
         for( var i = 0; i < data.doodads.length;  i++) { this.loadDoodad(  data.doodads[i] , level.canvas[data.doodads[i].depth] ) }
 
+        //TODO: only need to do this if new setting is different
         // set up backdrop
         if(data.setting == "exterior") level.canvas[0].canvas.style.backgroundImage = "url('images/sunset.jpg')";
         if(data.setting == "interior") level.canvas[0].canvas.style.backgroundImage = "url('images/factory.jpg')";
@@ -690,6 +678,14 @@ var LevelGenerator = Class.$extend({
         floorcanvas.tint( ambientLight  , 0.4+darkness );
 
 
+        var _this = this;
+
+        function Add( dataCol, levelCol, func ){
+            for( var i = 0; i < dataCol.length; i++){
+                levelCol.add( func( dataCol[i], floorcanvas ) );
+            }
+        }
+
 
 
         // draw floors
@@ -697,17 +693,11 @@ var LevelGenerator = Class.$extend({
         for( var i = 0; i < data.conveyers.length;          i++) {  level.floors.add(              this.loadConveyer(          data.conveyers[i ]         , floorcanvas ) ) }
         for( var i = 0; i < data.ladders.length;            i++) {  level.floors.add(              this.loadLadder(            data.ladders[i]            , floorcanvas ) ) }
         for( var i = 0; i < data.platforms.length;          i++) {  level.floors.add(              this.loadPlatform(          data.platforms[i]          , floorcanvas ) ) }
-
-
-
-
-
         // NOW ADD ALL OTHER GAME OBJECTS - THESE ARE NOT DRAWN NOW BUT NEED TO BE ADDED TO MANAGERS
         for( var i = 0; i < data.triggeredplatforms.length; i++) {  level.triggeredplatforms.add(  this.loadMovingPlatform(    data.triggeredplatforms[i] ) ) }
         for( var i = 0; i < data.enemies.length;            i++) {  level.enemies.add(             this.loadEnemy(             data.enemies[i]            ) ) }
         for( var i = 0; i < data.fragmentsources.length;    i++) {  level.fragmentSources.add(     this.loadFragmentSource(    data.fragmentsources[i]    ) ) }
         for( var i = 0; i < data.enemysources.length;       i++) {  level.enemySources.add(        this.loadEnemySource(       data.enemysources[i]       ) ) }
-
 
         this.drawMovingPlatforms( level.triggeredplatforms.getCollection(), level.floors.getCollection(), floorcanvas )
 
@@ -724,22 +714,12 @@ var LevelGenerator = Class.$extend({
         level.canvas[3].tint( ambientLight  , 0.3+darkness );
         level.canvas[5].tint( ambientLight  , 0.5+darkness );
 
+        // this.initPlayer( startpos, level.floors.getCollection() );
+
+        level.setStart(startpos, this.findClosestPlatform( startpos, level.floors.getCollection() ) );
+        //
 
 
-        // Start Level
-
-        this.initPlayer( startpos, level.floors.getCollection() )
-
-        // return level;
     },
 
-    // a bit hacky, this?? should i move this out of levelmanager
-    initPlayer: function( startpos, floors ){
-        player.body.SetPosition(new b2Vec2(startpos.x,startpos.y+5) );
-        player.currentPlatform = this.findClosestPlatform( startpos, floors )
-        if(player.currentAction == "idle") player.animation.current = player.animation.idle;
-        if(player.currentAction == "run") player.animation.current = player.animation.run;
-        player.animation.current.reset();
-
-    }
 });

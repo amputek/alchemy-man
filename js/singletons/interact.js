@@ -32,6 +32,7 @@ var potionColor = {
 }
 
 window.onload = function(){
+
 	game = new GameManager();
 	setup = new SetupGame( game.startGame );
 }
@@ -57,7 +58,9 @@ function SetupGame( finishedLoadingCallback ){
 		factory = new Factory(game.world); // create factory
 		game.world.SetContactListener( CreateListener() ); // set up listener for world
 		playerweapon = new PotionManager();
-		game.camera = new Camera( vector(0,0), vector(0,0) );  //create camera
+		// game.camera = new Camera( vector(0,0), vector(0,0) );  //create camera
+		// game.camera = CreateCamera( vector(0,0), vector(0,0) );  //create camera
+		game.camera = camera;
 		game.trajectory = new Trajectory( game.world.GetGravity() );
 		setup.loadLevelManager();
 	}
@@ -98,7 +101,7 @@ function SetupGame( finishedLoadingCallback ){
 var GameManager = Class.$extend({
 
 	__init__: function(){
-		this.currentLevelIndex = 1;
+		this.currentLevelIndex = 0;
 		this.levelGenerator = null;
 		this.camera = null; //in gameplay manager ?
 		this.trajectory = null; //in gameplay manager?
@@ -161,6 +164,7 @@ var GameManager = Class.$extend({
 
 		// get json data from database, pass json data to level loader. set level as current level
 		this.levelGenerator.generateLevelFromJSONData( index, currentLevel );
+		currentLevel.initPlayer();
 
 		//probably dont need to make new camera each time?
 		this.camera.reset( currentLevel.physicsSize, player.physicspos );

@@ -11,11 +11,7 @@ var GameplayManager = Class.$extend({
 	//this now gets called ONCE when the game starts
 	__init__: function(){
 
-		// ENTITIES
-
-		// Do I really need to instansiate these each time???
-		// can they not remain consistent outside of levels?
-		// They could... but why? They need to be cleared every time.
+		// ENTITIES - get repopulated at the start of every level
 	    this.floors             = new GameObjectManager();
 	    this.movingplatforms    = new GameObjectManager();
 	    this.triggeredplatforms = new GameObjectCollectionManager();
@@ -33,14 +29,34 @@ var GameplayManager = Class.$extend({
 		this.weather 			= new Weather();
 		this.nolandzones        = [];
 
+		this.startpos = null;
 		this.endpos = null;
+
+		this.startPlatform = null;
+
 		this.shakeAmount = 0;
+
+
+
+		//TODO make canvas exist here. SHould be created ONCE at start of game, and just cleared/resized at the start of every level
 		this.canvas  = [];
 
+		var levelSize = { w: 2040, h: 800 };
+		var canvasSize = sizeVector( levelSize.w - 1080, levelSize.h - 550 )
+		this.canvas[0] = new GameCanvas( canvasSize , 0.2  );
+        element("game-wrapper").removeChild( element("lightning"))
+        var light = document.createElement("div");
+        light.id = "lightning"
+        element("game-wrapper").appendChild(light)
+        this.canvas[1] = new GameCanvas( canvasSize , 0.5  );    //far background
+        this.canvas[2] = new GameCanvas( canvasSize , 0.75 );    //near background
+        var floorcanvas  = this.canvas[3] = new GameCanvas( canvasSize , 1 );    //static middleground
+        this.gamecanvas = this.canvas[4] = new GameCanvas( canvasSize , 1 );    //game middleground
+        this.canvas[5] = new GameCanvas( canvasSize , 1.2  );
 
 
 
-		this.gamecontext = null;
+		// this.gamecanvas = null;
 		this.painCounter = 0.0;
 		this.bottomLimit = 0;
 
@@ -52,6 +68,13 @@ var GameplayManager = Class.$extend({
 	},
 
 
+	initPlayer: function(){
+        player.body.SetPosition( new b2Vec2(this.startpos.x,this.startpos.y+5) );
+        player.currentPlatform = this.startPlatform;
+        if(player.currentAction == "idle") player.animation.current = player.animation.idle;
+        if(player.currentAction == "run") player.animation.current = player.animation.run;
+        player.animation.current.reset();
+    },
 
 	// PRIVATE
 	effectEntity : function(entity, type){
@@ -62,7 +85,7 @@ var GameplayManager = Class.$extend({
 
 	updatePlayer : function( canvas ){
 		player.update();
-  		if(player.worldpos.y > this.bottomLimit )	player.getHit(6)
+  		if(player.worldpos.y > this.bottomLimit ) player.getHit(6)
 		player.draw( canvas );
 	},
 
@@ -143,9 +166,15 @@ var GameplayManager = Class.$extend({
 
     //called  levelmanager
 
+	setStart : function( pos, floor ){
+		this.startpos = new b2Vec2(pos.x,pos.y);
+		this.startPlatform = floor;
+	},
+
 	setEnd : function( pos ){
 		this.endpos = new b2Vec2(pos.x,pos.y);
 	},
+
 
 	setSize: function( size ){
 		this.physicsSize = size;
@@ -187,7 +216,7 @@ var GameplayManager = Class.$extend({
 		this.explosions.emptyCollection();
 
 		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
-		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
+		// for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
 	},
 
 	update: function(world){
