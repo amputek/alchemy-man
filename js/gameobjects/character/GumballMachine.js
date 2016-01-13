@@ -2,7 +2,7 @@
 var Gumball = Character.$extend({
 	__init__ : function(pos,target){
 		this.$super(pos,{w:4,h:5.5});
-		this.target = toWorld(target);
+		this.target = Vector2.toWorld(target);
 
 		this.moveSpeed = 0;
 		this.jumpHeight = 0;
@@ -26,14 +26,14 @@ var Gumball = Character.$extend({
 		this.draw_prop  = new Canvas( this.drawsize );
 		this.draw_canvas = new Canvas( this.drawsize );
 		this.draw_fire = new Canvas( this.drawsize );
-		this.draw_cannon = new Canvas( sizeVector(25,70) )
+		this.draw_cannon = new Canvas( sizeVector(25,70) );
 
 		this.health = 5;
 		this.state = "hovering";
 		this.canClimb = false;
-		this.lightLevel = 0.0
+		this.lightLevel = 0.0;
 		this.body.SetAngularDamping(0.5);
-		this.body.SetLinearDamping(0.3)
+		this.body.SetLinearDamping(0.3);
 		this.body.SetFixedRotation(false);
 		this.body.GetFixtureList().SetFriction(3.4);
 		this.body.GetFixtureList().SetDensity(0.21);
@@ -59,7 +59,7 @@ var Gumball = Character.$extend({
 		if(this.inRange == true){
 			if(this.shootCounter % 60 == 50) this.cannonanimation.reset();
 			if(this.shootCounter % 60 == 0) this.shoot();
-		}    
+		}
 	},
 
 	hover: function(bodyAngle){
@@ -69,34 +69,34 @@ var Gumball = Character.$extend({
 
 		if( bodyAngle > 1  ) bodyAngle = 1;
 		if( bodyAngle < -1 ) bodyAngle = -1;
-		
+
 		this.applyImpulse( ( this.target.x - this.worldpos.x ) * 0.01, cosBodyAngle * -14.4 , this.physicspos.x + bodyAngle , this.physicspos.y + 1 );
-		
+
 		// this.applyImpulse( 0, ( this.target.y - this.worldpos.y ) * 0.01 , this.physicspos.x + bodyAngle , this.physicspos.y + 1 );
 
 		if(this.upping == true){
 
 			if(this.frozenCounter == 0) this.applyImpulse( sinBodyAngle * 2.5, cosBodyAngle * (-4.1*this.upCounter) ,  this.physicspos.x+random(-1,1) , this.physicspos.y+3 );
-			
+
 			this.upCounter++;
 			if(this.upCounter == 3){
 			  this.upCounter = 0;
 			  this.upping = false;
 			}
 		}
-		
+
 		if(this.worldpos.y > (this.target.y-5) && this.upping == false){
 			this.upping = true;
 			this.propanimation.current = this.propanimation.waft;
 		}
-		
+
 		if(this.frozenCounter == 0) this.updateCannon();
-	
+
 		this.inRange = vDistance(this.physicspos, player.physicspos) < 50
-		
+
 		var x = this.physicspos.x + sinBodyAngle * 6.5;
 		var y = this.physicspos.y + cosBodyAngle * 6.5;
-		
+
 		this.cannonpos = vector(x,y);
 		this.aimAngle = angle(x,y,player.physicspos.x,player.physicspos.y)
 
@@ -130,7 +130,7 @@ var Gumball = Character.$extend({
 		var startPos = vector( this.cannonpos.x + cosAng * 6, this.cannonpos.y + sinAng * 6 )
 		var cannon = new Gum( startPos , vector( cosAng * vel , sinAng * vel - 1.0 ) );
 		currentLevel.projectiles.add( cannon );
-	},  
+	},
 
 	getAnimationFrames: function(){
 		this.bodyanimation.getFrame(         this.draw_canvas );
@@ -162,10 +162,3 @@ var Gumball = Character.$extend({
 	}
 
 });
-
-
-
-
-
-
-

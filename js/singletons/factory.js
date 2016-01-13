@@ -1,21 +1,10 @@
-var b2Vec2 = Box2D.Common.b2Vec2;
-var b2BodyDef = Box2D.Dynamics.b2BodyDef;
-var b2Body = Box2D.Dynamics.b2Body;
-var b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
-var b2Fixture = Box2D.Dynamics.b2Fixture;
-var b2MassData = Box2D.Collision.Shapes.b2MassData;
-var b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
-var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
+var factory = new JS.Singleton(JS.Class,{
+	initialize: function(){
 
-var Factory = Class.$extend({
-	__init__: function(world){
-		this.world = world;
 		this.cPlayer = 0x0004;
 		this.cBullet = 0x0002;
 		this.cGround = 0x0001;
 		this.mPlayer = this.cBullet | this.cGround;
-
-		this.bodyDef = new b2BodyDef();
 
 		this.bulletFixture = this.createCircleFixture(1.0);
 		this.bulletFixture.friction = 0.0;
@@ -35,8 +24,7 @@ var Factory = Class.$extend({
 
 		this.hugeFragmentFixture = this.createCircleFixture(1.6);
 		this.hugeFragmentFixture.friction = 0.1;
-		this.hugeFragmentFixture.density = 1.0
-
+		this.hugeFragmentFixture.density = 1.0;
 
 		this.smokeFragmentFixture = this.createCircleFixture(4);
 		this.smokeFragmentFixture.filter.categoryBits = this.cPlayer;
@@ -51,39 +39,38 @@ var Factory = Class.$extend({
 		this.ingredientFixture = this.createRectFixture(1,1);
 	},
 
+	init: function(world){
+		this.world = world;
+	},
+
+	createBodyDef : function( pos, type ){
+		var bodyDef = new Box2D.Dynamics.b2BodyDef();
+		if(type == "static"   ) bodyDef.type = Box2D.Dynamics.b2Body.b2_staticBody;
+		if(type == "kinematic") bodyDef.type = Box2D.Dynamics.b2Body.b2_kinematicBody;
+		if(type == "dynamic"  ) bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+		bodyDef.position = pos;
+		return bodyDef;
+	},
+
 	// BODY DEFS
-	createStaticBodyDef : function( pos ) {
-		var bodyDef = new b2BodyDef();
-		bodyDef.type = b2Body.b2_staticBody;
-		bodyDef.position = pos;
-		return bodyDef;
-	},
+	createStaticBodyDef : function( pos ) { return this.createBodyDef( pos, "static" ); },
+	createKinematicBodyDef : function( pos ) { return this.createBodyDef( pos, "kinematic" ); },
+	createDynamicBodyDef : function( pos ) { return this.createBodyDef( pos, "dynamic" ); },
 
-	createKinematicBodyDef : function( pos ) {
-		var bodyDef = new b2BodyDef();
-		bodyDef.type = b2Body.b2_kinematicBody;
-		bodyDef.position = pos;
-		return bodyDef;
-	},
-
-	createDynamicBodyDef : function( pos ) {
-		var bodyDef = new b2BodyDef();
-		bodyDef.type = b2Body.b2_dynamicBody;
-		bodyDef.position = pos;
-		return bodyDef;
-	},
 
 	// FIXTURES
 
 	createRectFixture: function(w,h) {
-		var fixDef = new b2FixtureDef();
+		var b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
+		var fixDef = new Box2D.Dynamics.b2FixtureDef();
 		fixDef.shape = new b2PolygonShape();
 		fixDef.shape.SetAsBox( w, h );
 		return fixDef;
 	},
 
 	createCircleFixture: function(r) {
-		var fixDef = new b2FixtureDef();
+		var b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
+		var fixDef = new Box2D.Dynamics.b2FixtureDef();
 		fixDef.shape = new b2CircleShape(r);
 		return fixDef;
 	},
@@ -123,7 +110,7 @@ var Factory = Class.$extend({
 		if(size == "big"){
 			body.CreateFixture( this.potionFragmentFixture );
 		} else if(size == "huge"){
-			body.CreateFixture( this.hugeFragmentFixture )
+			body.CreateFixture( this.hugeFragmentFixture );
 		} else {
 			body.CreateFixture( this.potionSmallFragmentFixture );
 		}

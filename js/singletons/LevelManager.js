@@ -207,7 +207,7 @@ var LevelGenerator = Class.$extend({
         if(d.type == "bg_platform_2")      img = images.doodad.bg_platform[2];
         if(d.type == "door")               img = images.doodad.door;
         if(d.type == "lamp")               img = (d.depth == 3 ? images.doodad.lamp : images.doodad.lamp_blur);
-        canvas.drawImage( img, toWorld( toPhysics(d) ) );
+        canvas.drawImage( img, Vector2.toWorld( toPhysics(d) ) );
     },
 
     loadConveyer: function(f){
@@ -252,7 +252,7 @@ var LevelGenerator = Class.$extend({
     loadLadder: function( f, canvas ){
 
         var pos = vector( (f.x * 5) + 2.5, (f.y * 5) + (f.h * 2.5) );
-        var worldpos = toWorld(pos);
+        var worldpos = Vector2.toWorld(pos);
 
         var drawsize = sizeVector(20, f.h * SCALE * 2.5 );
         canvas.save();
@@ -304,7 +304,7 @@ var LevelGenerator = Class.$extend({
         draw_temp.drawImage( images.doodad.lampfitting_l, vector(80 - 78, 0 ) );
         draw_temp.drawImage( images.doodad.lampfitting_r, vector(80 + 38, 0 ) );
 
-        canvas.drawImage( draw_temp.getImage() , toWorld( vector(d.x*5 - 10, d.y*5) ) );
+        canvas.drawImage( draw_temp.getImage() , Vector2.toWorld( vector(d.x*5 - 10, d.y*5) ) );
 
     },
 
@@ -577,7 +577,7 @@ var LevelGenerator = Class.$extend({
                     if(f.physicspos.y+f.physicssize.h > f2.physicspos.y - f2.physicssize.h && f.physicspos.y-f.physicssize.h <= f2.physicspos.y + f2.physicssize.h){
                         for(var x = f.physicspos.x - f.physicssize.w; x < f.physicspos.x + f.physicssize.w; x+=5){
                             if(x >= f2.physicspos.x - f2.physicssize.w && x < f2.physicspos.x + f2.physicssize.w){
-                                var loc = toGrid(x,f2.physicspos.y + f2.physicssize.h,5);
+                                var loc = Vector2.toGrid( new Vector2(x,f2.physicspos.y + f2.physicssize.h));
 
                                 zones.push( loc );
 
@@ -646,10 +646,10 @@ var LevelGenerator = Class.$extend({
         level.name = data.name;
 
 
-        var levelPhysicsSize = sizeVector( data.width * 5, data.height * 5)
-        var levelSize = sizeVector( data.width * 5 * SCALE, data.height * 5 * SCALE )
-        var startpos  = toPhysics( data.start )
-        var endpos    = toPhysics( data.end )
+        var levelPhysicsSize = sizeVector( data.width * 5, data.height * 5);
+        var levelSize = sizeVector( data.width * 5 * SCALE, data.height * 5 * SCALE );
+        var startpos  = Vector2.toPhysics( data.start );
+        var endpos    = Vector2.toPhysics( data.end );
 
         level.weather.setAmount(data.weather)
         level.setEnd( endpos );

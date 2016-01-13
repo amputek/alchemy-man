@@ -1,9 +1,7 @@
-
-
-var ImageManager = Class.$extend({
+var images = new JS.Singleton(JS.Class,{
 
 	//this should take a callback?
-	__init__: function( callback ){
+	init: function( callback ){
 
 		this.finishedLoadingCallback = callback;
 

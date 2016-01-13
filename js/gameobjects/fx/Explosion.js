@@ -2,7 +2,7 @@ var Explosion = Class.$extend({
 	__init__ :function (pos,vel,type,dir,fragmentNumber) {
 
 		this.physicspos = pos;
-		this.worldpos = toWorld(this.physicspos)
+		this.worldpos = Vector2.toWorld(this.physicspos)
 		this.type = type;
 		this.dir = dir;
 		this.vel = vel;
@@ -10,7 +10,7 @@ var Explosion = Class.$extend({
 		this.life = 1;
 
 		this.draw_canvas = new Canvas( sizeVector(151, 200) )
- 
+
 		this.totalLife = 100;
 
 		this.animation = null;
@@ -59,6 +59,6 @@ var Explosion = Class.$extend({
 			canvas.drawImage( this.animation.getFrame( this.draw_canvas ) );
 			canvas.restore();
 		}
-	} 
+	}
 
 });

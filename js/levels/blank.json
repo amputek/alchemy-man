@@ -19,8 +19,12 @@
     "width": 28,
     "height": 18,
     "setting": "exterior",
-    "weather": 0,
-    "enemies": [],
+    "weather": 0.5,
+    "enemies": [{
+        "x": 10,
+        "y": 3,
+        "type": "gumball"
+    }],
     "platforms": [{
         "x": -1,
         "y": 11,

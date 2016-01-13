@@ -1,15 +1,11 @@
-
-
-
-var Input = Class.$extend({
-    __init__: function( playerweapon ){
+var input = new JS.Singleton(JS.Class,{
+    init: function( playerweapon ){
 
         this.allowControl = true;
 
         this.pressed = [];
         this.pressed.right = false;
         this.pressed.left = false;
-        // this.pressed.s = false;
         this.pressed.leftmouse = false;
         this.reticule = element('reticule');
         this.mousepos = this.startpos = this.offsetpos = {x:0,y:0};

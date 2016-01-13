@@ -200,14 +200,14 @@ var GameplayManager = Class.$extend({
 
 	clearLevel: function(world){
 		var graveyard = [];
-		this.floors.getBodies(             graveyard )
-		this.movingplatforms.getBodies(    graveyard )
-		this.triggeredplatforms.getBodies( graveyard )
-		this.fragments.getBodies(          graveyard )
-		this.projectiles.getBodies(        graveyard )
-		this.ice.getBodies(                graveyard )
-		this.enemies.getBodies(            graveyard )
-		this.enemySources.getBodies(       graveyard )
+		this.floors.getBodies(             graveyard );
+		this.movingplatforms.getBodies(    graveyard );
+		this.triggeredplatforms.getBodies( graveyard );
+		this.fragments.getBodies(          graveyard );
+		this.projectiles.getBodies(        graveyard );
+		this.ice.getBodies(                graveyard );
+		this.enemies.getBodies(            graveyard );
+		this.enemySources.getBodies(       graveyard );
 
 		//need to get rid of FX too 9/1/16
 		this.fire.emptyCollection();
@@ -216,7 +216,7 @@ var GameplayManager = Class.$extend({
 		this.explosions.emptyCollection();
 
 		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
-		// for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].delete(); 		}
+		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].clear(); 		}
 	},
 
 	update: function(world){

@@ -18,7 +18,7 @@ var MobilePlatform = Floor.$extend({
   update: function(){
     this.currentpos = this.physicspos = this.body.GetPosition();
     this.vel = this.body.GetLinearVelocity();
-    this.worldpos = toWorld(this.physicspos);
+    this.worldpos = Vector2.toWorld(this.physicspos);
   }
 });
 
@@ -67,13 +67,13 @@ var MovingPlatform = MobilePlatform.$extend({
 
   startJourney: function(){
     this.enabled = true;
-    this.body.SetAwake(true)    
+    this.body.SetAwake(true)
     this.setVelocity( (this.endpos.x-this.startpos.x) * this.time, (this.endpos.y-this.startpos.y) * this.time);
   },
 
   stopJourney: function(){
     this.enabled = false;
-    this.body.SetAwake(true)    
+    this.body.SetAwake(true)
     this.setVelocity( 0,0);
   },
 
@@ -115,8 +115,8 @@ var MovingPlatform = MobilePlatform.$extend({
 
 
     for(var y = top-40; y > -100; y-=40){
-      this.draw_canvas.drawImage( images.env.triggered.chain, vector(lx-20, y));      
-      this.draw_canvas.drawImage( images.env.triggered.chain, vector(rx-20, y));      
+      this.draw_canvas.drawImage( images.env.triggered.chain, vector(lx-20, y));
+      this.draw_canvas.drawImage( images.env.triggered.chain, vector(rx-20, y));
     }
 
     this.draw_canvas.drawImage( images.env.triggered.chain_bottom, vector(lx-20, top-60));
@@ -135,7 +135,7 @@ var MovingPlatform = MobilePlatform.$extend({
 
 
 
-    
+
   }
 
 

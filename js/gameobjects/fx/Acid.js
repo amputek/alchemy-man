@@ -1,8 +1,8 @@
-var Effect = Class.$extend({
-    __init__ : function(pos,endPiece,dir){
+var Effect = new JS.Class({
+    initialize: function(pos,endPiece,dir){
         this.gridpos = pos;
-        this.physicspos = toPhysics(pos);
-        this.worldpos = toWorld(this.physicspos);
+        this.physicspos = Vector2.toPhysics(pos);
+        this.worldpos = Vector2.toWorld(this.physicspos);
         this.life = 15;
 
         this.draw_canvas = new Canvas();
@@ -36,9 +36,9 @@ var Effect = Class.$extend({
 });
 
 
-var Acid = Effect.$extend({
-    __init__ : function(pos,endPiece,dir){
-        this.$super(pos,endPiece,dir);
+var Acid = new JS.Class(Effect,{
+    initialize : function(pos,endPiece,dir){
+        this.callSuper(pos,endPiece,dir);
         this.draw_canvas.setSize( sizeVector(100,60) )
 
         this.animationEndPoint = 52;
@@ -66,9 +66,9 @@ var Acid = Effect.$extend({
 });
 
 
-var Fire = Effect.$extend({
-    __init__ : function(pos,endPiece,perm,dir){
-        this.$super(pos,endPiece,dir);
+var Fire = new JS.Class(Effect,{
+    initialize : function(pos,endPiece,perm,dir){
+        this.callSuper(pos,endPiece,dir);
         this.draw_canvas.setSize( sizeVector(60,100) )
         this.animationEndPoint = 27;
         this.animationLoopPoint = 10;

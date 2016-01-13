@@ -1,6 +1,6 @@
 var Doodad = new JS.Class({
 	initialize: function(pos){
-		this.worldpos = toWorld( pos );
+		this.worldpos = Vector2.toWorld( pos );
 	}
 });
 

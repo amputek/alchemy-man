@@ -8,6 +8,7 @@ var Enemy = ClimbingCharacter.$extend({
     this.currentAction = "idle"
   },
 
+  //this could be a class method?
   lineOfSight: function(source, dest){
     var input = new b2RayCastInput( source.physicspos, dest.physicspos, 1 );
     var floors = currentLevel.getFloors();
@@ -47,7 +48,7 @@ var Enemy = ClimbingCharacter.$extend({
 
         this.stop("right")
         this.start("left");
-      } 
+      }
     }
   },
 
@@ -88,10 +89,10 @@ var Enemy = ClimbingCharacter.$extend({
     return false;
   },
 
- 
+
 
   stop: function(action){
-    if(action == "left" || action == "right"){  
+    if(action == "left" || action == "right"){
       this.animation.current = this.animation.idle;
       this.animation.current.reset();
     }
@@ -126,7 +127,7 @@ var Chomper = Enemy.$extend({
   },
 
   patrol: function(){
-    
+
 
     if(this.lineOfSight( this, player) == true){
       if(player.worldpos.x > this.worldpos.x){
@@ -149,9 +150,9 @@ var Chomper = Enemy.$extend({
         if(this.spotCounter > 0) this.spotCounter--;
         if(this.currentAction == "idle"){
             if(this.spotCounter <= 0){
-      
+
                 if( coin(0.5) ) {
-                    this.start("left");     
+                    this.start("left");
                 } else {
                     this.start("right")
                 }

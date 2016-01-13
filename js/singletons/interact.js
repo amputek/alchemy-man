@@ -8,11 +8,7 @@ var SCALE = 8;
 //toooooo many singletons
 // SINGLETONS - can be accessed globally
 var game; //Game Manager --- now only accessed by setup and game
-var images; // accessed by game objects and level manager
-var debug; // accessed by everything
 var player; // accessed everywhere apparently
-var input; //accessed by: Player (needs shoot angle?), Trajectory, Potion Manager (tells reticule what colour to be),
-var factory; //called from many game objects. could make this a class variable for game object?
 var playerweapon; //gamecanvas, player, trajectory, game, input
 var currentLevel; //game, gameobjects, level, input. could probably be replaced by "game" eventually.
 
@@ -32,7 +28,6 @@ var potionColor = {
 }
 
 window.onload = function(){
-
 	game = new GameManager();
 	setup = new SetupGame( game.startGame );
 }
@@ -43,11 +38,10 @@ function SetupGame( finishedLoadingCallback ){
 	this.finishedLoadingCallback = finishedLoadingCallback;
 
 	this.startLoading = function(){
-		debug   = new Debug(); // create debugger
 		debug.log("NEW GAME");
 		debug.logline();
 		debug.log("Loading Images")
-		images  = new ImageManager( this.loadWorld ); // create image manager, with a callback to load world when finished
+		images.init( this.loadWorld ); // create image manager, with a callback to load world when finished
 	}
 
 	this.loadWorld = function(){
@@ -55,11 +49,9 @@ function SetupGame( finishedLoadingCallback ){
 		debug.logline();
 		debug.log("Loading World");
 		game.world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true ); // create world
-		factory = new Factory(game.world); // create factory
+		factory.init(game.world); // create factory
 		game.world.SetContactListener( CreateListener() ); // set up listener for world
 		playerweapon = new PotionManager();
-		// game.camera = new Camera( vector(0,0), vector(0,0) );  //create camera
-		// game.camera = CreateCamera( vector(0,0), vector(0,0) );  //create camera
 		game.camera = camera;
 		game.trajectory = new Trajectory( game.world.GetGravity() );
 		setup.loadLevelManager();
@@ -79,7 +71,7 @@ function SetupGame( finishedLoadingCallback ){
 		debug.log("Finished loading levels");
 		debug.logline();
 		debug.log("Loading Inputs");
-		input = new Input(playerweapon);
+		input.init(playerweapon);
 		input.addDomEvents();
     	playerweapon.equip("fire")
 		debug.log("Finished loading inputs");
