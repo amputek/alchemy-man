@@ -90,7 +90,7 @@ var ExplosionManager = new JS.Class(Manager,{
 
 	add: function(pos,vel,type,ground,number){
 		if(ground != null){
-			var n = getDir(pos,ground);
+			var n = ground.getNearestEdge(pos);
 			this.preparedcollection.push( {pos: vector(round(pos.x/5)*5,round(pos.y/5)*5) , vel:vel , type:type , ground:ground , nearest:n.nearest , number:number } )
 		} else {
 			this.preparedcollection.push( {pos: pos, vel: vel, type:type,ground:null , nearest:null , number:number} )
@@ -135,7 +135,7 @@ var ExplosionManager = new JS.Class(Manager,{
 				var n = p.number;
 				if(n == null) n = 5;
 				this.collection.push(new Explosion(p.pos,p.vel,p.type,p.nearest,n));
-				if( notMovingOrIce(p.ground) && p.nearest != "bottom"){
+				if( p.ground.notMovingOrIce() && p.nearest != "bottom"){
 					if(p.type == "acid") currentLevel.acid.add(p.pos,p.ground);
 					if(p.type == "fire") currentLevel.fire.add(p.pos,p.ground);
 				}
@@ -159,14 +159,14 @@ var TooltipManager = new JS.Class(Manager,{
 
 var EffectManager = new JS.Class(Manager,{
 	add: function(pos,platform,type){
-		var a = getDir(pos,platform)
+		var a = platform.getNearestEdge(pos);
 		var n = Vector2.toGrid(a);
 		var alreadyTaken = false;
 		var platformGrid = Vector2.toGrid(platform.physicspos);
 		var w = platform.physicssize.w/5;
 		var add = false;
 
-		for(var i = 0; i < this.collection.length; i++){ if( equalVector(n,this.collection[i].gridpos) ) alreadyTaken = true; }
+		for(var i = 0; i < this.collection.length; i++){ if( Vector2.equal(n,this.collection[i].gridpos) ) alreadyTaken = true; }
 		if( currentLevel.occupied( n ) ) alreadyTaken = true;
 
 		if(alreadyTaken === false){
@@ -203,9 +203,9 @@ var FireManager = new JS.Class(EffectManager,{
 			currentLevel.addFragment( vector(f.physicspos.x + nf.x,f.physicspos.y + nf.y), vector(nf.vx,nf.vy), "fire", null );
 		}
 		for (var n = 0; n < currentLevel.enemies.length; n++) {
-			if( equalVector( currentLevel.enemies[n].gridpos, f.gridpos ) ) currentLevel.enemies[n].inFire = true;
+			if( Vector2.equal( currentLevel.enemies[n].gridpos, f.gridpos ) ) currentLevel.enemies[n].inFire = true;
 		}
-		if( equalVector(player.gridpos, f.gridpos) ) player.inFire = true;
+		if( Vector2.equal(player.gridpos, f.gridpos) ) player.inFire = true;
 		this.callSuper( f , canvas );
 	}
 });

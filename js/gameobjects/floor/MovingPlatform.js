@@ -1,25 +1,25 @@
 var MobilePlatform = Floor.$extend({
-  __init__: function( pos, size ){
-    this.$super( factory.createMovingPlatform( pos, size ));
-    this.physicssize = size;
-    this.drawsize = sizeVector(this.physicssize.w*SCALE,this.physicssize.h*SCALE);
-    this.vel = new b2Vec2( 0 , 0 );
-    this.setVelocity(0,0)
-  },
+    __init__: function( pos, size ){
+        this.$super( factory.createMovingPlatform( pos, size ));
+        this.physicssize = size;
+        this.drawsize = sizeVector(this.physicssize.w*SCALE,this.physicssize.h*SCALE);
+        this.vel = new b2Vec2( 0 , 0 );
+        this.setVelocity(0,0)
+    },
 
-  setVelocity: function(x,y){
-    this.body.SetLinearVelocity( new b2Vec2(x, y));
-  },
+    setVelocity: function(x,y){
+        this.body.SetLinearVelocity( new b2Vec2(x, y));
+    },
 
-  setPosition: function( pos ){
-    this.body.SetPositionAndAngle( pos, 0 );
-  },
+    setPosition: function( pos ){
+        this.body.SetPositionAndAngle( pos, 0 );
+    },
 
-  update: function(){
-    this.currentpos = this.physicspos = this.body.GetPosition();
-    this.vel = this.body.GetLinearVelocity();
-    this.worldpos = Vector2.toWorld(this.physicspos);
-  }
+    update: function(){
+        this.currentpos = this.physicspos = this.body.GetPosition();
+        this.vel = this.body.GetLinearVelocity();
+        this.worldpos = Vector2.toWorld(this.physicspos);
+    }
 });
 
 
@@ -95,7 +95,7 @@ var MovingPlatform = MobilePlatform.$extend({
   update: function(){
     this.$super();
     if(this.enabled){
-      if( vDistance( this.physicspos, this.endpos   ) < 0.1) this.reachedDest();
+      if( Vector2.distance( this.physicspos, this.endpos   ) < 0.1) this.reachedDest();
     }
   },
 

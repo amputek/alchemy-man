@@ -181,7 +181,7 @@ var Chomper = Enemy.$extend({
     if( this.atEdgeOfPlatform() ) this.jump();
     if(coin(0.05)) this.jump();
     this.attackCounter++;
-    if(this.attackCounter % 50 == 30 && vDistance(this.physicspos,player.physicspos) < 10) player.getHit(1)
+    if(this.attackCounter % 50 == 30 && Vector2.distance(this.physicspos,player.physicspos) < 10) player.getHit(1)
   },
 
   drawFinal: function( canvas ){
@@ -223,7 +223,7 @@ var Creeper = Enemy.$extend({
 
   hunt: function(){
     this.$super();
-    if( vDistance(this.physicspos, player.physicspos) < 30) this.state = "exploding"
+    if( Vector2.distance(this.physicspos, player.physicspos) < 30) this.state = "exploding"
   },
 
   vibrate: function(){
@@ -236,7 +236,7 @@ var Creeper = Enemy.$extend({
   behave: function(){
     this.$super();
     if(this.state == "exploding") this.vibrate();
-    if( vDistance(this.physicspos, player.physicspos) < 10 ) this.kill();
+    if( Vector2.distance(this.physicspos, player.physicspos) < 10 ) this.kill();
   },
 
   drawFinal: function( canvas ){

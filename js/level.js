@@ -110,7 +110,7 @@ var GameplayManager = Class.$extend({
 	detonatePotionOnFloor: function( potion, floor ){
 		this.addExplosion( potion , potion.type , floor );
 		potion.kill();
-		if( potion.type == "ice" && notMovingOrIce(floor) && getDir(  potion.physicspos , floor ).nearest == "top") currentLevel.ice.add(  potion.physicspos, floor );
+		if( potion.type == "ice" && floor.notMovingOrIce() && floor.getNearestEdge( potion.physicspos ).nearest == "top") currentLevel.ice.add(  potion.physicspos, floor );
 	},
 
 	detonatePotionOnCharacter: function( potion, entity ){
@@ -128,7 +128,7 @@ var GameplayManager = Class.$extend({
 	},
 
 	fragmentOnFloor: function( fragment, floor ){
-		if( notMovingOrIce( floor ) && !fragment.isDead() ){
+		if( floor.notMovingOrIce() && !fragment.isDead() ){
 			if( fragment.type == "fire") this.fire.add( fragment.physicspos, floor );
 			if( fragment.type == "acid") this.acid.add( fragment.physicspos, floor, (fragment.vel.y >= 0.0 && fragment.physicspos.y < floor.getTop() ) );
 			if( fragment.type == "drip") fragment.kill();
@@ -182,7 +182,7 @@ var GameplayManager = Class.$extend({
 	},
 
 	occupied: function( pos ){
-		for (var i = 0; i < this.nolandzones.length; i++) { if( equalVector( pos , this.nolandzones[i] ) ) return true;  }
+		for (var i = 0; i < this.nolandzones.length; i++) { if( Vector2.equal( pos , this.nolandzones[i] ) ) return true;  }
 		return false;
 	},
 
@@ -195,7 +195,7 @@ var GameplayManager = Class.$extend({
 
     //called by game
 	checkEnd : function(){
-		if(player.isDead() == false) return vDistance( player.physicspos, this.endpos ) < 5;
+		if(player.isDead() == false) return Vector2.distance( player.physicspos, this.endpos ) < 5;
 	},
 
 	clearLevel: function(world){

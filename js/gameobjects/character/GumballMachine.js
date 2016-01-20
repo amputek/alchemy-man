@@ -92,7 +92,7 @@ var Gumball = Character.$extend({
 
 		if(this.frozenCounter == 0) this.updateCannon();
 
-		this.inRange = vDistance(this.physicspos, player.physicspos) < 50
+		this.inRange = Vector2.distance(this.physicspos, player.physicspos) < 50
 
 		var x = this.physicspos.x + sinBodyAngle * 6.5;
 		var y = this.physicspos.y + cosBodyAngle * 6.5;
