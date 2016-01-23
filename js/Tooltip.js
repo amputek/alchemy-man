@@ -9,8 +9,8 @@ var Tooltip = Class.$extend({
     this.dom.style.zIndex = 500;
     this.dom.innerHTML = "" + this.text;
     element("game-wrapper").appendChild(this.dom);
-    this.dom.style.left = round(this.worldpos.x);
-    this.dom.style.top = round(this.worldpos.y);
+    this.dom.style.left = Math.round(this.worldpos.x);
+    this.dom.style.top = Math.round(this.worldpos.y);
     var _this = this;
     setTimeout(function(){ _this.dom.style.opacity = 0.0 },1);
     this.vy = 6.0;
@@ -18,7 +18,7 @@ var Tooltip = Class.$extend({
 
   update: function(){
 
-  },  
+  },
 
   isDead: function(){
     return this.life >= 100;
@@ -28,7 +28,7 @@ var Tooltip = Class.$extend({
     this.life++;
     this.worldpos.y -= this.vy;
     this.vy *= 0.96
-    this.dom.style.left = round(this.worldpos.x + offset.x);
-    this.dom.style.top = round(this.worldpos.y + offset.y);
+    this.dom.style.left = Math.round(this.worldpos.x + offset.x);
+    this.dom.style.top = Math.round(this.worldpos.y + offset.y);
   },
 })

@@ -1,6 +1,30 @@
 var images = new JS.Singleton(JS.Class,{
 
-	//this should take a callback?
+
+	createImage : function(src){
+		this.totalImages++;
+		return this.loadImage(src);
+	},
+
+	loadImage : function(src){
+		img = new Image();
+
+		img.src = src;
+
+		img.onload = function(){
+			images.numImages++;
+			if( images.numImages === images.totalImages ) images.finishedLoadingCallback();
+		}
+
+		img.onerror = function(){
+			setTimeout(function(){
+				debug.log("Image at " + src + " not found")
+			},1500);
+		}
+
+		return img;
+	},
+
 	init: function( callback ){
 
 		this.finishedLoadingCallback = callback;
@@ -42,7 +66,6 @@ var images = new JS.Singleton(JS.Class,{
 		this.arm.run_release 	 = this.createImage('images/character/arm/run_release.png');
 		this.arm.idle_aim 			 = this.createImage('images/character/arm/idle_aim.png');
 		this.arm.idle_release 	 = this.createImage('images/character/arm/idle_release.png');
-
 
 		this.chomper = [];
 		this.chomper.idle      = this.createImage('images/enemy/idle.png')
@@ -280,31 +303,6 @@ var images = new JS.Singleton(JS.Class,{
 		this.tooltip = this.createImage('images/tooltip.png')
 
 		this.cannon = this.createImage('images/potions/cannon.png')
-
-	},
-
-	createImage : function(src){
-		this.totalImages++;
-		return this.loadImage(src);
-	},
-
-	loadImage : function(src){
-		img = new Image();
-
-		img.src = src;
-
-		img.onload = function(){
-			images.numImages++;
-			if( images.numImages === images.totalImages ) images.finishedLoadingCallback();
-		}
-
-		img.onerror = function(){
-			setTimeout(function(){
-				debug.log("Image at " + src + " not found")
-			},1500);
-		}
-
-		return img;
 
 	},
 

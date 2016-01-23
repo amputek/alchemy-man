@@ -70,14 +70,19 @@ var Trajectory = Class.$extend({
         var startx = player.worldpos.x - 23 * player.facing;
         var starty = player.worldpos.y - 30;
 
-        input.shootAngle = angle( startx + offset.x, starty + offset.y, input.mousepos.x, input.mousepos.y);
+        var start = vector(player.worldpos.x - 23 * player.facing, player.worldpos.y - 30);
+
+        //input.shootAngle = angle( startx + offset.x, starty + offset.y, input.mousepos.x, input.mousepos.y);
+
+        input.shootAngle = Vector2.angle( Vector2.add(start, offset), input.mousepos ) ;
+
         var mousepos = vector(input.mousepos.x, input.mousepos.y);
 
 
         var d = Vector2.distance( {x: startx + offset.x, y: starty + offset.y}, {x:input.mousepos.x, y:input.mousepos.y});
         if( d > 250 ){
-            mousepos.x = (startx + offset.x) + cos(input.shootAngle) * 250;
-            mousepos.y = (starty + offset.y) + sin(input.shootAngle) * 250;
+            mousepos.x = (startx + offset.x) + Math.cos(input.shootAngle) * 250;
+            mousepos.y = (starty + offset.y) + Math.sin(input.shootAngle) * 250;
         }
 
         var vel = Vector2.distance( {x: startx + offset.x, y: starty + offset.y}, {x: mousepos.x, y:mousepos.y })*0.3;
@@ -115,8 +120,8 @@ var Trajectory = Class.$extend({
 
             // WTF is going on here?
             var poo = 20;
-            var r = this.getPoint( startx , starty , cos(input.shootAngle) * vel, sin(input.shootAngle) * vel - poo, i);
-            if(vel > poo) r = this.getPoint( startx , starty , cos(input.shootAngle) * vel, sin(input.shootAngle) * vel - poo + ((vel-poo)*0.05), i);
+            var r = this.getPoint( startx , starty , Math.cos(input.shootAngle) * vel, Math.sin(input.shootAngle) * vel - poo, i);
+            if(vel > poo) r = this.getPoint( startx , starty , Math.cos(input.shootAngle) * vel, Math.sin(input.shootAngle) * vel - poo + ((vel-poo)*0.05), i);
 
 
             var interrupt =  this.lineOfSight(lastr,r)

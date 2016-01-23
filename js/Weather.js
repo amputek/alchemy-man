@@ -6,7 +6,7 @@ var Splash = new JS.Class(Doodad,{
     },
 
     update: function(){
-        this.life += random(0,2);
+        this.life += Math.randomFloat(2.0);
     },
 
     isDead: function(){
@@ -51,11 +51,11 @@ var Weather = new JS.Class({
             ctx.setStroke( {r:255,g:255,b:255} ,0.06 * i);
             ctx.setWidth( i*0.6 );
             for (var n = 0; n < this.rainAmount; n++) {
-                var x = random(0,3000);
-                var y = random(0,800)
-                var lng = random(10,100)
-                var a = this.angle + random(-0.05,0.05);
-                ctx.line(x,y,x-sin(a)*lng,y-cos(a)*lng);
+                var x = Math.randomFloat(3000);
+                var y = Math.randomFloat(800);
+                var lng = Math.randomFloat(10,100);
+                var a = this.angle + Math.randomFloat(-0.05,0.05);
+                ctx.line(x,y,x-Math.sin(a)*lng,y-Math.cos(a)*lng);
             }
         }
     },
@@ -69,24 +69,23 @@ var Weather = new JS.Class({
         for (var i = 0; i < floors.length; i++) {
             var f = floors[i];
             if(f.physicssize.h == 2.5){
-                if( coin(this.splashAmount) ) this.splashes.add( new Splash( vector(f.physicspos.x + random(-f.physicssize.w,f.physicssize.w), f.physicspos.y - f.physicssize.h) ) );
-                if( coin(this.splashAmount*0.4) ){
-                    var onLeft = coin(0.5);
+                if( Math.coin(this.splashAmount) ) this.splashes.add( new Splash( vector(f.physicspos.x + Math.randomFloat(-f.physicssize.w,f.physicssize.w), f.physicspos.y - f.physicssize.h) ) );
+                if( Math.coin(this.splashAmount*0.4) ){
+                    var onLeft = Math.coin(0.5);
                     currentLevel.addFragment( vector(f.physicspos.x + f.physicssize.w + (onLeft?-0.3:0.3), f.physicspos.y - f.physicssize.h + 0.9) , vector(0,0), "water", "small" );
                 }
             }
         }
-
     },
 
     light: function(){
 
         if(this.severity > 0.8){
             if(this.lightning == 0){
-                if(coin(0.01)) this.lightning = 1;
+                if(Math.coin(0.01)) this.lightning = 1;
             } else {
                 this.lightning++;
-                this.lightningDom.style.opacity = coin(0.2) ? 1.0 : 0.0;
+                this.lightningDom.style.opacity = Math.coin(0.2) ? 1.0 : 0.0;
                 if(this.lightning >= 25){
                     this.lightning = 0;
                     this.lightningDom.style.opacity = 0.0;

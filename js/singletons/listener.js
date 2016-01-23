@@ -1,7 +1,6 @@
 function CreateListener(){
 	var listener = new Box2D.Dynamics.b2ContactListener();
 
-
 	ledge = function(character,other){
 		if(other instanceof IceBlock && character.getBottom() <= other.getTop() + 5) return true;
 		return character.getBottom() <= other.getTop();
@@ -104,7 +103,7 @@ function CreateListener(){
 	}
 
 	Character_Floor =  function( character, floor, contact ){
-		if( floor instanceof Floor && ledge(character,floor) )character.addPlatform(floor);
+		if( floor instanceof Floor && ledge(character,floor) ) character.addPlatform(floor);
 	}
 
 	Character_Ladder =  function( character, ladder, contact ){

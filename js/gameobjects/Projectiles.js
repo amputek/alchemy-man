@@ -76,7 +76,7 @@ var Gum = Projectile.$extend({
     this.body.SetLinearDamping(0.0)
 	  this.v = vel;
     this.setVelocity(vel.x, vel.y);
-    this.img = images.gum[ randomInt(0,3) ]
+    this.img = images.gum[ Math.randomInt(0,3) ]
   },
 
 	draw : function( canvas ){

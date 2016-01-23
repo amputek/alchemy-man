@@ -24,7 +24,7 @@ var FragmentSource = new JS.Class(Doodad,{
   update : function(){
     // console.log( this.counter, this.frequency )
     if(this.counter == this.tfrequency){
-      this.tfrequency = round(this.frequency + random(-this.frequency*0.5,this.frequency*0.5));
+      this.tfrequency = Math.round(this.frequency + Math.randomFloat(-this.frequency*0.5,this.frequency*0.5));
       this.counter = 0;
       return true;
     }

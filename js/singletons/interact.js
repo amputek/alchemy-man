@@ -3,6 +3,10 @@ var b2RayCastInput = Box2D.Collision.b2RayCastInput;
 var b2RayCastOutput = Box2D.Collision.b2RayCastOutput;
 var b2Vec2 = Box2D.Common.Math.b2Vec2;
 
+console.log( new b2Vec2(10,10) );
+console.log( new b2Vec2( {x:15,y:16} ) );
+
+
 var SCALE = 8;
 
 //toooooo many singletons

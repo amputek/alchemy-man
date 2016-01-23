@@ -4,15 +4,15 @@ var Platform = Floor.$extend({
 		this.physicssize = size;
 		this.boundary = {
 			left   : this.physicspos.x - this.physicssize.w,
-        	right  : this.physicspos.x + this.physicssize.w,
-        	top    : this.physicspos.y - this.physicssize.h,
-        	bottom : this.physicspos.y + this.physicssize.h
+			right  : this.physicspos.x + this.physicssize.w,
+			top    : this.physicspos.y - this.physicssize.h,
+			bottom : this.physicspos.y + this.physicssize.h
 		}
 	}
 });
 
 var JumpBox = Platform.$extend({
-  __init__: function(pos,size){
-    this.$super( pos, size );
-  }
+	__init__: function(pos,size){
+    	this.$super( pos, size );
+	}
 });

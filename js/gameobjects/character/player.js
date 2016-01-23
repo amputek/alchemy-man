@@ -244,9 +244,9 @@ var Player = ClimbingCharacter.$extend({
 		var vel = Vector2.distance( {x: player.worldpos.x + offset.x, y: player.worldpos.y + offset.y}, {x:input.mousepos.x, y:input.mousepos.y} ) * 0.12;
 		var poo = 3.5;
 		if(vel > poo){
-			return playerweapon.shoot(this.physicspos.x - 2.3 * this.facing, this.physicspos.y - 5, ang, cos(ang) * vel, sin(ang) * vel - poo + ((vel-poo)*-0.1), i);
+			return playerweapon.shoot(this.physicspos.x - 2.3 * this.facing, this.physicspos.y - 5, ang, Math.cos(ang) * vel, Math.sin(ang) * vel - poo + ((vel-poo)*-0.1), i);
 		} else {
-			return playerweapon.shoot(this.physicspos.x - 2.3 * this.facing, this.physicspos.y - 5, ang, cos(ang) * vel, sin(ang) * vel - poo);
+			return playerweapon.shoot(this.physicspos.x - 2.3 * this.facing, this.physicspos.y - 5, ang, Math.cos(ang) * vel, Math.sin(ang) * vel - poo);
 		}
   	},
 

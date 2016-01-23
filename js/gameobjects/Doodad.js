@@ -8,7 +8,7 @@ var ScorchedGround = new JS.Class( Doodad, {
 	initialse: function(pos){
 		this.callSuper(pos);
 		this.animation = new Animation( images.fx.scorched, 4, false, 62);
-		this.canvas = createCanvas();
+		this.canvas = document.createElement("canvas");
 		this.context = this.canvas.getContext('2d');
 		this.canvas.width = 140;
 		this.canvas.height = 100;

@@ -19,7 +19,7 @@ var GroundCharacter = Character.$extend({
 
 	updateGroundMovement: function(){
 		if(this.isInIce() == false){
-			if( this.currentAction == "run" && abs( this.vel.x ) < abs(this.moveSpeed) ){
+			if( this.currentAction == "run" && Math.abs( this.vel.x ) < Math.abs(this.moveSpeed) ){
 				this.impulse( this.currentPlatform == null ? 0.5 * this.facing : 0.8 * this.facing , 0);
 			}
 			if(this.currentPlatform instanceof MobilePlatform){

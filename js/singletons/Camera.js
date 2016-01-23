@@ -38,8 +38,8 @@ var camera = new JS.Singleton(JS.Class,{
 
 		//ease camera towards target
 		var diff =  ((-targetx * SCALE) + 500 ) - offset.x
-		if( abs(diff) > 2 ) offset.x += diff * this.speed;
+		if( Math.abs(diff) > 2 ) offset.x += diff * this.speed;
 		var diff = ((-targety * SCALE) + 250 ) - offset.y
-		if( abs(diff) > 2 ) offset.y += diff * this.speed;
+		if( Math.abs(diff) > 2 ) offset.y += diff * this.speed;
 	}
 });

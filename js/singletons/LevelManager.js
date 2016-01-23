@@ -142,7 +142,7 @@ var LevelGenerator = Class.$extend({
 
         if(f.w == 1){
             if(f.h == 2){
-                img = images.env.boxpile_1_2[ randomInt(0,2) ];
+                img = images.env.boxpile_1_2[ Math.randomInt(0,2) ];
                 drawoffset = vector(1,-2);
             } else if(f.h == 4){
                 img = images.env.boxpile_1_4;
@@ -154,7 +154,7 @@ var LevelGenerator = Class.$extend({
                 img = images.env.boxpile_1_6;
                 drawoffset = vector(0,-2);
             } else {
-                img = images.env.boxpile_1_1[ randomInt(0,3) ];
+                img = images.env.boxpile_1_1[ Math.randomInt(0,3) ];
                 drawoffset = vector(1,-2);
             }
         } else if(f.w == 2){
@@ -191,12 +191,12 @@ var LevelGenerator = Class.$extend({
         if(d.type == "pipe_top")           img = images.doodad.pipe_top;
         if(d.type == "pipe_left")          img = images.doodad.pipe_left;
         if(d.type == "pipe_right")         img = images.doodad.pipe_right;
-        if(d.type == "pipe_bottom_left")   img = images.doodad.pipe_bottom_left[ randomInt(0,2) ]
-        if(d.type == "pipe_bottom_right")  img = images.doodad.pipe_bottom_right[ randomInt(0,2) ]
-        if(d.type == "pipe_top_left")      img = images.doodad.pipe_top_left[ randomInt(0,2) ]
-        if(d.type == "pipe_top_right")     img = images.doodad.pipe_top_right[ randomInt(0,2) ]
-        if(d.type == "pipe_hor")           img = images.doodad.pipe_hor[ randomInt(0,4) ]
-        if(d.type == "pipe_vert")          img = images.doodad.pipe_vert[ randomInt(0,4) ]
+        if(d.type == "pipe_bottom_left")   img = images.doodad.pipe_bottom_left[ Math.randomInt(0,2) ]
+        if(d.type == "pipe_bottom_right")  img = images.doodad.pipe_bottom_right[ Math.randomInt(0,2) ]
+        if(d.type == "pipe_top_left")      img = images.doodad.pipe_top_left[ Math.randomInt(0,2) ]
+        if(d.type == "pipe_top_right")     img = images.doodad.pipe_top_right[ Math.randomInt(0,2) ]
+        if(d.type == "pipe_hor")           img = images.doodad.pipe_hor[ Math.randomInt(0,4) ]
+        if(d.type == "pipe_vert")          img = images.doodad.pipe_vert[ Math.randomInt(0,4) ]
         if(d.type == "pile")               img = images.doodad.pile;
         if(d.type == "boiler")             img = images.doodad.boiler;
         if(d.type == "box")                img = ( d.depth == 2 ? images.env.boxpile_4_2_blur : images.env.boxpile_4_2_blur2 );
@@ -292,13 +292,13 @@ var LevelGenerator = Class.$extend({
             } else if(ay == d.h-1){
                 draw_temp.drawImage( images.env.support_base, vector(80-3,ay*5*SCALE-15 ) );
             } else if (ay % 2 == 0){
-                draw_temp.drawImage( images.env.support_high[randomInt(0,2)], vector(80,ay*5*SCALE ) );
+                draw_temp.drawImage( images.env.support_high[Math.randomInt(0,2)], vector(80,ay*5*SCALE ) );
             } else {
-                draw_temp.drawImage( images.env.support_low[randomInt(0,3)], vector(80,ay*5*SCALE ) );
+                draw_temp.drawImage( images.env.support_low[Math.randomInt(0,3)], vector(80,ay*5*SCALE ) );
             }
         }
-        for(var ay = 1.5; ay < d.h - 3; ay+=random(1.5,2.5)){
-            if( coin(0.2) ) draw_temp.drawImage( images.doodad.poster[ randomInt(3,4) ], vector(84,ay * 5 * SCALE ));
+        for(var ay = 1.5; ay < d.h - 3; ay += Math.randomFloat(1.5,2.5)){
+            if( Math.coin(0.2) ) draw_temp.drawImage( images.doodad.poster[ Math.randomInt(3,4) ], vector(84,ay * 5 * SCALE ));
         }
 
         draw_temp.drawImage( images.doodad.lampfitting_l, vector(80 - 78, 0 ) );
@@ -348,11 +348,11 @@ var LevelGenerator = Class.$extend({
 
                 if(f.physicssize.w == 2.5){
                     if(f.physicssize.h == 5){
-                        draw_temp.drawImage( images.env.boxpile_1_2[ randomInt(0,2) ] );
+                        draw_temp.drawImage( images.env.boxpile_1_2[ Math.randomInt(0,2) ] );
                         drawoffset = vector(1,-2);
                         drawn = true;
                     } else if(f.physicssize.h == 10){
-                        draw_temp.drawImage( images.env.boxpile_1_4[ randomInt(0,1) ] );
+                        draw_temp.drawImage( images.env.boxpile_1_4[ Math.randomInt(0,1) ] );
                         drawoffset = vector(0,-2);
                         drawn = true;
                     } else if(f.physicssize.h == 15){
@@ -365,7 +365,7 @@ var LevelGenerator = Class.$extend({
                         drawn = true;
                     } else if(f.physicssize.h == 2.5){
                         if( f instanceof JumpBox == false ){
-                            draw_temp.drawImage( images.env.boxpile_1_1[ randomInt(0,3) ] );
+                            draw_temp.drawImage( images.env.boxpile_1_1[ Math.randomInt(0,3) ] );
                             drawoffset = vector(1,-2);
                             drawn = true;
                         } else {
@@ -399,9 +399,9 @@ var LevelGenerator = Class.$extend({
                             } else if(ax == f.physicssize.w*2 - 5){
                                 draw_temp.drawImage( images.env.floorboard_rightend               , vector( ax*SCALE , 0 ) );
                             } else if(ax % 10 == 5){
-                                draw_temp.drawImage( images.env.floorboard_left[ randomInt(0,3) ] , vector( ax*SCALE , 0 ) );
+                                draw_temp.drawImage( images.env.floorboard_left[ Math.randomInt(0,3) ] , vector( ax*SCALE , 0 ) );
                             } else {
-                                draw_temp.drawImage( images.env.floorboard_right[ randomInt(0,2) ], vector( ax*SCALE , 0 ) );
+                                draw_temp.drawImage( images.env.floorboard_right[ Math.randomInt(0,2) ], vector( ax*SCALE , 0 ) );
                             }
                         }
                     }
@@ -437,7 +437,7 @@ var LevelGenerator = Class.$extend({
             if(this.isBrick(f)){
                 for(var x = f.physicspos.x - f.physicssize.w; x < f.physicspos.x+f.physicssize.w; x+=5){
                     for(var y = f.physicspos.y - f.physicssize.h; y < f.physicspos.y+f.physicssize.h; y+=5){
-                        brickArray[ round(x/5)][ round(y/5)] = 1;
+                        brickArray[ Math.round(x/5)][ Math.round(y/5)] = 1;
                     }
                 }
             }
@@ -456,7 +456,7 @@ var LevelGenerator = Class.$extend({
                             canvas.drawImage( images.env.brick_column_bottom                , vector( x*40, y*40 ) );
                         } else {
                             canvas.setFill("purple")
-                            canvas.drawImage( images.env.brick_column_middle[randomInt(0,2)], vector( x*40, y*40 ) );
+                            canvas.drawImage( images.env.brick_column_middle[Math.randomInt(0,2)], vector( x*40, y*40 ) );
                         }
                     } else if(brickArray[x-1][y] == 0){
 
@@ -477,10 +477,10 @@ var LevelGenerator = Class.$extend({
                     } else {
                         if(brickArray[x][y+1] == 0){
                             canvas.setFill("white")
-                            canvas.drawImage( images.env.brick_bottom[ randomInt(0,1) ]    , vector( x*40 , y*40 ) );
+                            canvas.drawImage( images.env.brick_bottom[ Math.randomInt(0,1) ]    , vector( x*40 , y*40 ) );
                         } else {
                             canvas.setFill("orange")
-                            canvas.drawImage( images.env.brick_middle[ randomInt(0,2) ]    , vector( x*40 , y*40 ) );
+                            canvas.drawImage( images.env.brick_middle[ Math.randomInt(0,2) ]    , vector( x*40 , y*40 ) );
                         }
                     }
 
@@ -498,19 +498,19 @@ var LevelGenerator = Class.$extend({
             for(var y = 0; y < 250; y+=1){
                 if(brickArray[x][y] == 1){
                     if(brickArray[x][y+2] == 1 && brickArray[x+2][y] == 1 ){
-                        if(coin(0.08)) canvas.drawImage( images.doodad.poster[randomInt(0,4)], vector((x+0.5)*40,y*40));
+                        if(Math.coin(0.08)) canvas.drawImage( images.doodad.poster[Math.randomInt(0,4)], vector((x+0.5)*40,y*40));
                     }
                 }
             }
         }
 
         // draw exposed pipe area
-        for(var x = randomInt(-4,0); x < 250; x+=randomInt(4,6)){
-            for(var y = randomInt(-4,0); y < 250; y+=randomInt(2,4)){
+        for(var x = Math.randomInt(-4,0); x < 250; x+=Math.randomInt(4,6)){
+            for(var y = Math.randomInt(-4,0); y < 250; y+=Math.randomInt(2,4)){
                 if(brickArray[x][y] == 1){
 
                     if(brickArray[x][y+1] == 1 && brickArray[x][y+2] == 1 && brickArray[x][y+3] == 1 && brickArray[x+1][y] == 1 && brickArray[x+2][y] == 1 && brickArray[x+3][y] == 1 && brickArray[x+4][y] == 1 && brickArray[x+4][y+3] == 1){
-                        if(coin(0.1)) canvas.drawImage( images.env.brick_exposed, vector((x+0.5)*40,y*40));
+                        if(Math.coin(0.1)) canvas.drawImage( images.env.brick_exposed, vector((x+0.5)*40,y*40));
                     }
                 }
             }

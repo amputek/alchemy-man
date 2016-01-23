@@ -3,7 +3,7 @@ var Enemy = ClimbingCharacter.$extend({
   __init__ : function(pos,size){
     this.$super(pos,size);
     this.state = "patrolling";
-    this.facing = randomInt(0,1) * 2 - 1;
+    this.facing = Math.randomInt(0,1) * 2 - 1;
     this.turnCounter = 0;
     this.currentAction = "idle"
   },
@@ -151,7 +151,7 @@ var Chomper = Enemy.$extend({
         if(this.currentAction == "idle"){
             if(this.spotCounter <= 0){
 
-                if( coin(0.5) ) {
+                if( Math.coin(0.5) ) {
                     this.start("left");
                 } else {
                     this.start("right")
@@ -179,7 +179,7 @@ var Chomper = Enemy.$extend({
   hunt: function(){
     this.$super();
     if( this.atEdgeOfPlatform() ) this.jump();
-    if(coin(0.05)) this.jump();
+    if( Math.coin(0.05) ) this.jump();
     this.attackCounter++;
     if(this.attackCounter % 50 == 30 && Vector2.distance(this.physicspos,player.physicspos) < 10) player.getHit(1)
   },
@@ -217,7 +217,7 @@ var Creeper = Enemy.$extend({
 
   patrol: function(){
     if(this.atEdgeOfPlatform() )this.turn();
-    if( coin(0.5) ) this.turn();
+    if( Math.coin(0.5) ) this.turn();
     if(this.lineOfSight( this, player) == true) this.state = "hunting"
   },
 
@@ -242,7 +242,7 @@ var Creeper = Enemy.$extend({
   drawFinal: function( canvas ){
     canvas.save();
     canvas.translate( this.worldpos.x  - this.drawsize.w/2, this.worldpos.y - this.drawsize.h/2 + 0 );
-    if(this.state == "exploding") canvas.translate( random(-3,3), random(-3,3) )
+    if(this.state == "exploding") canvas.translate( Math.randomFloat(-3,3), Math.randomFloat(-3,3) )
     if(this.facing == -1) canvas.translate(this.drawsize.w,0);
     canvas.scale(this.facing,1);
     canvas.drawImage( this.draw_final.getImage() );

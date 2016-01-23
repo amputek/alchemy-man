@@ -17,13 +17,12 @@
         return this instanceof MobilePlatform == false && this instanceof IceBlock == false;
     },
 
-    //what does this actually do? rename it too you knobhead
     getNearestEdge: function(pos){
 
-        var distanceToLeft   = abs(pos.x - this.boundary.left);
-        var distanceToTop    = abs(pos.y - this.boundary.top);
-        var distanceToRight  = abs(pos.x - this.boundary.right);
-        var distanceToBottom = abs(pos.y - this.boundary.bottom);
+        var distanceToLeft   = Math.abs(pos.x - this.boundary.left);
+        var distanceToTop    = Math.abs(pos.y - this.boundary.top);
+        var distanceToRight  = Math.abs(pos.x - this.boundary.right);
+        var distanceToBottom = Math.abs(pos.y - this.boundary.bottom);
 
         var nearest = "left"
         var nx = pos.x;

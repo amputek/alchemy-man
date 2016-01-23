@@ -64,8 +64,8 @@ var Gumball = Character.$extend({
 
 	hover: function(bodyAngle){
 
-		var sinBodyAngle = sin(bodyAngle);
-		var cosBodyAngle = cos(bodyAngle);
+		var sinBodyAngle = Math.sin(bodyAngle);
+		var cosBodyAngle = Math.cos(bodyAngle);
 
 		if( bodyAngle > 1  ) bodyAngle = 1;
 		if( bodyAngle < -1 ) bodyAngle = -1;
@@ -76,7 +76,7 @@ var Gumball = Character.$extend({
 
 		if(this.upping == true){
 
-			if(this.frozenCounter == 0) this.applyImpulse( sinBodyAngle * 2.5, cosBodyAngle * (-4.1*this.upCounter) ,  this.physicspos.x+random(-1,1) , this.physicspos.y+3 );
+			if(this.frozenCounter == 0) this.applyImpulse( sinBodyAngle * 2.5, cosBodyAngle * (-4.1*this.upCounter) ,  this.physicspos.x+Math.randomFloat(-1,1) , this.physicspos.y+3 );
 
 			this.upCounter++;
 			if(this.upCounter == 3){
@@ -98,7 +98,7 @@ var Gumball = Character.$extend({
 		var y = this.physicspos.y + cosBodyAngle * 6.5;
 
 		this.cannonpos = vector(x,y);
-		this.aimAngle = angle(x,y,player.physicspos.x,player.physicspos.y)
+		this.aimAngle = Vector2.angle( this.cannonpos, player.physicspos );
 
 
 		 if(this.frozenCounter == 0) this.updateCannon();
@@ -109,11 +109,11 @@ var Gumball = Character.$extend({
 	update: function(){
 
 		var bodyAngle = this.body.GetAngle();
-		var sinBodyAngle = sin(bodyAngle);
-		var cosBodyAngle = cos(bodyAngle);
+		var sinBodyAngle = Math.sin(bodyAngle);
+		var cosBodyAngle = Math.cos(bodyAngle);
 
 		if(this.state == "hovering") this.hover( bodyAngle )
-		if(this.state == "dying") this.applyImpulse( sinBodyAngle * random(-20,-10) , cosBodyAngle * random(-20,-10) , this.physicspos.x+random(-10,10) , this.physicspos.y+random(-10,10) );
+		if(this.state == "dying") this.applyImpulse( sinBodyAngle * Math.randomFloat(-20,-10) , cosBodyAngle * Math.randomFloat(-20,-10) , this.physicspos.x+Math.randomFloat(-10,10) , this.physicspos.y+Math.randomFloat(-10,10) );
 
 		this.bodyanimation.incFrame();
 		this.propanimation.current.incFrame();
@@ -125,8 +125,8 @@ var Gumball = Character.$extend({
 	shoot: function(  ){
 		var vel = 17.0
 		var ang = this.aimAngle;
-		var sinAng = sin(ang);
-		var cosAng = cos(ang);
+		var sinAng = Math.sin(ang);
+		var cosAng = Math.cos(ang);
 		var startPos = vector( this.cannonpos.x + cosAng * 6, this.cannonpos.y + sinAng * 6 )
 		var cannon = new Gum( startPos , vector( cosAng * vel , sinAng * vel - 1.0 ) );
 		currentLevel.projectiles.add( cannon );

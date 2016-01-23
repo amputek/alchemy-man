@@ -45,21 +45,21 @@ var Acid = new JS.Class(Effect,{
         this.animationLoopPoint = 12;
 
         if(dir == "left"){
-            this.animation = new Animation( images.fx.acidright, randomInt(3,4), false, 69);
+            this.animation = new Animation( images.fx.acidright, Math.randomInt(3,4), false, 69);
             this.drawoffset = vector(50,10)
         } else if(dir == "right"){
-            this.animation = new Animation( images.fx.acidleft, randomInt(3,4), false, 69);
+            this.animation = new Animation( images.fx.acidleft, Math.randomInt(3,4), false, 69);
             this.drawoffset = vector(10,10)
         } else {
             this.animationEndPoint = 58;
             this.animationLoopPoint = 15;
             if(endPiece == true){
-                this.animation = new Animation( images.fx.acid_small, randomInt(2,4), false, 88);
+                this.animation = new Animation( images.fx.acid_small, Math.randomInt(2,4), false, 88);
                 this.drawoffset = vector(5,50)
                 // this.draw_canvas.width = 100;
             } else {
                 this.drawoffset = vector(30,50)
-                this.animation = new Animation( images.fx.acid, randomInt(2,4), false, 81);
+                this.animation = new Animation( images.fx.acid, Math.randomInt(2,4), false, 81);
             }
         }
     }
@@ -74,20 +74,20 @@ var Fire = new JS.Class(Effect,{
         this.animationLoopPoint = 10;
 
         if(dir == "left"){
-            this.animation = new Animation( images.fx.firerightwall, randomInt(3,4), false, 44);
+            this.animation = new Animation( images.fx.firerightwall, Math.randomInt(3,4), false, 44);
             this.drawoffset = vector(45,45);
         } else if(dir == "right"){
-            this.animation = new Animation( images.fx.fireleftwall, randomInt(3,4), false, 44);
+            this.animation = new Animation( images.fx.fireleftwall, Math.randomInt(3,4), false, 44);
             this.drawoffset = vector(10,45)
         } else {
             this.drawoffset = vector(50,82)
-            if( coin(0.5) ){
-                this.animation = new Animation( images.fx.fireL, randomInt(3,4), false, 41);
+            if( Math.coin(0.5) ){
+                this.animation = new Animation( images.fx.fireL, Math.randomInt(3,4), false, 41);
             } else {
-                this.animation = new Animation( images.fx.fireR, randomInt(3,4), false, 41);
+                this.animation = new Animation( images.fx.fireR, Math.randomInt(3,4), false, 41);
             }
             if(endPiece == true){
-                this.animation = new Animation( images.fx.firesmall, randomInt(3,4),false,41);
+                this.animation = new Animation( images.fx.firesmall, Math.randomInt(3,4),false,41);
             }
             this.draw_canvas.setSize( sizeVector(140, 100) )
         }

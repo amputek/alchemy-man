@@ -20,7 +20,7 @@ var Animation = Class.$extend({
 		this.frameUpdated = false;
 
 		this.counter++;
-		if(this.counter >= round(this.speed)){
+		if(this.counter >= Math.round(this.speed)){
 			if(this.currentFrame < this.frames){
 				this.currentFrame++;
 				this.frameUpdated = true;

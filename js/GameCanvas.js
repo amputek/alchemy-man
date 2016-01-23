@@ -1,6 +1,6 @@
 var Canvas = new JS.Class({
 	initialize: function(size){
-		this.canvas = createCanvas();
+		this.canvas = document.createElement("canvas");
 		this.context = this.canvas.getContext('2d');
 		if( size  == undefined) size = sizeVector(0,0);
 		this.canvas.width = size.w;
@@ -127,8 +127,8 @@ var GameCanvas = new JS.Class(Canvas,{
 	},
 
 	update: function(shake){
-		var x = Math.floor(offset.x * this.offsetMod + random(-shake,shake));
-		var y = Math.floor(offset.y * this.offsetMod + random(-shake,shake));
+		var x = Math.floor(offset.x * this.offsetMod + Math.randomFloat(-shake,shake));
+		var y = Math.floor(offset.y * this.offsetMod + Math.randomFloat(-shake,shake));
 		this.canvas.style.webkitTransform = "translate3d(" + x + "px," + y + "px, 0px)"
 	}
 });
