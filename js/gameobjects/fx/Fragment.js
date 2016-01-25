@@ -20,12 +20,12 @@ var Fragment = DynamicObject.$extend({
         if(type == "junk"){
             this.img = images.fx.junk[Math.randomInt(0,1)];
             this.applyImpulse( Math.randomFloat(-1,1), Math.randomFloat(-1,1) , this.physicspos.x + Math.randomFloat(-2,2), this.physicspos.y + Math.randomFloat(-2,2) );
-            //this.applyAnImpulse( Vector2.random(1), Vector2.add( this.physicspos , Vector2.random(2) ) );
+            // this.applyAnImpulse( Vector2.random(1), Vector2.add( this.physicspos , Vector2.random(2) ) );
         }
     },
 
     applyAnImpulse: function( vel, pos ){
-        this.body.ApplyImpulse( new b2Vec2( vel.x , vel.y ), new b2Vec2( pos.x , pos.y ) );
+        this.body.ApplyImpulse( Vector2.b2( vel ), Vector2.b2( pos ) );
     },
 
     applyImpulse: function(vx,vy,px,py){

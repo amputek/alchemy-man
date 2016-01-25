@@ -207,7 +207,7 @@ var LevelGenerator = Class.$extend({
         if(d.type == "bg_platform_2")      img = images.doodad.bg_platform[2];
         if(d.type == "door")               img = images.doodad.door;
         if(d.type == "lamp")               img = (d.depth == 3 ? images.doodad.lamp : images.doodad.lamp_blur);
-        canvas.drawImage( img, Vector2.toWorld( toPhysics(d) ) );
+        canvas.drawImage( img, Vector2.toWorld( Vector2.gridToPhysics(d) ) );
     },
 
     loadConveyer: function(f){
@@ -645,11 +645,19 @@ var LevelGenerator = Class.$extend({
 
         level.name = data.name;
 
+        console.log(data.start);
+
 
         var levelPhysicsSize = sizeVector( data.width * 5, data.height * 5);
         var levelSize = sizeVector( data.width * 5 * SCALE, data.height * 5 * SCALE );
-        var startpos  = Vector2.toPhysics( data.start );
-        var endpos    = Vector2.toPhysics( data.end );
+        var startpos  = Vector2.gridToPhysics( data.start );
+        var endpos    = Vector2.gridToPhysics( data.end );
+
+        // console.log(startpos);
+
+        //startpos goes from a world value? (in the json data), to a physics position, to a draw position, to a b2vec2 in the level.js
+        //clean this up
+
 
         level.weather.setAmount(data.weather)
         level.setEnd( endpos );

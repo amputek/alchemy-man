@@ -167,12 +167,12 @@ var GameplayManager = Class.$extend({
     //called  levelmanager
 
 	setStart : function( pos, floor ){
-		this.startpos = new b2Vec2(pos.x,pos.y);
+		this.startpos = Vector2.b2(pos);
 		this.startPlatform = floor;
 	},
 
 	setEnd : function( pos ){
-		this.endpos = new b2Vec2(pos.x,pos.y);
+		this.endpos = Vector2.b2(pos);
 	},
 
 

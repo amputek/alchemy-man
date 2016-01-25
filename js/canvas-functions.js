@@ -48,6 +48,7 @@ Math.PI2 = Math.PI * 2;
 
 
 // vector operations - maybe this should just be a helper class?
+//TODO what does tophysics actually do? can you clean up the releationship between b2vec2 and this vector helper etc.....
 var Vector2 = new JS.Class({
     initialize: function(x,y){
         this.x = x || 0;
@@ -59,10 +60,20 @@ var Vector2 = new JS.Class({
     },
     extend : {
         new      : function(x,y){ return {x:x,y:y}; },
+        b2 : function(a,b){
+            if( !b ) return new b2Vec2(a.x,a.y);
+            return new b2Vec2(a,b);
+        },
         random   : function(r){       return vector(Math.randomFloat(-r,r),Math.randomFloat(-r,r)); },
         angle : function(a,b){        return angle(a.x,a.y,b.x,b.y); },
-        toPhysics : function(pos){    return vector(pos.x * 5, pos.y * 5); },
+
+        //convert a grid position to a position for the b2 physics world
+        gridToPhysics : function(pos){    return vector(pos.x * 5, pos.y * 5); },
+
+        //convert a physics position to a draw position
         toWorld : function(pos){      return vector(Math.round(pos.x*SCALE) , Math.round(pos.y*SCALE)); },
+
+        // convert a physics position to a grid position
         toGrid : function(pos){       return vector(Math.floor(pos.x/5), Math.round(pos.y/5)); },
         equal : function(a,b){        return a.x == b.x && a.y == b.y; },
         distance : function(a,b){     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)); },

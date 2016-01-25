@@ -1,7 +1,7 @@
 var Effect = new JS.Class({
     initialize: function(pos,endPiece,dir){
         this.gridpos = pos;
-        this.physicspos = Vector2.toPhysics(pos);
+        this.physicspos = Vector2.gridToPhysics(pos);
         this.worldpos = Vector2.toWorld(this.physicspos);
         this.life = 15;
 

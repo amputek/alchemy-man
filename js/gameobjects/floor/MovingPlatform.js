@@ -4,6 +4,7 @@ var MobilePlatform = Floor.$extend({
         this.physicssize = size;
         this.drawsize = sizeVector(this.physicssize.w*SCALE,this.physicssize.h*SCALE);
         this.vel = new b2Vec2( 0 , 0 );
+        //this.vel = Vector2.b2(0,0);
         this.setVelocity(0,0);
         this.boundary = {
             left   : this.physicspos.x - this.physicssize.w,
