@@ -15,9 +15,9 @@ var Splash = new JS.Class(Doodad,{
 
     draw: function(ctx){
         ctx.setStroke( 'rgba(255,255,255,' + (0.25 - (this.life/40)) + ')' );
-        ctx.line(this.worldpos.x,this.worldpos.y,this.worldpos.x - this.life,this.worldpos.y - this.life);
-        ctx.line(this.worldpos.x,this.worldpos.y,this.worldpos.x + this.life,this.worldpos.y - this.life);
-        ctx.line(this.worldpos.x,this.worldpos.y,this.worldpos.x,this.worldpos.y - this.life/2);
+        ctx.line(this.drawpos.x,this.drawpos.y,this.drawpos.x - this.life,this.drawpos.y - this.life);
+        ctx.line(this.drawpos.x,this.drawpos.y,this.drawpos.x + this.life,this.drawpos.y - this.life);
+        ctx.line(this.drawpos.x,this.drawpos.y,this.drawpos.x,this.drawpos.y - this.life/2);
     }
 });
 

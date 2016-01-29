@@ -241,7 +241,8 @@ var Player = ClimbingCharacter.$extend({
 			this.armanimation.current.reset();
 		}
 		var ang = input.shootAngle;
-		var vel = Vector2.distance( {x: player.worldpos.x + offset.x, y: player.worldpos.y + offset.y}, {x:input.mousepos.x, y:input.mousepos.y} ) * 0.12;
+
+		var vel = Vector2.distance( Vector2.add( player.drawpos, offset ), input.mousepos ) * 0.12;
 		var poo = 3.5;
 		if(vel > poo){
 			return playerweapon.shoot(this.physicspos.x - 2.3 * this.facing, this.physicspos.y - 5, ang, Math.cos(ang) * vel, Math.sin(ang) * vel - poo + ((vel-poo)*-0.1), i);
@@ -264,7 +265,7 @@ var Player = ClimbingCharacter.$extend({
 
 	drawFinal: function( canvas ){
 		 canvas.save();
-		 canvas.translate( this.worldpos.x  - this.drawsize.w/2, this.worldpos.y - this.drawsize.h/2  );
+		 canvas.translate( this.drawpos.x  - this.drawsize.w/2, this.drawpos.y - this.drawsize.h/2  );
 
 		if( this.climbing == "off" || this.climbing == "ready-bottom"  || this.climbing == "ready-top"){
 			if(this.facing == -1)  canvas.translate(this.drawsize.w,0);

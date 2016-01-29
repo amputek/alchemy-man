@@ -5,6 +5,6 @@ var GameObject = Class.$extend({
 		this.body = body;
 		this.body.SetUserData( this );
 		this.physicspos = this.body.GetPosition();
-    	this.worldpos = Vector2.toWorld(this.physicspos);
+    	this.drawpos = Vector2.physicsToDraw(this.physicspos);
 	}
 });

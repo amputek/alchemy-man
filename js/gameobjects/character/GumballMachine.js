@@ -2,7 +2,8 @@
 var Gumball = Character.$extend({
 	__init__ : function(pos,target){
 		this.$super(pos,{w:4,h:5.5});
-		this.target = Vector2.toWorld(target);
+
+		this.target = target;
 
 		this.moveSpeed = 0;
 		this.jumpHeight = 0;
@@ -51,7 +52,7 @@ var Gumball = Character.$extend({
 	},
 
 	applyImpulse: function(vx,vy,px,py){
-		this.body.ApplyImpulse( new b2Vec2( vx , vy ), new b2Vec2( px , py ) );
+		this.body.ApplyImpulse( Vector2.b2( vx , vy ), Vector2.b2( px , py ) );
 	},
 
 	updateCannon: function(){
@@ -70,9 +71,9 @@ var Gumball = Character.$extend({
 		if( bodyAngle > 1  ) bodyAngle = 1;
 		if( bodyAngle < -1 ) bodyAngle = -1;
 
-		this.applyImpulse( ( this.target.x - this.worldpos.x ) * 0.01, cosBodyAngle * -14.4 , this.physicspos.x + bodyAngle , this.physicspos.y + 1 );
 
-		// this.applyImpulse( 0, ( this.target.y - this.worldpos.y ) * 0.01 , this.physicspos.x + bodyAngle , this.physicspos.y + 1 );
+		this.applyImpulse( ( this.target.x - this.physicspos.x ) * 0.1, cosBodyAngle * -14.4 , this.physicspos.x + bodyAngle , this.physicspos.y + 1 );
+
 
 		if(this.upping == true){
 
@@ -85,7 +86,7 @@ var Gumball = Character.$extend({
 			}
 		}
 
-		if(this.worldpos.y > (this.target.y-5) && this.upping == false){
+		if(this.physicspos.y > this.target.y-1 && this.upping == false){
 			this.upping = true;
 			this.propanimation.current = this.propanimation.waft;
 		}
@@ -154,7 +155,7 @@ var Gumball = Character.$extend({
 
 	drawFinal: function( canvas ){
 		 canvas.save();
-		 canvas.translate( this.worldpos.x  , this.worldpos.y   );
+		 canvas.translate( this.drawpos.x  , this.drawpos.y   );
 		 canvas.rotate(this.body.GetAngle());
 		 canvas.translate(-100,-85);
 		 canvas.drawImage( this.draw_final.getImage() );

@@ -1,8 +1,11 @@
-var Effect = new JS.Class({
+var Effect = new JS.Class( Doodad, {
+    //gets initalised with a grid position, not a physics position
     initialize: function(pos,endPiece,dir){
+
         this.gridpos = pos;
         this.physicspos = Vector2.gridToPhysics(pos);
-        this.worldpos = Vector2.toWorld(this.physicspos);
+        this.callSuper( this.physicspos );
+
         this.life = 15;
 
         this.draw_canvas = new Canvas();
@@ -29,7 +32,7 @@ var Effect = new JS.Class({
 
     draw : function( canvas ){
         canvas.save();
-        canvas.translate(  this.worldpos.x - this.drawoffset.x, this.worldpos.y - this.drawoffset.y );
+        canvas.translate(  this.drawpos.x - this.drawoffset.x, this.drawpos.y - this.drawoffset.y );
         canvas.drawImage( this.animation.getFrame( this.draw_canvas ) );
         canvas.restore();
     }

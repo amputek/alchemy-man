@@ -1,12 +1,10 @@
-
-// does this even need to exist?????????? you massive twat <3 love from liffey x
-
 //this is now a SINGLETON. The collectionos are cleared/refilled each new level load - NOT completely recreated.
 //used to be called "Level"
 
 //this could still be merged with Game Manager. Need to work out what separates this from Game Manager.
-var GameplayManager = Class.$extend({
 
+//this manages the updating of the game / current level. level set up occurs in level manager
+var GameplayManager = Class.$extend({
 
 	//this now gets called ONCE when the game starts
 	__init__: function(){
@@ -24,7 +22,6 @@ var GameplayManager = Class.$extend({
 	    this.explosions         = new ExplosionManager();
 	    this.fragmentSources    = new FragmentSourceManager();
 	    this.enemySources       = new GameObjectCollectionManager();
-	    this.tooltips           = new TooltipManager();
 
 		this.weather 			= new Weather();
 		this.nolandzones        = [];
@@ -38,7 +35,7 @@ var GameplayManager = Class.$extend({
 
 
 
-		//TODO make canvas exist here. SHould be created ONCE at start of game, and just cleared/resized at the start of every level
+		//TODO clean this up
 		this.canvas  = [];
 
 		var levelSize = { w: 2040, h: 800 };
@@ -55,10 +52,7 @@ var GameplayManager = Class.$extend({
         this.canvas[5] = new GameCanvas( canvasSize , 1.2  );
 
 
-
-		// this.gamecanvas = null;
 		this.painCounter = 0.0;
-		this.bottomLimit = 0;
 
 		this.name = "";
 		this.physicsSize = null;
@@ -69,7 +63,7 @@ var GameplayManager = Class.$extend({
 
 
 	initPlayer: function(){
-        player.body.SetPosition( new b2Vec2(this.startpos.x,this.startpos.y+5) );
+        player.body.SetPosition( Vector2.b2(this.startpos.x,this.startpos.y+5) );
         player.currentPlatform = this.startPlatform;
         if(player.currentAction == "idle") player.animation.current = player.animation.idle;
         if(player.currentAction == "run") player.animation.current = player.animation.run;
@@ -85,7 +79,7 @@ var GameplayManager = Class.$extend({
 
 	updatePlayer : function( canvas ){
 		player.update();
-  		if(player.worldpos.y > this.bottomLimit ) player.getHit(6)
+  		if(player.physicspos.y > this.physicsSize.h ) player.getHit(6)
 		player.draw( canvas );
 	},
 
@@ -154,38 +148,16 @@ var GameplayManager = Class.$extend({
 	// called from entity manager
 	addFragment: function( pos, vel, type, size ){ this.fragments.add( new Fragment( pos , vel , type , size ) ); },
 
-	//called from entity manager ()
-	addTooltip: function( pos, text ){ this.tooltips.add( new Tooltip( pos, text) ); },
+	occupied: function( pos ){
+		for (var i = 0; i < this.nolandzones.length; i++) { if( Vector2.equal( pos , this.nolandzones[i] ) ) return true;  }
+		return false;
+	},
 
 
 	//called by Chomper ONLY
 	getFloors: function(){
 		return this.floors.collection;
 	},
-
-
-    //called  levelmanager
-
-	setStart : function( pos, floor ){
-		this.startpos = Vector2.b2(pos);
-		this.startPlatform = floor;
-	},
-
-	setEnd : function( pos ){
-		this.endpos = Vector2.b2(pos);
-	},
-
-
-	setSize: function( size ){
-		this.physicsSize = size;
-		this.bottomLimit = size.h * SCALE + 100;
-	},
-
-	occupied: function( pos ){
-		for (var i = 0; i < this.nolandzones.length; i++) { if( Vector2.equal( pos , this.nolandzones[i] ) ) return true;  }
-		return false;
-	},
-
 
 	// called by player
 	shake: function(a){
@@ -215,8 +187,8 @@ var GameplayManager = Class.$extend({
 		this.acid.emptyCollection();
 		this.explosions.emptyCollection();
 
-		for(var i = 0; i < graveyard.length;            i++){			world.DestroyBody( graveyard[i] 						) }
-		for(var i = 0; i < this.canvas.length; i++) {			this.canvas[i].clear(); 		}
+		for(var i = 0; i < graveyard.length; i++){ world.DestroyBody( graveyard[i] ) }
+		for(var i = 0; i < this.canvas.length; i++) { this.canvas[i].clear(); }
 	},
 
 	update: function(world){
@@ -239,7 +211,6 @@ var GameplayManager = Class.$extend({
 		this.gamecanvas.blendFunction(  "source-over"  );
 		this.projectiles.update(     		this.gamecanvas, graveyard );
 		this.enemySources.update(			this.gamecanvas, graveyard );
-		this.tooltips.update( 				this.gamecanvas, graveyard );
 
 		game.trajectory.draw(              		this.gamecanvas       			);
 

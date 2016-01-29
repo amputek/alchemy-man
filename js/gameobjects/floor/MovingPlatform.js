@@ -3,8 +3,7 @@ var MobilePlatform = Floor.$extend({
         this.$super( factory.createMovingPlatform( pos, size ));
         this.physicssize = size;
         this.drawsize = sizeVector(this.physicssize.w*SCALE,this.physicssize.h*SCALE);
-        this.vel = new b2Vec2( 0 , 0 );
-        //this.vel = Vector2.b2(0,0);
+        this.vel = Vector2.b2( 0 , 0 );
         this.setVelocity(0,0);
         this.boundary = {
             left   : this.physicspos.x - this.physicssize.w,
@@ -15,17 +14,18 @@ var MobilePlatform = Floor.$extend({
     },
 
     setVelocity: function(x,y){
-        this.body.SetLinearVelocity( new b2Vec2(x, y));
+        this.body.SetLinearVelocity( Vector2.b2(x, y));
     },
 
     setPosition: function( pos ){
         this.body.SetPositionAndAngle( pos, 0 );
     },
 
+    //this update should come from a different abstract class
     update: function(){
         this.currentpos = this.physicspos = this.body.GetPosition();
         this.vel = this.body.GetLinearVelocity();
-        this.worldpos = Vector2.toWorld(this.physicspos);
+        this.drawpos = Vector2.physicsToDraw(this.physicspos);
     }
 });
 
@@ -110,7 +110,7 @@ var MovingPlatform = MobilePlatform.$extend({
     this.draw_canvas.clear();
     this.draw_canvas.setFill("black");
 
-    this.toppos.x = this.worldpos.x - this.physicssize.w*SCALE;
+    this.toppos.x = this.drawpos.x - this.physicssize.w*SCALE;
 
     var lx = this.drawsize.w - (this.drawsize.w-20);
     var rx = this.drawsize.w + (this.drawsize.w-20)
@@ -118,7 +118,7 @@ var MovingPlatform = MobilePlatform.$extend({
     this.draw_canvas.solidCircle( lx , 0 , 15 );
     this.draw_canvas.solidCircle( rx , 0 , 15 );
 
-    var top = this.worldpos.y - this.toppos.y;
+    var top = this.drawpos.y - this.toppos.y;
 
 
     for(var y = top-40; y > -100; y-=40){
@@ -170,6 +170,6 @@ var SwitchedMovingPlatform = MovingPlatform.$extend({
 
   draw: function(ctx){
     this.$super(ctx);
-    ctx.drawImage(this.triggerimg, vector(this.triggerPoint.worldpos.x-60,this.triggerPoint.worldpos.y-75));
+    ctx.drawImage(this.triggerimg, vector(this.triggerPoint.drawpos.x-60,this.triggerPoint.drawpos.y-75));
   }
 });

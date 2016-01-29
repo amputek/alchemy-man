@@ -131,7 +131,6 @@ var factory = new JS.Singleton(JS.Class,{
 		var body = this.world.CreateBody( db );
 		body.SetAngularDamping(0.3);
 		body.CreateFixture( this.iceFragmentFixture );
-		//body.ApplyImpulse( new b2Vec2(vel.x,vel.y), new b2Vec2( pos.x+Math.randomFloat(-10,10),pos.y+Math.randomFloat(-10,10)));
 		body.ApplyImpulse( Vector2.b2(vel), Vector2.b2( Vector2.add( pos, Vector2.random(10) ) ) );
 		return body;
 	},

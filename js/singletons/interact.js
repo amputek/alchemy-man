@@ -1,7 +1,6 @@
 // Simplify Box2D variables --- do these all need to be here??????
 var b2RayCastInput = Box2D.Collision.b2RayCastInput;
 var b2RayCastOutput = Box2D.Collision.b2RayCastOutput;
-var b2Vec2 = Box2D.Common.Math.b2Vec2;
 
 var SCALE = 8;
 
@@ -12,9 +11,10 @@ var player; // accessed everywhere apparently
 var playerweapon; //gamecanvas, player, trajectory, game, input
 var currentLevel; //game, gameobjects, level, input. could probably be replaced by "game" eventually.
 
+var gamePaused = false;
 
 //GLOBAL VARIABLES
-var offset = vector(0,0)
+var offset = vector(0,0); //canvas, player, camera (set), trajectory
 var now = Date.now();
 
 var debugging = false;
@@ -48,7 +48,7 @@ function SetupGame( finishedLoadingCallback ){
 		debug.log("Finished loading images");
 		debug.logline();
 		debug.log("Loading World");
-		game.world = new Box2D.Dynamics.b2World(new b2Vec2(0, 10),  true ); // create world
+		game.world = new Box2D.Dynamics.b2World( Vector2.b2(0, 10),  true ); // create world
 		factory.init(game.world); // create factory
 		game.world.SetContactListener( CreateListener() ); // set up listener for world
 		playerweapon = new PotionManager();
@@ -63,7 +63,8 @@ function SetupGame( finishedLoadingCallback ){
 		debug.logline();
 		debug.log("Loading Levels");
 		player = new Player( vector(0,0), game.world )
-		game.levelGenerator = new LevelGenerator( setup.setupInputs );
+		// game.levelGenerator = new LevelGenerator( setup.setupInputs );
+		LevelJSONDatabase.init( setup.setupInputs );
 	}
 
 	//now levels have finished loading
@@ -94,7 +95,7 @@ var GameManager = Class.$extend({
 
 	__init__: function(){
 		this.currentLevelIndex = 0;
-		this.levelGenerator = null;
+		// this.levelGenerator = null;
 		this.camera = null; //in gameplay manager ?
 		this.trajectory = null; //in gameplay manager?
 		this.playerDying = false; //in gameplay manager?
@@ -118,6 +119,8 @@ var GameManager = Class.$extend({
 	// Main Game update function
 	update : function(){
 		this.loop = window.requestAnimationFrame( function(){ game.update() } );
+
+		if(gamePaused) return;
 		if(debugging) debug.stats.begin();
 
 		//check if current level has finished
@@ -138,7 +141,7 @@ var GameManager = Class.$extend({
 		this.currentLevelIndex++;
 
 		//loop round to level 0 when last level is finished
-		if(this.currentLevelIndex == this.levelGenerator.database.databaseSize){
+		if(this.currentLevelIndex == LevelGenerator.database.databaseSize){
 			this.currentLevelIndex = 0;
 			this.loadLevel( this.currentLevelIndex );
 		} else {
@@ -155,7 +158,7 @@ var GameManager = Class.$extend({
 		if(currentLevel != undefined && currentLevel != null) currentLevel.clearLevel(this.world);
 
 		// get json data from database, pass json data to level loader. set level as current level
-		this.levelGenerator.generateLevelFromJSONData( index, currentLevel );
+		LevelGenerator.generateLevelFromJSONData( index, currentLevel );
 		currentLevel.initPlayer();
 
 		//probably dont need to make new camera each time?

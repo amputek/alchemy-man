@@ -1,8 +1,8 @@
-var Explosion = Class.$extend({
-	__init__ :function (pos,vel,type,dir,fragmentNumber) {
+var Explosion = new JS.Class( Doodad, {
+	initialize :function (pos,vel,type,dir,fragmentNumber) {
 
+		this.callSuper(pos);
 		this.physicspos = pos;
-		this.worldpos = Vector2.toWorld(this.physicspos)
 		this.type = type;
 		this.dir = dir;
 		this.vel = vel;
@@ -49,7 +49,7 @@ var Explosion = Class.$extend({
 		if(this.animation != null && this.animation.resting() == false){
 			this.animation.incFrame();
 			canvas.save();
-			canvas.translate(this.worldpos.x,this.worldpos.y)
+			canvas.translate(this.drawpos.x,this.drawpos.y)
 			if(this.type == "acid"){
 				if(this.dir == "right" || this.dir == "left")	canvas.translate(0,20)
 			}

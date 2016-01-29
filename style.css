@@ -63,25 +63,6 @@ body{
 }
 
 
-.tooltip{
-	text-shadow: 0 -1px 10px purple;
-	font-size: 20px;
-	text-align: center;
-	font-weight: bolder;
-	margin-left: -70px;
-	margin-top: -70px;
-	z-index: 30;
-	padding: 20px;
-	height: 140px;
-	width: 140px;
-	overflow: hidden;
-	position: absolute;
-	opacity: 1.0;
-	-webkit-transition: opacity 2.0s ease;
-	color: white;
-	-webkit-transform: translate3d(0,0,0);
-}
-
 #debug-wrapper{
 	border: 1px solid #333;
 	height: 100px;

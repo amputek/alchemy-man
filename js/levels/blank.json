@@ -21,14 +21,19 @@
     "setting": "exterior",
     "weather": 0.5,
     "enemies": [{
-        "x": 10,
-        "y": 3,
+        "x": 15,
+        "y": 8,
         "type": "gumball"
     }],
     "platforms": [{
         "x": -1,
         "y": 11,
-        "w": 7,
+        "w": 8,
+        "h": 1
+    }, {
+        "x": 11,
+        "y": 12,
+        "w": 10,
         "h": 1
     }, {
         "x": -1,
@@ -37,11 +42,48 @@
         "h": 1
     }],
     "jumpboxes": [],
-    "ladders": [],
+    "ladders": [{
+        "x":5,
+        "y":5,
+        "h":5
+    }],
     "fragmentsources": [],
     "triggeredplatforms": [],
     "enemysources": [],
     "conveyers": [],
-    "supports": [],
-    "doodads": []
+    "supports": [{
+        "x":0,
+        "y":12,
+        "h":5
+    },{
+        "x":3,
+        "y":12,
+        "h":5
+    },{
+        "x":14,
+        "y":13,
+        "h":4
+    },{
+        "x":17,
+        "y":13,
+        "h":4
+    }],
+    "doodads": [{
+        "type":"drawers",
+        "x":3,
+        "y":14,
+        "depth":3
+    },{
+        "type":"pile",
+        "x":8,
+        "y":15,
+        "depth":3
+    },{
+        "type":"lamp",
+        "x":5,
+        "y":2,
+        "depth":3
+    }
+
+]
 }

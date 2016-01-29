@@ -148,21 +148,13 @@ var ExplosionManager = new JS.Class(Manager,{
 	}
 });
 
-var TooltipManager = new JS.Class(Manager,{
-	collectGarbage: function( ){
-		for(var i = 0; i < this.removers.length; i++){
-			element("game-wrapper").removeChild( this.removers[i].dom )
-			this.collection.splice( this.collection.indexOf( this.removers[i]), 1 );
-		}
-	}
-});
 
 var EffectManager = new JS.Class(Manager,{
 	add: function(pos,platform,type){
 		var a = platform.getNearestEdge(pos);
-		var n = Vector2.toGrid(a);
+		var n = Vector2.physicsToGrid(a);
 		var alreadyTaken = false;
-		var platformGrid = Vector2.toGrid(platform.physicspos);
+		var platformGrid = Vector2.physicsToGrid(platform.physicspos);
 		var w = platform.physicssize.w/5;
 		var add = false;
 
@@ -229,7 +221,6 @@ var AcidManager = new JS.Class(EffectManager,{
 
 var EnemyManager = new JS.Class(GameObjectManager,{
 	kill: function( e, graveyard ){
-		currentLevel.addTooltip( e.worldpos, "+10" );
 		if( e instanceof Gumball )  for (var i = 0; i < 30; i++) {  currentLevel.addFragment( e.physicspos, Vector2.random(15) , "gumball" , "big" ) }
 		if( e instanceof Chomper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, Vector2.random(15) , "gumball" , "big" ) }
 		if( e instanceof Creeper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, Vector2.random(15) , (Math.coin(0.5) ? "fire" : "gumball") , "big" ) }
@@ -253,7 +244,7 @@ var IceManager = new JS.Class(GameObjectManager,{
 		this.callSuper();
 	},
 	add: function(pos,platform){
-		var gp = Vector2.toGrid(pos);
+		var gp = Vector2.physicsToGrid(pos);
 		this.preFreeze = vector(pos.x, gp.y* 5);
 	},
 	update : function(ctx, graveyard){

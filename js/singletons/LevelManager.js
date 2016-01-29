@@ -1,12 +1,16 @@
 
 // CONTAINS THE RAW JSON DATA FOR EACH LEVEL
-var LevelJSONDatabase = Class.$extend({
+var LevelJSONDatabase = new JS.Singleton( JS.Class, {
 
     //takes a callback function for when levels have finished loading
-    __init__: function( callback ){
+    initialize: function(){
         this.data = [];
         this.databaseSize = 0;
         this.successfulLoads = 0;
+        this.finishedLoadingCallback = null;
+    },
+
+    init: function( callback ){
         this.finishedLoadingCallback = callback;
         this.parseLevels();
     },
@@ -111,121 +115,183 @@ var LevelJSONDatabase = Class.$extend({
 
 //CONVERTS JSON DATA INTO GAMEOBJECTS.
 //PREPARES LEVEL FOR ENGINE
-var LevelGenerator = Class.$extend({
+var LevelGenerator = new JS.Singleton( JS.Class, {
 
-    __init__: function( callback ){
-        this.database = new LevelJSONDatabase( callback );
+    initialize: function(  ){
         this.posterCount = 0;
     },
 
-    getVectors: function(f){
-        var size = sizeVector( f.w * 2.5 , f.h * 2.5 );
-        var pos  = vector    ( f.x*5 + size.w , f.y*5 + size.h );
-        return { pos: pos , size: size }
+    getSize: function( objectData ){
+        if( objectData.w == undefined ) objectData.w = 1;
+        return sizeVector( objectData.w * 2.5 , objectData.h * 2.5 );
     },
 
-    loadPlatform: function( f, canvas ){
-        var vectors = this.getVectors(f);
-        return new Platform( vectors.pos, vectors.size );
-    },
-
-    loadJumpBox: function( f , canvas ){
-        var vectors = this.getVectors(f);
-        canvas.drawImage( images.env.jumpbox, vector(vectors.pos.x*SCALE - 22 , vectors.pos.y*SCALE - 20 ));
-        return new JumpBox( vectors.pos , vectors.size );
-    },
-
-    loadLedge: function( f , canvas ){
-        var vectors = this.getVectors(f)
-        var img = null;
-        var drawoffset = vector(0,0);
-
-        if(f.w == 1){
-            if(f.h == 2){
-                img = images.env.boxpile_1_2[ Math.randomInt(0,2) ];
-                drawoffset = vector(1,-2);
-            } else if(f.h == 4){
-                img = images.env.boxpile_1_4;
-                drawoffset = vector(0,-2);
-            } else if(f.h == 5){
-                img = images.env.boxpile_1_5;
-                drawoffset = vector(0,-2);
-            } else if(f.h == 6){
-                img = images.env.boxpile_1_6;
-                drawoffset = vector(0,-2);
-            } else {
-                img = images.env.boxpile_1_1[ Math.randomInt(0,3) ];
-                drawoffset = vector(1,-2);
-            }
-        } else if(f.w == 2){
-            if(f.h == 2){
-                img = images.env.boxpile_2_2;
-                drawoffset = vector(40,37)
-            } else if(f.h == 4){
-                img = images.env.machine;
-                drawoffset = vector(45,0);
-            }
-        } else if(f.w == 3){
-            if(f.h == 2){
-                img = images.env.boxpile_3_2;
-                drawoffset = vector(15,0);
-            } else {
-                img = images.env.toyrack;
-                drawoffset = vector(-0,0);
-            }
+    getPosition2: function( x,y,w,h ){
+        var nx,ny,nw,nh;
+        //incase its an object
+        if( x.x != undefined){
+            nx = x.x;
+            ny = x.y;
+            nw = x.w;
+            nh = x.h;
         }
 
-
-        drawsize = sizeVector( vectors.size.w * SCALE + drawoffset.x, vectors.size.h * SCALE + drawoffset.y );
-        canvas.drawImage( img, vector( vectors.pos.x*SCALE - drawsize.w, vectors.pos.y*SCALE - drawsize.h ) );
-
-        return new Platform( vectors.pos , vectors.size )
+        if( nh == undefined ){
+            nw = 0;
+            nh = 0;
+        }
+        if( nh != undefined && nw == undefined ) nw = 1;
+        return vector( (nx * 5) + (nw * 2.5) , (ny * 5) + (nh * 2.5) );
     },
 
-    loadDoodad: function( d, canvas ){
-        var img = null;
-        if(d.type == "generator")          img = images.doodad.gen_fore
-        if(d.type == "barrel")             img = images.env.boxpile_2_2_blur;
-        if(d.type == "drawers")            img = images.doodad.drawers;
-        if(d.type == "pipe_bottom")        img = images.doodad.pipe_bottom;
-        if(d.type == "pipe_top")           img = images.doodad.pipe_top;
-        if(d.type == "pipe_left")          img = images.doodad.pipe_left;
-        if(d.type == "pipe_right")         img = images.doodad.pipe_right;
-        if(d.type == "pipe_bottom_left")   img = images.doodad.pipe_bottom_left[ Math.randomInt(0,2) ]
-        if(d.type == "pipe_bottom_right")  img = images.doodad.pipe_bottom_right[ Math.randomInt(0,2) ]
-        if(d.type == "pipe_top_left")      img = images.doodad.pipe_top_left[ Math.randomInt(0,2) ]
-        if(d.type == "pipe_top_right")     img = images.doodad.pipe_top_right[ Math.randomInt(0,2) ]
-        if(d.type == "pipe_hor")           img = images.doodad.pipe_hor[ Math.randomInt(0,4) ]
-        if(d.type == "pipe_vert")          img = images.doodad.pipe_vert[ Math.randomInt(0,4) ]
-        if(d.type == "pile")               img = images.doodad.pile;
-        if(d.type == "boiler")             img = images.doodad.boiler;
-        if(d.type == "box")                img = ( d.depth == 2 ? images.env.boxpile_4_2_blur : images.env.boxpile_4_2_blur2 );
-        if(d.type == "lamp_fitting_left")  img = images.doodad.lampfitting_l;
-        if(d.type == "lamp_fitting_right") img = images.doodad.lampfitting_r;
-        if(d.type == "bg_platform_0")      img = images.doodad.bg_platform[0];
-        if(d.type == "bg_platform_1")      img = images.doodad.bg_platform[1];
-        if(d.type == "bg_platform_2")      img = images.doodad.bg_platform[2];
-        if(d.type == "door")               img = images.doodad.door;
-        if(d.type == "lamp")               img = (d.depth == 3 ? images.doodad.lamp : images.doodad.lamp_blur);
-        canvas.drawImage( img, Vector2.toWorld( Vector2.gridToPhysics(d) ) );
-    },
+    setStart : function( level, pos, floor ){
+		level.startpos = Vector2.b2(pos);
+		level.startPlatform = floor;
+	},
 
-    loadConveyer: function(f){
-        return new Conveyer( vector(f.x*5 + f.w*5 , f.y*5 ), sizeVector(f.w*2.5,2) );
-    },
+	setEnd : function( level, pos ){
+		level.endpos = Vector2.b2(pos);
+	},
 
-    loadMovingPlatform: function(f){
+	setSize: function( level, size ){
+		level.physicsSize = size;
+	},
 
-        var vectors = this.getVectors(f);
-        var endpos = vector(f.ex*5 + vectors.size.w, f.ey*5 + vectors.size.h);
-        var triggerpos = vector(f.tx*5, f.ty*5);
+    //non-interactive drawing
+    //this could be moved into doodads? "support" is just a type of doodad right?
+    drawSupports: function( data , canvas ){
 
-        if(f.switched == true){
-            return new SwitchedMovingPlatform( vectors.pos, vectors.size, endpos, f.time, triggerpos );
-        } else {
-            return new MovingPlatform( vectors.pos, vectors.size, endpos, f.time, true );
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+
+            var draw_temp = new Canvas( sizeVector(600,600))
+
+            for(var ay = 0; ay < d.h; ay++){
+                if(ay == 0){
+                    draw_temp.drawImage( images.env.support_top, vector(80-0,ay*5*SCALE ) );
+                    ay++;
+                } else if(ay == d.h-1){
+                    draw_temp.drawImage( images.env.support_base, vector(80-3,ay*5*SCALE-15 ) );
+                } else if (ay % 2 == 0){
+                    draw_temp.drawImage( images.env.support_high[Math.randomInt(0,2)], vector(80,ay*5*SCALE ) );
+                } else {
+                    draw_temp.drawImage( images.env.support_low[Math.randomInt(0,3)], vector(80,ay*5*SCALE ) );
+                }
+            }
+            for(var ay = 1.5; ay < d.h - 3; ay += Math.randomFloat(1.5,2.5)){
+                if( Math.coin(0.2) ) draw_temp.drawImage( images.doodad.poster[ Math.randomInt(3,4) ], vector(84,ay * 5 * SCALE ));
+            }
+
+            draw_temp.drawImage( images.doodad.lampfitting_l, vector(80 - 78, 0 ) );
+            draw_temp.drawImage( images.doodad.lampfitting_r, vector(80 + 38, 0 ) );
+
+            canvas.drawImage( draw_temp.getImage() , Vector2.physicsToDraw( vector(d.x*5 - 10, d.y*5) ) );
+
         }
     },
+
+    drawDoodads: function( data, canvases ){
+
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+
+            var img = null;
+            if(d.type == "generator")          img = images.doodad.gen_fore
+            if(d.type == "barrel")             img = images.env.boxpile_2_2_blur;
+            if(d.type == "drawers")            img = images.doodad.drawers;
+            if(d.type == "pipe_bottom")        img = images.doodad.pipe_bottom;
+            if(d.type == "pipe_top")           img = images.doodad.pipe_top;
+            if(d.type == "pipe_left")          img = images.doodad.pipe_left;
+            if(d.type == "pipe_right")         img = images.doodad.pipe_right;
+            if(d.type == "pipe_bottom_left")   img = images.doodad.pipe_bottom_left[ Math.randomInt(0,2) ]
+            if(d.type == "pipe_bottom_right")  img = images.doodad.pipe_bottom_right[ Math.randomInt(0,2) ]
+            if(d.type == "pipe_top_left")      img = images.doodad.pipe_top_left[ Math.randomInt(0,2) ]
+            if(d.type == "pipe_top_right")     img = images.doodad.pipe_top_right[ Math.randomInt(0,2) ]
+            if(d.type == "pipe_hor")           img = images.doodad.pipe_hor[ Math.randomInt(0,4) ]
+            if(d.type == "pipe_vert")          img = images.doodad.pipe_vert[ Math.randomInt(0,4) ]
+            if(d.type == "pile")               img = images.doodad.pile;
+            if(d.type == "boiler")             img = images.doodad.boiler;
+            if(d.type == "box")                img = ( d.depth == 2 ? images.env.boxpile_4_2_blur : images.env.boxpile_4_2_blur2 );
+            if(d.type == "lamp_fitting_left")  img = images.doodad.lampfitting_l;
+            if(d.type == "lamp_fitting_right") img = images.doodad.lampfitting_r;
+            if(d.type == "bg_platform_0")      img = images.doodad.bg_platform[0];
+            if(d.type == "bg_platform_1")      img = images.doodad.bg_platform[1];
+            if(d.type == "bg_platform_2")      img = images.doodad.bg_platform[2];
+            if(d.type == "door")               img = images.doodad.door;
+            if(d.type == "lamp")               img = (d.depth == 3 ? images.doodad.lamp : images.doodad.lamp_blur);
+            canvases[d.depth].drawImage( img, Vector2.physicsToDraw( this.getPosition2( d ) ) );
+
+
+        }
+    },
+
+
+    //game object loading (and drawing)
+
+    loadAndDrawJumpBoxes: function( data , floors, canvas ){
+        for (var i = 0; i < data.length; i++) {
+            var pos = this.getPosition2( data[i] );
+            var size = this.getSize( data[i] );
+            canvas.drawImage( images.env.jumpbox, vector(pos.x*SCALE - 22 , pos.y*SCALE - 20 ));
+            floors.add( new JumpBox( pos , size ) );
+        }
+    },
+
+    loadAndDrawLadders: function( data, floors, canvas ){
+
+        for (var i = 0; i < data.length; i++) {
+            var f = data[i];
+
+            var pos = this.getPosition2( f );
+            var size = this.getSize( f );
+
+            var drawpos = Vector2.physicsToDraw(pos);
+            var drawsize = sizeVector(f.w * SCALE * 2.5, f.h * SCALE * 2.5 );
+
+            //temporary draw
+            canvas.save();
+            canvas.translate( drawpos.x,  drawpos.y);
+            canvas.setFill( 'black' );
+            for(var i = -drawsize.h; i < drawsize.h; i+= 20){
+                canvas.solidRect( -22 , i-2  , 44 , 6  );
+                canvas.solidRect( -17 , i-22 , 6  , 46 );
+                canvas.solidRect( 13  , i-22 , 6  , 46 );
+            }
+            canvas.setFill( 'rgb(100,65,30)' );
+            for(var i = -drawsize.h; i < drawsize.h; i+= 20){
+                canvas.solidRect( -20 , i    , 40 , 2  );
+                canvas.solidRect( -15 , i-20 , 2  , 40 );
+                canvas.solidRect( 15  , i-20 , 2  , 40 );
+            }
+            canvas.restore();
+
+
+            floors.add( new Ladder( pos, size ) );
+
+        }
+    },
+
+    loadPlatforms: function( data, floors ){
+        for (var i = 0; i < data.length; i++) {
+            floors.add( new Platform( this.getPosition2(data[i]), this.getSize(data[i]) ) );
+        }
+    },
+
+    loadMovingPlatforms: function( data, floors ){
+
+        for (var i = 0; i < data.length; i++) {
+            var f = data[i]
+            var endpos = this.getPosition2( f.ex, f.ey, f.w, f.h );
+            var triggerpos = this.getPosition2( f.tx, f.ty );
+
+            if(f.switched == true){
+                floors.add( new SwitchedMovingPlatform( this.getPosition2(f), this.getSize(f), endpos, f.time, triggerpos ) );
+            } else {
+                floors.add( new MovingPlatform( this.getPosition2(f), this.getSize(f), endpos, f.time, true ) );
+            }
+        }
+    },
+
 
     drawMovingPlatforms: function(movers, floors, canvas){
 
@@ -245,82 +311,29 @@ var LevelGenerator = Class.$extend({
                 }
             }
 
-            m.setTopPos( vector( m.worldpos.x - m.physicssize.w*SCALE,currenty*SCALE ) );
+            m.setTopPos( vector( m.drawpos.x - m.physicssize.w*SCALE,currenty*SCALE ) );
         }
     },
 
-    loadLadder: function( f, canvas ){
+    loadEnemies: function( data, enemies ){
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i]
+            if(d.type == "gumball") enemies.add( new Gumball( this.getPosition2(d), this.getPosition2(d) ) );
+            if(d.type == "chomper") enemies.add( new Chomper( this.getPosition2(d) ) );
+            if(d.type == "creeper") enemies.add( new Creeper( this.getPosition2(d) ) );
+        }
+    },
 
-        var pos = vector( (f.x * 5) + 2.5, (f.y * 5) + (f.h * 2.5) );
-        var worldpos = Vector2.toWorld(pos);
 
-        var drawsize = sizeVector(20, f.h * SCALE * 2.5 );
-        canvas.save();
-        canvas.translate( worldpos.x,  worldpos.y);
-
-        canvas.setFill( 'black' );
-        for(var i = -drawsize.h; i < drawsize.h; i+= 20){
-            canvas.solidRect( -22 , i-2  , 44 , 6  );
-            canvas.solidRect( -17 , i-22 , 6  , 46 );
-            canvas.solidRect( 13  , i-22 , 6  , 46 );
+    loadFragmentSources: function( data, fs ){
+        for (var i = 0; i < data.length; i++) {
+            var d= data[i];
+            fs.add( new FragmentSource( this.getPosition(d), vector(d.vx,d.vy), d.type, d.frequency) );
         }
 
-        canvas.setFill( 'rgb(100,65,30)' );
-        for(var i = -drawsize.h; i < drawsize.h; i+= 20){
-            canvas.solidRect( -20 , i    , 40 , 2  );
-            canvas.solidRect( -15 , i-20 , 2  , 40 );
-            canvas.solidRect( 15  , i-20 , 2  , 40 );
-        }
-        canvas.restore();
-
-
-        return new Ladder( vector( (f.x * 5) + 2.5, (f.y * 5) + (f.h * 2.5) ), sizeVector(1,f.h*2.5) );
     },
 
-    loadSupport: function( d , canvas ){
-
-        var draw_temp = new Canvas( sizeVector(600,600))
-
-
-        var ax = d.x;
-
-
-        for(var ay = 0; ay < d.h; ay++){
-            if(ay == 0){
-                draw_temp.drawImage( images.env.support_top, vector(80-0,ay*5*SCALE ) );
-                ay++;
-            } else if(ay == d.h-1){
-                draw_temp.drawImage( images.env.support_base, vector(80-3,ay*5*SCALE-15 ) );
-            } else if (ay % 2 == 0){
-                draw_temp.drawImage( images.env.support_high[Math.randomInt(0,2)], vector(80,ay*5*SCALE ) );
-            } else {
-                draw_temp.drawImage( images.env.support_low[Math.randomInt(0,3)], vector(80,ay*5*SCALE ) );
-            }
-        }
-        for(var ay = 1.5; ay < d.h - 3; ay += Math.randomFloat(1.5,2.5)){
-            if( Math.coin(0.2) ) draw_temp.drawImage( images.doodad.poster[ Math.randomInt(3,4) ], vector(84,ay * 5 * SCALE ));
-        }
-
-        draw_temp.drawImage( images.doodad.lampfitting_l, vector(80 - 78, 0 ) );
-        draw_temp.drawImage( images.doodad.lampfitting_r, vector(80 + 38, 0 ) );
-
-        canvas.drawImage( draw_temp.getImage() , Vector2.toWorld( vector(d.x*5 - 10, d.y*5) ) );
-
-    },
-
-    loadEnemy: function(d){
-      if(d.type == "gumball") return new Gumball( vector(d.x * 5, d.y * 5), vector(d.x * 5, d.y * 5) );
-      if(d.type == "chomper") return new Chomper(   vector(d.x * 5, d.y * 5) );
-      if(d.type == "creeper") return new Creeper(   vector(d.x * 5, d.y * 5) );
-    },
-
-    loadFragmentSource: function(d){
-        return new FragmentSource( vector(d.x * 5,d.y * 5), vector(d.vx,d.vy), d.type, d.frequency)
-    },
-
-    loadEnemySource: function(es){
-        if(es != null) return new EnemySource( vector(es.x * 5,es.y * 5), 400, 4 );
-    },
+    //For drawing floors
 
     isBrick: function( f ){
         if(f.physicssize.h == 2.5) return false;
@@ -339,7 +352,6 @@ var LevelGenerator = Class.$extend({
 
             if( this.isBrick(f) == false ){
 
-                var vectors = this.getVectors(f);
                 var drawsize = sizeVector( f.physicssize.w * SCALE * 2, f.physicssize.h * SCALE * 2 );
                 var draw_temp = new Canvas( sizeVector( drawsize.w + 70, drawsize.h + 70 ) );
                 var drawoffset = vector(0,0);
@@ -411,10 +423,10 @@ var LevelGenerator = Class.$extend({
                 var drawsize = sizeVector( f.physicssize.w * SCALE * 2 + drawoffset.x, f.physicssize.h * SCALE * 2 + drawoffset.y);
                 draw_temp.setFill("red")
                 // draw_temp.solidRect(0,0,1000,1000);
-                canvas.drawImage( draw_temp.getImage(), vector( f.worldpos.x - drawsize.w/2 , f.worldpos.y - drawsize.h/2 ) )
+                canvas.drawImage( draw_temp.getImage(), vector( f.drawpos.x - drawsize.w/2 , f.drawpos.y - drawsize.h/2 ) )
                 // canvas.setFill("blue")
                 // console.log(f.physicspos.x - drawsize.w/2 , f.physicspos.y - drawsize.h/2)
-                // canvas.solidRect( f.worldpos.x - drawsize.w/2 , f.worldpos.y - drawsize.h/2 , 50, 50);
+                // canvas.solidRect( f.drawpos.x - drawsize.w/2 , f.drawpos.y - drawsize.h/2 , 50, 50);
 
             }
         }
@@ -422,7 +434,7 @@ var LevelGenerator = Class.$extend({
 
     },
 
-    drawBrick: function(floors,canvas){
+    drawBricks: function(floors,canvas){
 
         var brickArray = [];
         for(var i = -50; i < 300; i++){
@@ -567,7 +579,7 @@ var LevelGenerator = Class.$extend({
 
     },
 
-    addPlatformShadows: function(floors,canvas,zones){
+    drawLedgeShadows: function(floors,canvas,zones){
         canvas.setFill( 'rgba(0,0,0,0.6)' );
         for (var i = 0; i < floors.length; i++) {
             var f = floors[i];
@@ -577,7 +589,7 @@ var LevelGenerator = Class.$extend({
                     if(f.physicspos.y+f.physicssize.h > f2.physicspos.y - f2.physicssize.h && f.physicspos.y-f.physicssize.h <= f2.physicspos.y + f2.physicssize.h){
                         for(var x = f.physicspos.x - f.physicssize.w; x < f.physicspos.x + f.physicssize.w; x+=5){
                             if(x >= f2.physicspos.x - f2.physicssize.w && x < f2.physicspos.x + f2.physicssize.w){
-                                var loc = Vector2.toGrid( new Vector2(x,f2.physicspos.y + f2.physicssize.h));
+                                var loc = Vector2.physicsToGrid( new Vector2(x,f2.physicspos.y + f2.physicssize.h));
 
                                 zones.push( loc );
 
@@ -603,6 +615,31 @@ var LevelGenerator = Class.$extend({
         }
 
 
+    },
+
+    drawBackdrop: function( setting, canvas ){
+        if(setting == "exterior") canvas.canvas.style.backgroundImage = "url('images/sunset.jpg')";
+        if(setting == "interior") canvas.canvas.style.backgroundImage = "url('images/factory.jpg')";
+    },
+
+    drawDoors: function( start, end, canvas ){
+        if(start.type == "door") canvas.drawImage( images.doodad.door,      vector(start.x * 5 * SCALE - 90 , start.y * 5 * SCALE - 160 ) );
+        if(end.type   == "door") canvas.drawImage( images.doodad.door_open, vector(end.x   * 5 * SCALE - 150, end.y   * 5 * SCALE - 160 ) );
+    },
+
+    tintFloorCanvas: function( floorcanvas, ambientLight ){
+        floorcanvas.tint( ambientLight  , 0.4+ambientLight.darkness );
+    },
+
+    tintCanvases: function( level, ambientLight ){
+        level.ambientLight = ambientLight;
+        var darkness = ambientLight.darkness;
+        level.canvas[0].tint( ambientLight  , 0.7+darkness );
+        level.canvas[1].fill( rgba(ambientLight.r,ambientLight.g,ambientLight.b,0.3) );
+        level.canvas[1].tint( ambientLight  , 0.5+darkness );
+        level.canvas[2].tint( ambientLight  , 0.5+darkness );
+        level.canvas[3].tint( ambientLight  , 0.3+darkness );
+        level.canvas[5].tint( ambientLight  , 0.5+darkness );
     },
 
 
@@ -641,91 +678,53 @@ var LevelGenerator = Class.$extend({
     generateLevelFromJSONData: function( index, level ){
 
         //get json data from database
-        var data = this.database.getLevel( index );
+        var data = LevelJSONDatabase.getLevel( index );
 
         level.name = data.name;
 
-        console.log(data.start);
 
 
-        var levelPhysicsSize = sizeVector( data.width * 5, data.height * 5);
-        var levelSize = sizeVector( data.width * 5 * SCALE, data.height * 5 * SCALE );
-        var startpos  = Vector2.gridToPhysics( data.start );
-        var endpos    = Vector2.gridToPhysics( data.end );
-
-        // console.log(startpos);
-
-        //startpos goes from a world value? (in the json data), to a physics position, to a draw position, to a b2vec2 in the level.js
+        //startpos goes from a grid value (in the json data), to a physics position, to a draw position, to a b2vec2 in the level.js
         //clean this up
 
 
+        //some of these functions are based here, some are in level.js.
+        //eg. we tell the level "setStart", but "loadplatforms" is here. why?
+
         level.weather.setAmount(data.weather)
-        level.setEnd( endpos );
-        level.setSize( levelPhysicsSize );
+        this.setEnd(  level, this.getPosition2( data.end ) );
+        this.setSize( level, sizeVector( data.width * 5, data.height * 5) );
 
-
-        var ambientLight = level.ambientLight = data.ambientLight;
-        var darkness = ambientLight.darkness;
 
         var floorcanvas  = level.canvas[3];
 
-        // draw doors
-        if(data.start.type == "door") level.canvas[3].drawImage( images.doodad.door,      vector(startpos.x * SCALE - 90, startpos.y * SCALE - 160 ) );
-        if(data.end.type   == "door") level.canvas[3].drawImage( images.doodad.door_open, vector(endpos.x   * SCALE - 150, endpos.y   * SCALE - 160 ) );
+        this.drawDoors( data.start, data.end, level.canvas[3]);
 
         // draw supports and doodads
-        for( var i = 0; i < data.supports.length; i++) { this.loadSupport( data.supports[i], level.canvas[3]                     ) }
-        for( var i = 0; i < data.doodads.length;  i++) { this.loadDoodad(  data.doodads[i] , level.canvas[data.doodads[i].depth] ) }
+        this.drawSupports( data.supports , level.canvas[3] );
+        this.drawDoodads(  data.doodads , level.canvas );
 
         //TODO: only need to do this if new setting is different
-        // set up backdrop
-        if(data.setting == "exterior") level.canvas[0].canvas.style.backgroundImage = "url('images/sunset.jpg')";
-        if(data.setting == "interior") level.canvas[0].canvas.style.backgroundImage = "url('images/factory.jpg')";
+        this.drawBackdrop( data.setting, level.canvas[0] );
 
         // tint doors and non-interactive doodads (before adding any platforms etc)
-        floorcanvas.tint( ambientLight  , 0.4+darkness );
+        this.tintFloorCanvas( floorcanvas, data.ambientLight );
 
+        this.loadAndDrawJumpBoxes( data.jumpboxes          , level.floors, floorcanvas );
+        this.loadAndDrawLadders(   data.ladders            , level.floors, floorcanvas );
+        this.loadPlatforms(        data.platforms          , level.floors );
+        this.loadMovingPlatforms(  data.triggeredplatforms , level.triggeredplatforms );
+        this.loadEnemies(          data.enemies            , level.enemies );
+        this.loadFragmentSources(  data.fragmentsources    , level.fragmentsources );
+        this.drawMovingPlatforms(  level.triggeredplatforms.getCollection(), level.floors.getCollection(), floorcanvas )
+        this.drawBricks(           level.floors.getCollection(), floorcanvas )
+        this.drawLedgeShadows(     level.floors.getCollection(), floorcanvas, level.nolandzones)
+        this.drawLedges(           level.floors.getCollection(), floorcanvas )
 
-        var _this = this;
+        this.tintCanvases( level, data.ambientLight )
 
-        function Add( dataCol, levelCol, func ){
-            for( var i = 0; i < dataCol.length; i++){
-                levelCol.add( func( dataCol[i], floorcanvas ) );
-            }
-        }
-
-
-
-        // draw floors
-        for( var i = 0; i < data.jumpboxes.length;          i++) {  level.floors.add(              this.loadJumpBox(           data.jumpboxes[i]          , floorcanvas ) ) }
-        for( var i = 0; i < data.conveyers.length;          i++) {  level.floors.add(              this.loadConveyer(          data.conveyers[i ]         , floorcanvas ) ) }
-        for( var i = 0; i < data.ladders.length;            i++) {  level.floors.add(              this.loadLadder(            data.ladders[i]            , floorcanvas ) ) }
-        for( var i = 0; i < data.platforms.length;          i++) {  level.floors.add(              this.loadPlatform(          data.platforms[i]          , floorcanvas ) ) }
-        // NOW ADD ALL OTHER GAME OBJECTS - THESE ARE NOT DRAWN NOW BUT NEED TO BE ADDED TO MANAGERS
-        for( var i = 0; i < data.triggeredplatforms.length; i++) {  level.triggeredplatforms.add(  this.loadMovingPlatform(    data.triggeredplatforms[i] ) ) }
-        for( var i = 0; i < data.enemies.length;            i++) {  level.enemies.add(             this.loadEnemy(             data.enemies[i]            ) ) }
-        for( var i = 0; i < data.fragmentsources.length;    i++) {  level.fragmentSources.add(     this.loadFragmentSource(    data.fragmentsources[i]    ) ) }
-        for( var i = 0; i < data.enemysources.length;       i++) {  level.enemySources.add(        this.loadEnemySource(       data.enemysources[i]       ) ) }
-
-        this.drawMovingPlatforms( level.triggeredplatforms.getCollection(), level.floors.getCollection(), floorcanvas )
-
-        this.drawBrick( level.floors.getCollection(), floorcanvas )
-        this.addPlatformShadows( level.floors.getCollection(), floorcanvas, level.nolandzones)
-        this.drawLedges( level.floors.getCollection(), floorcanvas )
-
-
-        // TINT CANVASES
-        level.canvas[0].tint( ambientLight  , 0.7+darkness );
-        level.canvas[1].fill( rgba(ambientLight.r,ambientLight.g,ambientLight.b,0.3) );
-        level.canvas[1].tint( ambientLight  , 0.5+darkness );
-        level.canvas[2].tint( ambientLight  , 0.5+darkness );
-        level.canvas[3].tint( ambientLight  , 0.3+darkness );
-        level.canvas[5].tint( ambientLight  , 0.5+darkness );
-
-        // this.initPlayer( startpos, level.floors.getCollection() );
-
-        level.setStart(startpos, this.findClosestPlatform( startpos, level.floors.getCollection() ) );
-        //
+        var startpos  = this.getPosition2( data.start );
+        this.setStart( level, startpos, this.findClosestPlatform( startpos, level.floors.getCollection() ) );
 
 
     },

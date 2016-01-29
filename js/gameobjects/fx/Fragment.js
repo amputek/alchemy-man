@@ -24,12 +24,8 @@ var Fragment = DynamicObject.$extend({
         }
     },
 
-    applyAnImpulse: function( vel, pos ){
-        this.body.ApplyImpulse( Vector2.b2( vel ), Vector2.b2( pos ) );
-    },
-
     applyImpulse: function(vx,vy,px,py){
-        this.body.ApplyImpulse( new b2Vec2( vx , vy ), new b2Vec2( px , py ) );
+        this.body.ApplyImpulse( Vector2.b2( vx , vy ), Vector2.b2( px , py ) );
     },
 
     update:function () {
@@ -47,7 +43,7 @@ var Fragment = DynamicObject.$extend({
 
     draw:function( canvas ){
         canvas.save();
-        canvas.translate(this.worldpos.x, this.worldpos.y);
+        canvas.translate(this.drawpos.x, this.drawpos.y);
         canvas.rotate(this.body.GetAngle());
         canvas.translate(-20,-20);
         if(this.type == "gumball") canvas.translate(16,16);

@@ -10,7 +10,7 @@ var DynamicObject = GameObject.$extend({
 	update: function(){
 		this.physicspos = this.body.GetPosition();
 		this.vel = this.body.GetLinearVelocity();
-		this.worldpos = Vector2.toWorld(this.physicspos);
+		this.drawpos = Vector2.physicsToDraw(this.physicspos);
 	},
 
 	// i should change this to vector param??
@@ -27,3 +27,10 @@ var DynamicObject = GameObject.$extend({
 	}
 
 });
+
+
+function DynamicUpdate(obj){
+	obj.physicspos = obj.body.GetPosition();
+	obj.vel = obj.body.GetLinearVelocity();
+	obj.drawpos = Vector2.physicsToDraw(obj.physicspos);
+}

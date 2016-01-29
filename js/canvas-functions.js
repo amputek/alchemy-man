@@ -28,9 +28,9 @@ function sizeVector(w,h){  return {w:w,h:h}; }
 Math.angle = function(x1,y1,x2,y2){ return Math.atan2(y2-y1,x2-x1); }
 
 Math.randomFloat = function(a,b){
-    if( !a && !b ){
+    if( a === undefined && b === undefined ){
         return Math.random();
-    } else if( a && !b ){
+    } else if( a != undefined && b === undefined ){
         b = a;
         a = 0;
     }
@@ -60,9 +60,12 @@ var Vector2 = new JS.Class({
     },
     extend : {
         new      : function(x,y){ return {x:x,y:y}; },
+
+        //creates a new vector for the box2d physics engine
+        //this is now the only place b2vec2 is used
         b2 : function(a,b){
-            if( !b ) return new b2Vec2(a.x,a.y);
-            return new b2Vec2(a,b);
+            if( !b ) return new Box2D.Common.Math.b2Vec2(a.x,a.y);
+            return new Box2D.Common.Math.b2Vec2(a,b);
         },
         random   : function(r){       return vector(Math.randomFloat(-r,r),Math.randomFloat(-r,r)); },
         angle : function(a,b){        return angle(a.x,a.y,b.x,b.y); },
@@ -71,10 +74,14 @@ var Vector2 = new JS.Class({
         gridToPhysics : function(pos){    return vector(pos.x * 5, pos.y * 5); },
 
         //convert a physics position to a draw position
-        toWorld : function(pos){      return vector(Math.round(pos.x*SCALE) , Math.round(pos.y*SCALE)); },
+        physicsToDraw : function(pos){      return vector(Math.round(pos.x*SCALE) , Math.round(pos.y*SCALE)); },
+
+        gridToDraw : function(pos){      return vector(Math.round(pos.x*5*SCALE) , Math.round(pos.y*5*SCALE)); },
 
         // convert a physics position to a grid position
-        toGrid : function(pos){       return vector(Math.floor(pos.x/5), Math.round(pos.y/5)); },
+        physicsToGrid : function(pos){       return vector(Math.floor(pos.x/5), Math.round(pos.y/5)); },
+
+
         equal : function(a,b){        return a.x == b.x && a.y == b.y; },
         distance : function(a,b){     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)); },
         add : function(a,b){ return vector(a.x + b.x, a.y + b.y); }

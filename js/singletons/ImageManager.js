@@ -300,8 +300,6 @@ var images = new JS.Singleton(JS.Class,{
 		this.fx.ice_shard.push( this.createImage('images/fx/ice/shard-6.png') )
 		this.fx.ice_shard.push( this.createImage('images/fx/ice/shard-7.png') )
 
-		this.tooltip = this.createImage('images/tooltip.png')
-
 		this.cannon = this.createImage('images/potions/cannon.png')
 
 	},

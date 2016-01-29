@@ -34,6 +34,6 @@ var IceBlock = MobilePlatform.$extend({
   },
 
   draw: function(canvas){
-    canvas.drawImage( this.currentAnimation.getFrame( this.draw_canvas ) , vector(this.worldpos.x-30, this.worldpos.y-47 ) );
+    canvas.drawImage( this.currentAnimation.getFrame( this.draw_canvas ) , vector(this.drawpos.x-30, this.drawpos.y-47 ) );
   }
 });

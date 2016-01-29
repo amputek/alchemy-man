@@ -67,10 +67,10 @@ var Trajectory = Class.$extend({
     draw: function( canvas ){
         if(input.pressed.leftmouse == false) return;
 
-        var startx = player.worldpos.x - 23 * player.facing;
-        var starty = player.worldpos.y - 30;
+        var startx = player.drawpos.x - 23 * player.facing;
+        var starty = player.drawpos.y - 30;
 
-        var start = vector(player.worldpos.x - 23 * player.facing, player.worldpos.y - 30);
+        var start = vector(player.drawpos.x - 23 * player.facing, player.drawpos.y - 30);
 
         //input.shootAngle = angle( startx + offset.x, starty + offset.y, input.mousepos.x, input.mousepos.y);
 

@@ -130,7 +130,7 @@ var Chomper = Enemy.$extend({
 
 
     if(this.lineOfSight( this, player) == true){
-      if(player.worldpos.x > this.worldpos.x){
+      if(player.physicspos.x > this.physicspos.x){
         this.facing == 1
       } else {
         this.facing = -1;
@@ -186,7 +186,7 @@ var Chomper = Enemy.$extend({
 
   drawFinal: function( canvas ){
     canvas.save();
-    canvas.translate( this.worldpos.x  - this.drawsize.w/2, this.worldpos.y - this.drawsize.h/2 + 8 );
+    canvas.translate( this.drawpos.x  - this.drawsize.w/2, this.drawpos.y - this.drawsize.h/2 + 8 );
     if(this.facing == -1) canvas.translate(this.drawsize.w,0);
     canvas.scale(this.facing,1);
     canvas.drawImage( this.draw_final.getImage() );
@@ -241,7 +241,7 @@ var Creeper = Enemy.$extend({
 
   drawFinal: function( canvas ){
     canvas.save();
-    canvas.translate( this.worldpos.x  - this.drawsize.w/2, this.worldpos.y - this.drawsize.h/2 + 0 );
+    canvas.translate( this.drawpos.x  - this.drawsize.w/2, this.drawpos.y - this.drawsize.h/2 + 0 );
     if(this.state == "exploding") canvas.translate( Math.randomFloat(-3,3), Math.randomFloat(-3,3) )
     if(this.facing == -1) canvas.translate(this.drawsize.w,0);
     canvas.scale(this.facing,1);

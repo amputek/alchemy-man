@@ -99,7 +99,10 @@ var input = new JS.Singleton(JS.Class,{
                 input.playerweapon.make(true, "ice");
             } else if(code == 51){
                 input.playerweapon.make(true, "acid");
+            } else if(code == 80){
+                gamePaused = !gamePaused;
             }
+
         }
     },
 
