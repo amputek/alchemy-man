@@ -130,7 +130,7 @@ var Gumball = Character.$extend({
 		var cosAng = Math.cos(ang);
 		var startPos = vector( this.cannonpos.x + cosAng * 6, this.cannonpos.y + sinAng * 6 )
 		var cannon = new Gum( startPos , vector( cosAng * vel , sinAng * vel - 1.0 ) );
-		currentLevel.projectiles.add( cannon );
+		gameplay.projectiles.add( cannon );
 	},
 
 	getAnimationFrames: function(){

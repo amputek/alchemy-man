@@ -158,7 +158,7 @@ var input = new JS.Singleton(JS.Class,{
                         input.timeHeld = 30;
                         input.pressed.leftmouse = false;
 
-                        currentLevel.projectiles.add( player.shoot(input.shootAngle) );
+                        gameplay.projectiles.add( player.shoot(input.shootAngle) );
                     }
                 }
             }

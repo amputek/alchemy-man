@@ -7,26 +7,32 @@ var Canvas = new JS.Class({
 		this.canvas.height = size.h
 	},
 
-	setAlpha:      function(   a   ){ this.context.globalAlpha = a;	                                    },
-	setFill:       function( color ){ this.context.fillStyle = color;	                                  },
-	setFill:       function( co,op ){ this.context.fillStyle = rgba(co.r,co.g,co.b,op || co.a || 1);				},
-	setStroke:     function( color ){ this.context.strokeStyle = color;	                                },
-	setStroke:     function( co,op ){ this.context.strokeStyle = rgba(co.r,co.g,co.b,op || co.a || 1);				},
-	setWidth:      function(   w   ){ this.context.lineWidth = w;	                                      },
-	blendFunction: function( blend ){ this.context.globalCompositeOperation = blend	                    },
-	translate:     function( x , y ){ this.context.translate(x,y)	                                      },
-	save:          function(       ){ this.context.save();	                                            },
-	scale:         function( x , y ){ this.context.scale(x,y);	                                        },
-	restore:       function(       ){ this.context.restore();	                                          },
-	rotate:        function( r     ){ this.context.rotate(r)	                                          },
-	clear: 				 function(       ){ this.canvas.width = this.canvas.width                           	},
+	extend : {
+		rgba: function(r,g,b,a){
+			return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ', ' + (a||1.0) + ')';
+		}
+	},
+
+	setAlpha:      function(   a   ){ this.context.globalAlpha = a;	},
+	setFill:       function( color ){ this.context.fillStyle = color; },
+	setFill:       function( co,op ){ this.context.fillStyle   = Canvas.rgba( co.r , co.g , co.b , op || co.a || 1); },
+	setStroke:     function( color ){ this.context.strokeStyle = color; },
+	setStroke:     function( co,op ){ this.context.strokeStyle = Canvas.rgba( co.r , co.g , co.b , op || co.a || 1); },
+	setWidth:      function(   w   ){ this.context.lineWidth = w; },
+	blendFunction: function( blend ){ this.context.globalCompositeOperation = blend; },
+	translate:     function( x , y ){ this.context.translate(x,y);  },
+	save:          function(       ){ this.context.save(); },
+	scale:         function( x , y ){ this.context.scale(x,y); },
+	restore:       function(       ){ this.context.restore(); },
+	rotate:        function( r     ){ this.context.rotate(r); },
+	clear: 		   function(       ){ this.canvas.width = this.canvas.width; },
 
 	setSize: function(size){
 		this.canvas.width = size.w;
 		this.canvas.height = size.h;
 	},
 
-	fill: function(color){
+	fill: function(color, opacity){
 		this.context.fillStyle = color;
 		this.solidRect(0,0,this.canvas.width,this.canvas.height)
 	},
@@ -44,7 +50,8 @@ var Canvas = new JS.Class({
 		this.canvas = img;
 	},
 
-	tint: function(tint,opacity){
+	//TODO clean up this mess ffs.
+	tint: function( tint , opacity ){
   		this.blendFunction("source-atop");
   		this.fill('rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + opacity + ')');
   		this.blendFunction("source-over");
@@ -109,13 +116,18 @@ var Canvas = new JS.Class({
 
 
 var GameCanvas = new JS.Class(Canvas,{
-	initialize: function(size,offsetMod){
+	initialize: function(size,offsetMod,ambientLight){
 		// if( size.h < 550) size.h = 550;
 		this.callSuper(  sizeVector(1080 + size.w * offsetMod, 550 + size.h * offsetMod ) )
 		this.offsetMod = offsetMod;
 		this.canvas.style.position = "absolute";
 		if(offsetMod == 1) this.canvas.style.boxShadow = "0 0 0 1000px rgba(0,0,0,0.6)";
 		element("game-wrapper").appendChild(this.canvas);
+		this.ambientLight = ambientLight;
+	},
+
+	updateTint: function(){
+		this.tint( this.ambientLight, 0.1 + this.ambientLight.darkness );
 	},
 
 	setSize: function(size){

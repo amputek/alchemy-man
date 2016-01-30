@@ -25,8 +25,8 @@ function CreateListener(){
 		if( projectile instanceof Potion ){
 			if( other instanceof TriggerPoint )  		    Potion_TriggerPoint(                    projectile , other )
 			if( other instanceof PlatformTriggerPoint ) Potion_PlatformTriggerPoint(            projectile , other )
-			if( other instanceof Character && other instanceof Player == false )				    currentLevel.detonatePotionOnCharacter( projectile , other )
-			if( other instanceof Floor   )				      currentLevel.detonatePotionOnFloor(			projectile , other )
+			if( other instanceof Character && other instanceof Player == false )				    gameplay.detonatePotionOnCharacter( projectile , other )
+			if( other instanceof Floor   )				      gameplay.detonatePotionOnFloor(			projectile , other )
 		}
 		if( projectile instanceof Gum ){
 			if( other instanceof Floor )                Gum_Floor(                    projectile, other )
@@ -48,11 +48,11 @@ function CreateListener(){
 	Gum_Player = function( gum , player ){
 		player.getHit(1);
 		gum.kill();
-		currentLevel.addExplosion( gum , "gumball", null)
+		gameplay.addExplosion( gum , "gumball", null)
 	}
 
 	Gum_Floor = function( gum, floor ){
-		currentLevel.addExplosion( gum , "gumball", floor );
+		gameplay.addExplosion( gum , "gumball", floor );
 		gum.kill();
 	}
 
@@ -63,9 +63,9 @@ function CreateListener(){
 	// ------------------
 
 	fragment = function(fragment, other,contact){
-		if( other instanceof Floor     ) currentLevel.fragmentOnFloor( fragment, other );
+		if( other instanceof Floor     ) gameplay.fragmentOnFloor( fragment, other );
 		if( other instanceof Fragment  ) contact.SetEnabled(false)
-		if( other instanceof Character ) currentLevel.fragmentOnCharacter( fragment, other );
+		if( other instanceof Character ) gameplay.fragmentOnCharacter( fragment, other );
 		contact.SetEnabled(false)
 	}
 

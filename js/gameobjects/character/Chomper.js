@@ -11,7 +11,7 @@ var Enemy = ClimbingCharacter.$extend({
   //this could be a class method?
   lineOfSight: function(source, dest){
     var input = new b2RayCastInput( source.physicspos, dest.physicspos, 1 );
-    var floors = currentLevel.getFloors();
+    var floors = gameplay.getFloors();
     for(var i = 0; i < floors.length; i++){
       if( floors[i] instanceof Ladder == false){
         if( floors[i].getFixture().RayCast( new b2RayCastOutput ,input) ) return false;

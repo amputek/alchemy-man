@@ -65,9 +65,18 @@ var Player = ClimbingCharacter.$extend({
 
 	},
 
+
+	// init: function( startpos, startPlatform ){
+	// 	player.body.SetPosition( Vector2.b2(this.startpos.x,this.startpos.y+5) );
+    //     player.currentPlatform = this.startPlatform;
+    //     if(player.currentAction == "idle") player.animation.current = player.animation.idle;
+    //     if(player.currentAction == "run") player.animation.current = player.animation.run;
+    //     player.animation.current.reset();
+	// },
+
 	// called once at moment of death
 	kill: function(){
-		currentLevel.painCounter = 0.8;
+		gameplay.painCounter = 0.8;
 		allowControl = false;
 		this.state = "dead"
 
@@ -92,8 +101,8 @@ var Player = ClimbingCharacter.$extend({
 	getHit: function(val){
 		if( !this.isDead() ){
 			this.$super(val);
-			currentLevel.shake(5);
-			currentLevel.painCounter = 0.3;
+			gameplay.shake(5);
+			gameplay.painCounter = 0.3;
 			if(this.state == "dying") this.kill();
 			updateHealthDom(this.health)
 		}

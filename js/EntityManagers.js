@@ -78,12 +78,12 @@ var GameObjectCollectionManager = new JS.Class(DynamicManager,{
 
 var FragmentSourceManager = new JS.Class(Manager,{
 	updateIndividual: function(o){
-		if( o.update() ) currentLevel.addFragment( o.physicspos, vector(o.vel.x + Math.randomFloat(-o.rvx,o.rvx), o.vel.y + Math.randomFloat(-o.rvy,o.rvy) ), o.type, null)
+		if( o.update() ) gameplay.addFragment( o.physicspos, vector(o.vel.x + Math.randomFloat(-o.rvx,o.rvx), o.vel.y + Math.randomFloat(-o.rvy,o.rvy) ), o.type, null)
 	}
 });
 
 var ExplosionManager = new JS.Class(Manager,{
-		initialize: function(){
+	initialize: function(){
 		this.callSuper();
 		this.preparedcollection = [];
 	},
@@ -101,7 +101,7 @@ var ExplosionManager = new JS.Class(Manager,{
 	updateIndividual: function( e, canvas ){
 		if(e.life < e.fragmentNumber){
 			if(e.type == "miniice"){
-				currentLevel.addFragment( e.physicspos, vector(Math.randomFloat(-0.5,0.5), Math.randomFloat(-0.2,0)), e.type, "small" );
+				gameplay.addFragment( e.physicspos, vector(Math.randomFloat(-0.5,0.5), Math.randomFloat(-0.2,0)), e.type, "small" );
 			} else {
 				var vel = vector( Math.randomFloat(-3,3), Math.randomFloat(-3 ,0) );
 				var pos = vector(e.physicspos.x, e.physicspos.y);
@@ -122,7 +122,7 @@ var ExplosionManager = new JS.Class(Manager,{
 					vel.y = Math.randomFloat(0, e.vel.y * 0.5)
 					pos.x+=2
 				}
-				currentLevel.addFragment( pos, vel, e.type, "big");
+				gameplay.addFragment( pos, vel, e.type, "big");
 			}
 		}
 		this.callSuper( e, canvas )
@@ -136,8 +136,8 @@ var ExplosionManager = new JS.Class(Manager,{
 				if(n == null) n = 5;
 				this.collection.push(new Explosion(p.pos,p.vel,p.type,p.nearest,n));
 				if( p.ground.notMovingOrIce() && p.nearest != "bottom"){
-					if(p.type == "acid") currentLevel.acid.add(p.pos,p.ground);
-					if(p.type == "fire") currentLevel.fire.add(p.pos,p.ground);
+					if(p.type == "acid") gameplay.acid.add(p.pos,p.ground);
+					if(p.type == "fire") gameplay.fire.add(p.pos,p.ground);
 				}
 			} else {
 				this.collection.push(new Explosion(p.pos,p.vel,p.type,null));
@@ -159,7 +159,7 @@ var EffectManager = new JS.Class(Manager,{
 		var add = false;
 
 		for(var i = 0; i < this.collection.length; i++){ if( Vector2.equal(n,this.collection[i].gridpos) ) alreadyTaken = true; }
-		if( currentLevel.occupied( n ) ) alreadyTaken = true;
+		if( gameplay.squareOccupiedByEffect( n ) ) alreadyTaken = true;
 
 		if(alreadyTaken === false){
 			if(a.nearest != "top"){
@@ -192,10 +192,10 @@ var FireManager = new JS.Class(EffectManager,{
 			if(f.dir == "right") nf = { x : 1           , y : -1   ,  vx : -0.1             , vy : -0.9           }
 			if(f.dir == "left")  nf = { x : 0           , y : -1   ,  vx :  0.1             , vy : -0.9           }
 			if(f.dir == "top")   nf = { x : Math.randomFloat(0,4) , y : -0.5 ,  vx : Math.randomFloat(-0.5,0.5) , vy : Math.randomFloat(-0.5,0) }
-			currentLevel.addFragment( vector(f.physicspos.x + nf.x,f.physicspos.y + nf.y), vector(nf.vx,nf.vy), "fire", null );
+			gameplay.addFragment( vector(f.physicspos.x + nf.x,f.physicspos.y + nf.y), vector(nf.vx,nf.vy), "fire", null );
 		}
-		for (var n = 0; n < currentLevel.enemies.length; n++) {
-			if( Vector2.equal( currentLevel.enemies[n].gridpos, f.gridpos ) ) currentLevel.enemies[n].inFire = true;
+		for (var n = 0; n < gameplay.enemies.length; n++) {
+			if( Vector2.equal( gameplay.enemies[n].gridpos, f.gridpos ) ) gameplay.enemies[n].inFire = true;
 		}
 		if( Vector2.equal(player.gridpos, f.gridpos) ) player.inFire = true;
 		this.callSuper( f , canvas );
@@ -212,7 +212,7 @@ var AcidManager = new JS.Class(EffectManager,{
 			if(f.dir == "right") nf = { x : 1           , y : 5    ,  vx : -0.1             , vy : 0              }
 			if(f.dir == "left")  nf = { x : 0           , y : 5    ,  vx :  0.1             , vy : 0              }
 			if(f.dir == "top")   nf = { x : Math.randomFloat(0,4) , y : -0.5 ,  vx : Math.randomFloat(-0.5,0.5) , vy : Math.randomFloat(-0.5,0) }
-			currentLevel.addFragment( vector(f.physicspos.x + nf.x,f.physicspos.y + nf.y), vector(nf.vx,nf.vy), "acid", null );
+			gameplay.addFragment( vector(f.physicspos.x + nf.x,f.physicspos.y + nf.y), vector(nf.vx,nf.vy), "acid", null );
 		}
 
 		this.callSuper( f , canvas );
@@ -221,14 +221,14 @@ var AcidManager = new JS.Class(EffectManager,{
 
 var EnemyManager = new JS.Class(GameObjectManager,{
 	kill: function( e, graveyard ){
-		if( e instanceof Gumball )  for (var i = 0; i < 30; i++) {  currentLevel.addFragment( e.physicspos, Vector2.random(15) , "gumball" , "big" ) }
-		if( e instanceof Chomper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, Vector2.random(15) , "gumball" , "big" ) }
-		if( e instanceof Creeper )  for (var i = 0; i < 20; i++) {  currentLevel.addFragment( e.physicspos, Vector2.random(15) , (Math.coin(0.5) ? "fire" : "gumball") , "big" ) }
-		currentLevel.addExplosion( e , "fire" , null )
+		if( e instanceof Gumball )  for (var i = 0; i < 30; i++) {  gameplay.addFragment( e.physicspos, Vector2.random(15) , "gumball" , "big" ) }
+		if( e instanceof Chomper )  for (var i = 0; i < 20; i++) {  gameplay.addFragment( e.physicspos, Vector2.random(15) , "gumball" , "big" ) }
+		if( e instanceof Creeper )  for (var i = 0; i < 20; i++) {  gameplay.addFragment( e.physicspos, Vector2.random(15) , (Math.coin(0.5) ? "fire" : "gumball") , "big" ) }
+		gameplay.addExplosion( e , "fire" , null )
 		this.callSuper( e, graveyard )
 	},
 	updateIndividual: function( e , canvas, graveyard ){
-		if(e instanceof Gumball && e.state == "dying" && Math.coin(0.2)) currentLevel.addFragment( e.physicspos, Vector2.random(5) , "gumball" , "big" );
+		if(e instanceof Gumball && e.state == "dying" && Math.coin(0.2)) gameplay.addFragment( e.physicspos, Vector2.random(5) , "gumball" , "big" );
 		this.callSuper( e , canvas, graveyard );
 	},
 	getBodies: function( graveyard){

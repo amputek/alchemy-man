@@ -30,7 +30,14 @@ var Weather = new JS.Class({
         this.severity = 0;
         this.splashAmount = 0;
         this.rainAmount = 0;
-        this.lightningDom = element("lightning");
+        this.lightningDom = null;
+    },
+
+    createLightningDOM: function(){
+        var light = document.createElement("div");
+        light.id = "lightning"
+        element("game-wrapper").appendChild(light);
+        this.lightningDom = light;
     },
 
     update: function(context,floors){
@@ -72,7 +79,7 @@ var Weather = new JS.Class({
                 if( Math.coin(this.splashAmount) ) this.splashes.add( new Splash( vector(f.physicspos.x + Math.randomFloat(-f.physicssize.w,f.physicssize.w), f.physicspos.y - f.physicssize.h) ) );
                 if( Math.coin(this.splashAmount*0.4) ){
                     var onLeft = Math.coin(0.5);
-                    currentLevel.addFragment( vector(f.physicspos.x + f.physicssize.w + (onLeft?-0.3:0.3), f.physicspos.y - f.physicssize.h + 0.9) , vector(0,0), "water", "small" );
+                    gameplay.addFragment( vector(f.physicspos.x + f.physicssize.w + (onLeft?-0.3:0.3), f.physicspos.y - f.physicssize.h + 0.9) , vector(0,0), "water", "small" );
                 }
             }
         }

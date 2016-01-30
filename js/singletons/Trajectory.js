@@ -51,8 +51,8 @@ var Trajectory = Class.$extend({
         dest = vector(dest.x   / SCALE, dest.y   / SCALE);
 
         var input = new b2RayCastInput( source, dest, 1 )
-        for(var i = 0; i < currentLevel.floors.collection.length; i++){
-            var f = currentLevel.floors.collection[i];
+        for(var i = 0; i < gameplay.floors.collection.length; i++){
+            var f = gameplay.floors.collection[i];
             if( f instanceof Ladder == false){
                 var output = new b2RayCastOutput;
                 if( f.body.GetFixtureList().RayCast(output,input) ){

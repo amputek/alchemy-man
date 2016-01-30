@@ -1,32 +1,16 @@
 //most of these should be moved out of the global namespace
 
-
-//not used atm
-function sortFloors( floors ){
-    floors.sort( function(a,b){
-        return b.h - a.h;
-    });
-}
-
 function rgba(r,g,b,a){ return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ', ' + (a||1.0) + ')'; }
 
 function element(id){ return document.getElementById(id); }
 
-
-// SOME MATHS FUNCTIONS
-
-var PI = Math.PI;
-var PI2 = Math.PI*2;
-
-function angle(x1,y1,x2,y2){ return Math.atan2(y2-y1,x2-x1); }
 
 // types
 function vector(x,y){  return {x:x,y:y} }
 function sizeVector(w,h){  return {w:w,h:h}; }
 
 //add some helper functions to Math class
-Math.angle = function(x1,y1,x2,y2){ return Math.atan2(y2-y1,x2-x1); }
-
+Math.angle = function(x1,y1,x2,y2){ return Math.atan2(y2-y1,x2-x1); } //this should be here or in vector2?
 Math.randomFloat = function(a,b){
     if( a === undefined && b === undefined ){
         return Math.random();
@@ -37,12 +21,9 @@ Math.randomFloat = function(a,b){
     return (Math.random() * (b-a)) + a;
 
 }
-
-
 Math.randomInt = function(a,b){
     return Math.round(Math.randomFloat(a,b));
 }
-
 Math.coin = function(val){ return Math.randomFloat(1) < val; }
 Math.PI2 = Math.PI * 2;
 
@@ -60,6 +41,7 @@ var Vector2 = new JS.Class({
     },
     extend : {
         new      : function(x,y){ return {x:x,y:y}; },
+        size     : function(w,h){ return {w:w,h:h}; },
 
         //creates a new vector for the box2d physics engine
         //this is now the only place b2vec2 is used
@@ -67,24 +49,24 @@ var Vector2 = new JS.Class({
             if( !b ) return new Box2D.Common.Math.b2Vec2(a.x,a.y);
             return new Box2D.Common.Math.b2Vec2(a,b);
         },
-        random   : function(r){       return vector(Math.randomFloat(-r,r),Math.randomFloat(-r,r)); },
-        angle : function(a,b){        return angle(a.x,a.y,b.x,b.y); },
+        random   : function(r){       return Vector2.new(Math.randomFloat(-r,r),Math.randomFloat(-r,r)); },
+        angle : function(a,b){        return Math.angle(a.x,a.y,b.x,b.y); },
 
         //convert a grid position to a position for the b2 physics world
-        gridToPhysics : function(pos){    return vector(pos.x * 5, pos.y * 5); },
+        gridToPhysics : function(pos){    return Vector2.new(pos.x * 5, pos.y * 5); },
 
         //convert a physics position to a draw position
-        physicsToDraw : function(pos){      return vector(Math.round(pos.x*SCALE) , Math.round(pos.y*SCALE)); },
+        physicsToDraw : function(pos){      return Vector2.new(Math.round(pos.x*SCALE) , Math.round(pos.y*SCALE)); },
 
-        gridToDraw : function(pos){      return vector(Math.round(pos.x*5*SCALE) , Math.round(pos.y*5*SCALE)); },
+        gridToDraw : function(pos){      return Vector2.new(Math.round(pos.x*5*SCALE) , Math.round(pos.y*5*SCALE)); },
 
         // convert a physics position to a grid position
-        physicsToGrid : function(pos){       return vector(Math.floor(pos.x/5), Math.round(pos.y/5)); },
+        physicsToGrid : function(pos){       return Vector2.new(Math.floor(pos.x/5), Math.round(pos.y/5)); },
 
 
         equal : function(a,b){        return a.x == b.x && a.y == b.y; },
         distance : function(a,b){     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)); },
-        add : function(a,b){ return vector(a.x + b.x, a.y + b.y); }
+        add : function(a,b){ return Vector2.new(a.x + b.x, a.y + b.y); }
     }
 });
 

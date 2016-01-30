@@ -44,7 +44,8 @@ var debug = new JS.Singleton(JS.Class,{
         element("game-wrapper").appendChild(this.debugCanvasWrapper)
     },
 
-    logline: function(con){
+    logline: function(text,con){
+        this.log(text,con);
         var line = "----------------------------";
         var time = ((Date.now() - now)/1000).toFixed(3);
         if(con != false){
@@ -66,6 +67,17 @@ var debug = new JS.Singleton(JS.Class,{
             this.debugText += d;
         }
     },
+
+    // logline: function(text,con){
+    //     var time = ((Date.now() - now)/1000).toFixed(3);
+    //     if(con != false){
+    //         console.log("["+time+"]", text)
+    //     } else {
+    //         var d = this.debugText;
+    //         this.debugText = "<br/> [" + (time) + "s] " + text;
+    //         this.debugText += d;
+    //     }
+    // },
 
     update : function(){
         if(debugging){

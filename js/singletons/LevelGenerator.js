@@ -1,132 +1,15 @@
-
-// CONTAINS THE RAW JSON DATA FOR EACH LEVEL
-var LevelJSONDatabase = new JS.Singleton( JS.Class, {
-
-    //takes a callback function for when levels have finished loading
-    initialize: function(){
-        this.data = [];
-        this.databaseSize = 0;
-        this.successfulLoads = 0;
-        this.finishedLoadingCallback = null;
-    },
-
-    init: function( callback ){
-        this.finishedLoadingCallback = callback;
-        this.parseLevels();
-    },
-
-    // creates levels from JSON data
-    parseLevels: function(){
-
-        element("level-list").innerHTML = "";
-        this.data = [];
-        this.successfulLoads = 0;
-
-        var filenames = [];
-
-        var _this = this;
-
-        //get levels from js/levels directory
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST','js/levels/get.php',true);
-        xhr.send();
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState == 4 && xhr.status == 200){
-
-                //get list of files in level directory
-                var fileList = $.parseJSON(xhr.responseText);
-
-                //get all json files from directory
-                for(var i = 0; i < fileList.length; i++){
-                    if( fileList[i].split('.').pop() == "json"){
-                        filenames.push( fileList[i] )
-                    }
-                }
-
-                _this.databaseSize = filenames.length;
-
-
-                for (var i = 0; i < _this.databaseSize; i++) {
-
-                    //create dom in menu
-                    var list = document.createElement("li");
-                    element("level-list").appendChild(list);
-
-                    //parse level
-                    _this.parseLevel(filenames[i], i );
-                };
-
-            }
-        }
-
-    },
-
-    // Save a level to the database
-    saveLevel: function( data , filename ){
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST','js/levels/server.php',true);
-        xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-        debug.log("Saving Level: " + filename + ".json")
-        xhr.send('json=' + data + '&filename=' + filename);
-
-        var _this = this;
-        setTimeout(function(){ _this.parseLevels() },500);
-    },
-
-    loadSuccess: function( data, ind ){
-        debug.log("- Finished parsing level " + ind + ": '" + data.name + "'");
-        this.data[ind] = data;
-        // sortFloors( data.platforms );
-        element("level-list").children[ind].innerHTML = '"' + data.name + '"';
-        this.successfulLoads++;
-        if(this.successfulLoads == this.databaseSize){
-
-            var levellist = element("level-list")
-    		for (var i = 0; i < levellist.children.length; i++) {
-    			(function(i){
-    				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
-    			}(i));
-    		};
-
-            this.finishedLoadingCallback();
-        }
-    },
-
-    // parsed a single level of specified name
-    parseLevel: function( filename, i ){
-        var _this = this;
-        var _index = i;
-        debug.log(  "- Parsing '" + filename + "' from JSON file into JSON database of levels.");
-        var filename = 'js/levels/' + filename + '?nocache=(' + (new Date()).getTime()
-        $.getJSON(filename, function(data){
-        }).success( function(data){
-            _this.loadSuccess(data, _index);
-        });
-    },
-
-    getLevel: function(index){
-        return this.data[index];
-    }
-
-});
-
-
-
-
 //CONVERTS JSON DATA INTO GAMEOBJECTS.
 //PREPARES LEVEL FOR ENGINE
-var LevelGenerator = new JS.Singleton( JS.Class, {
+function LevelGenerator( callback ){
 
-    initialize: function(  ){
-        this.posterCount = 0;
-    },
+    this.database = new LevelJSONDatabase( callback );
 
-    getSize: function( objectData ){
+    this.getSize = function( objectData ){
         if( objectData.w == undefined ) objectData.w = 1;
         return sizeVector( objectData.w * 2.5 , objectData.h * 2.5 );
-    },
+    }
 
-    getPosition2: function( x,y,w,h ){
+    this.getPosition2 = function( x,y,w,h ){
         var nx,ny,nw,nh;
         //incase its an object
         if( x.x != undefined){
@@ -142,24 +25,24 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
         }
         if( nh != undefined && nw == undefined ) nw = 1;
         return vector( (nx * 5) + (nw * 2.5) , (ny * 5) + (nh * 2.5) );
-    },
+    }
 
-    setStart : function( level, pos, floor ){
-		level.startpos = Vector2.b2(pos);
-		level.startPlatform = floor;
-	},
+    this.setStart = function ( pos, floor ){
+		gameplay.startpos = Vector2.b2(pos);
+		gameplay.startPlatform = floor;
+	}
 
-	setEnd : function( level, pos ){
-		level.endpos = Vector2.b2(pos);
-	},
+	this.setEnd = function ( pos ){
+		gameplay.endpos = Vector2.b2(pos);
+	}
 
-	setSize: function( level, size ){
-		level.physicsSize = size;
-	},
+	this.setSize = function( size ){
+		gameplay.physicsSize = size;
+	}
 
     //non-interactive drawing
     //this could be moved into doodads? "support" is just a type of doodad right?
-    drawSupports: function( data , canvas ){
+    this.drawSupports = function( data , canvas ){
 
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
@@ -188,9 +71,9 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
             canvas.drawImage( draw_temp.getImage() , Vector2.physicsToDraw( vector(d.x*5 - 10, d.y*5) ) );
 
         }
-    },
+    }
 
-    drawDoodads: function( data, canvases ){
+    this.drawDoodads = function( data, canvases ){
 
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
@@ -223,21 +106,21 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
 
 
         }
-    },
+    }
 
 
     //game object loading (and drawing)
 
-    loadAndDrawJumpBoxes: function( data , floors, canvas ){
+    this.loadAndDrawJumpBoxes = function( data , floors, canvas ){
         for (var i = 0; i < data.length; i++) {
             var pos = this.getPosition2( data[i] );
             var size = this.getSize( data[i] );
             canvas.drawImage( images.env.jumpbox, vector(pos.x*SCALE - 22 , pos.y*SCALE - 20 ));
             floors.add( new JumpBox( pos , size ) );
         }
-    },
+    }
 
-    loadAndDrawLadders: function( data, floors, canvas ){
+    this.loadAndDrawLadders = function( data, floors, canvas ){
 
         for (var i = 0; i < data.length; i++) {
             var f = data[i];
@@ -269,15 +152,15 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
             floors.add( new Ladder( pos, size ) );
 
         }
-    },
+    }
 
-    loadPlatforms: function( data, floors ){
+    this.loadPlatforms = function( data, floors ){
         for (var i = 0; i < data.length; i++) {
             floors.add( new Platform( this.getPosition2(data[i]), this.getSize(data[i]) ) );
         }
-    },
+    }
 
-    loadMovingPlatforms: function( data, floors ){
+    this.loadMovingPlatforms = function( data, floors ){
 
         for (var i = 0; i < data.length; i++) {
             var f = data[i]
@@ -290,10 +173,10 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
                 floors.add( new MovingPlatform( this.getPosition2(f), this.getSize(f), endpos, f.time, true ) );
             }
         }
-    },
+    }
 
 
-    drawMovingPlatforms: function(movers, floors, canvas){
+    this.drawMovingPlatforms = function(movers, floors, canvas){
 
         for(var i = 0; i < movers.length; i++){
             var m = movers[i];
@@ -313,29 +196,29 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
 
             m.setTopPos( vector( m.drawpos.x - m.physicssize.w*SCALE,currenty*SCALE ) );
         }
-    },
+    }
 
-    loadEnemies: function( data, enemies ){
+    this.loadEnemies = function( data, enemies ){
         for (var i = 0; i < data.length; i++) {
             var d = data[i]
             if(d.type == "gumball") enemies.add( new Gumball( this.getPosition2(d), this.getPosition2(d) ) );
             if(d.type == "chomper") enemies.add( new Chomper( this.getPosition2(d) ) );
             if(d.type == "creeper") enemies.add( new Creeper( this.getPosition2(d) ) );
         }
-    },
+    }
 
 
-    loadFragmentSources: function( data, fs ){
+    this.loadFragmentSources = function( data, fs ){
         for (var i = 0; i < data.length; i++) {
             var d= data[i];
             fs.add( new FragmentSource( this.getPosition(d), vector(d.vx,d.vy), d.type, d.frequency) );
         }
 
-    },
+    }
 
     //For drawing floors
 
-    isBrick: function( f ){
+    this.isBrick = function( f ){
         if(f.physicssize.h == 2.5) return false;
         if(f.physicssize.h == 5 && f.physicssize.w == 7.5) return false;
         if(f.physicssize.h == 10 && f.physicssize.w == 5) return false;
@@ -343,9 +226,9 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
         if(f.physicssize.w == 5 && f.physicssize.h != 10) return true;
         if(f.physicssize.w == 2.5 && f.physicssize.h > 15) return true;
         return false;
-    },
+    }
 
-    drawLedges: function(floors,canvas){
+    this.drawLedges = function(floors,canvas){
 
         for(var i = 0; i < floors.length; i++){
             var f = floors[i]
@@ -432,9 +315,9 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
         }
 
 
-    },
+    }
 
-    drawBricks: function(floors,canvas){
+    this.drawBricks = function(floors,canvas){
 
         var brickArray = [];
         for(var i = -50; i < 300; i++){
@@ -577,9 +460,9 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
 
 
 
-    },
+    }
 
-    drawLedgeShadows: function(floors,canvas,zones){
+    this.drawLedgeShadows = function(floors,canvas,zones){
         canvas.setFill( 'rgba(0,0,0,0.6)' );
         for (var i = 0; i < floors.length; i++) {
             var f = floors[i];
@@ -615,36 +498,36 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
         }
 
 
-    },
+    }
 
-    drawBackdrop: function( setting, canvas ){
+    this.drawBackdrop = function( setting, canvas ){
         if(setting == "exterior") canvas.canvas.style.backgroundImage = "url('images/sunset.jpg')";
         if(setting == "interior") canvas.canvas.style.backgroundImage = "url('images/factory.jpg')";
-    },
+    }
 
-    drawDoors: function( start, end, canvas ){
+    this.drawDoors = function( start, end, canvas ){
         if(start.type == "door") canvas.drawImage( images.doodad.door,      vector(start.x * 5 * SCALE - 90 , start.y * 5 * SCALE - 160 ) );
         if(end.type   == "door") canvas.drawImage( images.doodad.door_open, vector(end.x   * 5 * SCALE - 150, end.y   * 5 * SCALE - 160 ) );
-    },
+    }
 
-    tintFloorCanvas: function( floorcanvas, ambientLight ){
+    this.tintFloorCanvas = function( floorcanvas, ambientLight ){
         floorcanvas.tint( ambientLight  , 0.4+ambientLight.darkness );
-    },
+    }
 
-    tintCanvases: function( level, ambientLight ){
-        level.ambientLight = ambientLight;
+    this.tintCanvases = function( ambientLight ){
         var darkness = ambientLight.darkness;
-        level.canvas[0].tint( ambientLight  , 0.7+darkness );
-        level.canvas[1].fill( rgba(ambientLight.r,ambientLight.g,ambientLight.b,0.3) );
-        level.canvas[1].tint( ambientLight  , 0.5+darkness );
-        level.canvas[2].tint( ambientLight  , 0.5+darkness );
-        level.canvas[3].tint( ambientLight  , 0.3+darkness );
-        level.canvas[5].tint( ambientLight  , 0.5+darkness );
-    },
+        gameplay.canvas[0].tint( ambientLight  , 0.7+darkness );
+        gameplay.canvas[1].fill( rgba(ambientLight.r,ambientLight.g,ambientLight.b,0.3) );
+        gameplay.canvas[1].tint( ambientLight  , 0.5+darkness );
+        gameplay.canvas[2].tint( ambientLight  , 0.5+darkness );
+        gameplay.canvas[3].tint( ambientLight  , 0.3+darkness );
+        gameplay.canvas[4].ambientLight = ambientLight;
+        gameplay.canvas[5].tint( ambientLight  , 0.5+darkness );
+    }
 
 
     //TODO: this in unnecessarily long-winded. do the "highest" check on-the-fly
-    findClosestPlatform: function( pos, floors ){
+    this.findClosestPlatform = function( pos, floors ){
 
         var closefloors = [];
 
@@ -671,62 +554,44 @@ var LevelGenerator = new JS.Singleton( JS.Class, {
         }
 
         return closest;
+    }
 
 
-    },
-
-    generateLevelFromJSONData: function( index, level ){
+    this.generateLevel = function( index ){
 
         //get json data from database
-        var data = LevelJSONDatabase.getLevel( index );
+        var data = this.database.getLevel( index );
 
-        level.name = data.name;
+        gameplay.name = data.name;
 
+        gameplay.weather.setAmount(data.weather)
+        this.setEnd(  this.getPosition2( data.end ) );
+        this.setSize( sizeVector( data.width * 5, data.height * 5) );
 
+        var floorcanvas  = gameplay.canvas[3];
 
-        //startpos goes from a grid value (in the json data), to a physics position, to a draw position, to a b2vec2 in the level.js
-        //clean this up
+        this.drawDoors( data.start, data.end, gameplay.canvas[3]);
+        this.drawSupports( data.supports , gameplay.canvas[3] );
+        this.drawDoodads(  data.doodads , gameplay.canvas );
+        this.drawBackdrop( data.setting, gameplay.canvas[0] ); //TODO: only need to do this if new setting is different
+        this.tintFloorCanvas( floorcanvas, data.ambientLight ); // tint doors and non-interactive doodads (before adding any platforms etc)
 
+        this.loadAndDrawJumpBoxes( data.jumpboxes          , gameplay.floors, floorcanvas );
+        this.loadAndDrawLadders(   data.ladders            , gameplay.floors, floorcanvas );
+        this.loadPlatforms(        data.platforms          , gameplay.floors );
+        this.loadMovingPlatforms(  data.triggeredplatforms , gameplay.triggeredplatforms );
+        this.loadEnemies(          data.enemies            , gameplay.enemies );
+        this.loadFragmentSources(  data.fragmentsources    , gameplay.fragmentsources );
+        this.drawMovingPlatforms(  gameplay.triggeredplatforms.getCollection(), gameplay.floors.getCollection(), floorcanvas )
+        this.drawBricks(           gameplay.floors.getCollection(), floorcanvas )
+        this.drawLedgeShadows(     gameplay.floors.getCollection(), floorcanvas, gameplay.nolandzones)
+        this.drawLedges(           gameplay.floors.getCollection(), floorcanvas )
 
-        //some of these functions are based here, some are in level.js.
-        //eg. we tell the level "setStart", but "loadplatforms" is here. why?
-
-        level.weather.setAmount(data.weather)
-        this.setEnd(  level, this.getPosition2( data.end ) );
-        this.setSize( level, sizeVector( data.width * 5, data.height * 5) );
-
-
-        var floorcanvas  = level.canvas[3];
-
-        this.drawDoors( data.start, data.end, level.canvas[3]);
-
-        // draw supports and doodads
-        this.drawSupports( data.supports , level.canvas[3] );
-        this.drawDoodads(  data.doodads , level.canvas );
-
-        //TODO: only need to do this if new setting is different
-        this.drawBackdrop( data.setting, level.canvas[0] );
-
-        // tint doors and non-interactive doodads (before adding any platforms etc)
-        this.tintFloorCanvas( floorcanvas, data.ambientLight );
-
-        this.loadAndDrawJumpBoxes( data.jumpboxes          , level.floors, floorcanvas );
-        this.loadAndDrawLadders(   data.ladders            , level.floors, floorcanvas );
-        this.loadPlatforms(        data.platforms          , level.floors );
-        this.loadMovingPlatforms(  data.triggeredplatforms , level.triggeredplatforms );
-        this.loadEnemies(          data.enemies            , level.enemies );
-        this.loadFragmentSources(  data.fragmentsources    , level.fragmentsources );
-        this.drawMovingPlatforms(  level.triggeredplatforms.getCollection(), level.floors.getCollection(), floorcanvas )
-        this.drawBricks(           level.floors.getCollection(), floorcanvas )
-        this.drawLedgeShadows(     level.floors.getCollection(), floorcanvas, level.nolandzones)
-        this.drawLedges(           level.floors.getCollection(), floorcanvas )
-
-        this.tintCanvases( level, data.ambientLight )
+        this.tintCanvases( data.ambientLight )
 
         var startpos  = this.getPosition2( data.start );
-        this.setStart( level, startpos, this.findClosestPlatform( startpos, level.floors.getCollection() ) );
+        this.setStart( startpos, this.findClosestPlatform( startpos, gameplay.floors.getCollection() ) );
+    }
 
 
-    },
-
-});
+}
