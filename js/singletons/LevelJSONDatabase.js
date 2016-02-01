@@ -8,16 +8,15 @@ var LevelJSONDatabase = new JS.Class({
         this.databaseSize = 0;
         this.successfulLoads = 0;
         this.finishedLoadingCallback = callback;
-        this.parseStaticLevels();
+        this.parseLevelsStatic();
     },
 
 
-    parseStaticLevels: function(){
+    parseJSONlevels: function( filenames ){
+
+        this.successfulLoads = 0;
         element("level-list").innerHTML = "";
         this.data = [];
-        this.successfulLoads = 0;
-
-        var filenames = ["blank.json","warehouse.json"];
 
         var _this = this;
         _this.databaseSize = filenames.length;
@@ -33,14 +32,14 @@ var LevelJSONDatabase = new JS.Class({
         };
     },
 
+
+    parseLevelsStatic: function(){
+        var filenames = ["blank.json","warehouse.json"];
+        this.parseJSONlevels( filenames );
+    },
+
     // creates levels from JSON data
-    parseLevels: function(){
-
-        element("level-list").innerHTML = "";
-        this.data = [];
-        this.successfulLoads = 0;
-
-        var filenames = [];
+    parseLevelsPHP: function(){
 
         var _this = this;
 
@@ -51,6 +50,8 @@ var LevelJSONDatabase = new JS.Class({
         xhr.onreadystatechange = function() {
             if(xhr.readyState == 4 && xhr.status == 200){
 
+                var filenames = [];
+
                 //get list of files in level directory
                 var fileList = $.parseJSON(xhr.responseText);
 
@@ -58,26 +59,12 @@ var LevelJSONDatabase = new JS.Class({
                 for(var i = 0; i < fileList.length; i++){
                     if( fileList[i].split('.').pop() == "json"){
                         filenames.push( fileList[i] )
-                        console.log(fileList[i])
                     }
                 }
 
-                _this.databaseSize = filenames.length;
-
-
-                for (var i = 0; i < _this.databaseSize; i++) {
-
-                    //create dom in menu
-                    var list = document.createElement("li");
-                    element("level-list").appendChild(list);
-
-                    //parse level
-                    _this.parseLevel(filenames[i], i );
-                };
-
+                _this.parseJSONlevels(filenames);
             }
         }
-
     },
 
     // Save a level to the database
@@ -103,7 +90,7 @@ var LevelJSONDatabase = new JS.Class({
             var levellist = element("level-list")
     		for (var i = 0; i < levellist.children.length; i++) {
     			(function(i){
-    				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
+    				levellist.children[i].addEventListener( "mousedown", function(){  GameManager.loadLevel(i) }, false );
     			}(i));
     		};
 
