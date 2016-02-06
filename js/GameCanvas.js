@@ -1,3 +1,37 @@
+var Color = new JS.Class({
+	extend:{
+		new      : function(r,g,b,a){
+			return {
+				r : Math.round(r),
+				g : Math.round(g),
+				b : Math.round(b),
+				a : ( a == undefined ? 1.0 : a )
+			}
+		},
+		fire     : {r: 201 , g: 50  , b: 16  },
+		ice      : {r: 50  , g: 155 , b: 255 },
+		acid     : {r: 100 , g: 255 , b: 50  },
+		black    : {r: 0   , g: 0   , b: 0   },
+		white    : {r: 255 , g: 255 , b: 255 },
+		woodbrown: {r: 100 , g: 65  , b: 30  },
+		toText: function(color,op){
+			var red =  Math.round(color.r);
+			var green = Math.round(color.g);
+			var blue = Math.round(color.b);
+			var opacity = 1.0;
+			if( op != undefined ){
+				opacity = op;
+			} else if( color.a != undefined ){
+				opacity = color.a;
+			}
+			return 'rgba(' + red + ',' + green + ',' + blue + ', ' + opacity + ')';
+		}
+	}
+});
+
+
+
+
 var Canvas = new JS.Class({
 	initialize: function(size){
 		this.canvas = document.createElement("canvas");
@@ -7,17 +41,11 @@ var Canvas = new JS.Class({
 		this.canvas.height = size.h
 	},
 
-	extend : {
-		rgba: function(r,g,b,a){
-			return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ', ' + (a||1.0) + ')';
-		}
-	},
-
 	setAlpha:      function(   a   ){ this.context.globalAlpha = a;	},
-	setFill:       function( color ){ this.context.fillStyle = color; },
-	setFill:       function( co,op ){ this.context.fillStyle   = Canvas.rgba( co.r , co.g , co.b , op || co.a || 1); },
-	setStroke:     function( color ){ this.context.strokeStyle = color; },
-	setStroke:     function( co,op ){ this.context.strokeStyle = Canvas.rgba( co.r , co.g , co.b , op || co.a || 1); },
+
+	//these take a color object (r,g,b,a) and an optional opacity
+	setFill:       function( co,op ){ this.context.fillStyle   = Color.toText(co,op); },
+	setStroke:     function( co,op ){ this.context.strokeStyle = Color.toText(co,op); },
 	setWidth:      function(   w   ){ this.context.lineWidth = w; },
 	blendFunction: function( blend ){ this.context.globalCompositeOperation = blend; },
 	translate:     function( x , y ){ this.context.translate(x,y);  },
@@ -32,8 +60,8 @@ var Canvas = new JS.Class({
 		this.canvas.height = size.h;
 	},
 
-	fill: function(color, opacity){
-		this.context.fillStyle = color;
+	fill: function(color,op){
+		this.setFill(color,op);
 		this.solidRect(0,0,this.canvas.width,this.canvas.height)
 	},
 
@@ -50,10 +78,9 @@ var Canvas = new JS.Class({
 		this.canvas = img;
 	},
 
-	//TODO clean up this mess ffs.
 	tint: function( tint , opacity ){
   		this.blendFunction("source-atop");
-  		this.fill('rgba(' + tint.r + ',' + tint.g + ',' + tint.b + ',' + opacity + ')');
+		this.fill( tint, opacity );
   		this.blendFunction("source-over");
 	},
 

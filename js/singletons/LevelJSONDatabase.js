@@ -67,7 +67,7 @@ var LevelJSONDatabase = new JS.Class({
         }
     },
 
-    // Save a level to the database
+    // Save a level to the database (from editor)
     saveLevel: function( data , filename ){
         var xhr = new XMLHttpRequest();
         xhr.open('POST','js/levels/server.php',true);

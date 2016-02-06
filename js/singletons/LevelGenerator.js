@@ -134,13 +134,13 @@ function LevelGenerator( callback ){
             //temporary draw
             canvas.save();
             canvas.translate( drawpos.x,  drawpos.y);
-            canvas.setFill( 'black' );
+            canvas.setFill( Color.black );
             for(var i = -drawsize.h; i < drawsize.h; i+= 20){
                 canvas.solidRect( -22 , i-2  , 44 , 6  );
                 canvas.solidRect( -17 , i-22 , 6  , 46 );
                 canvas.solidRect( 13  , i-22 , 6  , 46 );
             }
-            canvas.setFill( 'rgb(100,65,30)' );
+            canvas.setFill( Color.woodbrown );
             for(var i = -drawsize.h; i < drawsize.h; i+= 20){
                 canvas.solidRect( -20 , i    , 40 , 2  );
                 canvas.solidRect( -15 , i-20 , 2  , 40 );
@@ -463,7 +463,7 @@ function LevelGenerator( callback ){
     }
 
     this.drawLedgeShadows = function(floors,canvas,zones){
-        canvas.setFill( 'rgba(0,0,0,0.6)' );
+        canvas.setFill( Color.black,0.6 );
         for (var i = 0; i < floors.length; i++) {
             var f = floors[i];
             for (var j = 0; j < floors.length; j++) {
@@ -517,7 +517,7 @@ function LevelGenerator( callback ){
     this.tintCanvases = function( ambientLight ){
         var darkness = ambientLight.darkness;
         gameplay.canvas[0].tint( ambientLight  , 0.7+darkness );
-        gameplay.canvas[1].fill( rgba(ambientLight.r,ambientLight.g,ambientLight.b,0.3) );
+        gameplay.canvas[1].fill( ambientLight  , 0.3 );
         gameplay.canvas[1].tint( ambientLight  , 0.5+darkness );
         gameplay.canvas[2].tint( ambientLight  , 0.5+darkness );
         gameplay.canvas[3].tint( ambientLight  , 0.3+darkness );

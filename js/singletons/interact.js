@@ -20,12 +20,6 @@ var debugging = false;
 
 var setup;
 
-var potionColor = {
-	fire : {r: 201 , g: 50  , b: 16  },
-	ice  : {r: 50  , g:155  , b:255  },
-	acid : {r: 100 , g:255  , b:50   }
-}
-
 window.onload = function(){
 	setup = new SetupGame( GameManager.startGame );
 }

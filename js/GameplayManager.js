@@ -195,7 +195,7 @@ var GameplayManager = new JS.Class({
 	updatePain: function( canvas ){
 		if(this.painCounter > 0.01){
 			canvas.blendFunction("lighter");
-			canvas.fill( 'rgba(255,50,30,' + this.painCounter + ')' );
+			canvas.fill( Color.fire,this.painCounter );
 			canvas.blendFunction("source-over");
 			this.painCounter-=0.02;
 			if(this.painCounter <= 0.0) this.painCounter = 0;

@@ -47,16 +47,16 @@ var PotionManager = Class.$extend({
 
     this.currentlySelected = type;
     if(type == "fire"){
-      input.reticule.style.border = "1px solid rgb(" + potionColor.fire.r + "," + potionColor.fire.g + "," + potionColor.fire.b + ")";
-      input.reticule.style.boxShadow = "0 0 0px rgba(" + potionColor.fire.r + "," + potionColor.fire.g + "," + potionColor.fire.b + ", 1.0)";
+        input.reticule.style.border = "1px solid " + Color.toText( Color.fire );
+        input.reticule.style.boxShadow = "0 0 0px " + Color.toText( Color.fire );
     }
     if(type == "ice"){
-      input.reticule.style.border = "1px solid rgb(" + potionColor.ice.r + "," + potionColor.ice.g + "," + potionColor.ice.b + ")";
-      input.reticule.style.boxShadow = "0 0 0px rgba(" + potionColor.ice.r + "," + potionColor.ice.g + "," + potionColor.ice.b + ", 1.0)";
+        input.reticule.style.border = "1px solid " + Color.toText( Color.ice );
+        input.reticule.style.boxShadow = "0 0 0px " + Color.toText( Color.ice );
     }
     if(type == "acid"){
-      input.reticule.style.border = "1px solid rgb(" + potionColor.acid.r + "," + potionColor.acid.g + "," + potionColor.acid.b + ")";
-      input.reticule.style.boxShadow = "0 0 0px rgba(" + potionColor.acid.r + "," + potionColor.acid.g + "," + potionColor.acid.b + ", 1.0)";
+        input.reticule.style.border = "1px solid " + Color.toText( Color.acid );
+        input.reticule.style.boxShadow = "0 0 0px " + Color.toText( Color.acid );
     }
 
     //mouseBlips.add( new MouseBlip( input.mousepos, this.currentlySelected) )

@@ -99,13 +99,13 @@ var Character = DynamicObject.$extend({
     	this.draw_final.blendFunction("source-atop")
 
     	if(this.inFire){
-    		this.draw_final.context.fillStyle = 'rgba(255,100,50,0.4)'
-    		solidRect(this.draw_final.context,0,0,this.draw_final.canvas.width, this.draw_final.canvas.height)
+			this.draw_final.fill( Color.fire, 0.4 );
     	}
 
-    	this.draw_final.fill( 'rgba(250,50,20,' + (this.fireCounter * 0.009) + ')' );
-	    this.draw_final.fill( 'rgba(50,250,20,' + (this.acidCounter * 0.009) + ')' );
-	    this.draw_final.fill( 'rgba(100,140,250,' + (this.frozenCounter * 0.009) + ')' );
+    	this.draw_final.fill( Color.fire , (this.fireCounter   * 0.009) );
+	    this.draw_final.fill( Color.acid , (this.acidCounter   * 0.009) );
+	    this.draw_final.fill( Color.ice  , (this.frozenCounter * 0.009) );
+
 
 
 	    this.draw_final.blendFunction("source-over")

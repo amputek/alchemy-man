@@ -1,29 +1,3 @@
-// var mouseBlips = new Manager();
-//
-// var MouseBlip = Class.$extend({
-//   __init__: function(pos,type){
-//     this.pos = vector(pos.x+4,pos.y+3);
-//     this.life = 10;
-//     this.col = {r:255,g:50,b:20}
-//
-//     if(type == "ice" ) this.col = {r:50  , g:155 , b:255};
-//     if(type == "acid") this.col = {r:100 , g:255 , b:50};
-//   },
-//   update: function(){
-//     this.life++;
-//   },
-//   isDead: function(){
-//     return(this.life >= 30);
-//   },
-//   draw: function(ctx){
-//     ctx.context.lineWidth = 3.0
-//     ctx.setStroke( rgba( this.col.r, this.col.g, this.col.b, (30-this.life) / 30 ) );
-//     ctx.setFill(   rgba( this.col.r, this.col.g, this.col.b, (30-this.life) / 90 ) );
-//     ctx.strokedCircle( this.pos.x, this.pos.y, this.life)
-//     ctx.solidCircle( this.pos.x, this.pos.y, this.life)
-//   }
-// });
-
 var Trajectory = Class.$extend({
     __init__: function( worldGravity ){
         this.timestep = 1/60;
@@ -95,9 +69,9 @@ var Trajectory = Class.$extend({
 
 
 
-        if( playerweapon.currentlySelected == "fire") canvas.setFill( potionColor.fire );
-        if( playerweapon.currentlySelected == "ice")  canvas.setFill( potionColor.ice  );
-        if( playerweapon.currentlySelected == "acid") canvas.setFill( potionColor.acid );
+        if( playerweapon.currentlySelected == "fire") canvas.setFill( Color.fire );
+        if( playerweapon.currentlySelected == "ice")  canvas.setFill( Color.ice  );
+        if( playerweapon.currentlySelected == "acid") canvas.setFill( Color.acid );
 
         canvas.solidCircle(startx,starty,5);
 
@@ -113,9 +87,9 @@ var Trajectory = Class.$extend({
             //for testing
             op = 1.0;
 
-            if( playerweapon.currentlySelected == "fire") canvas.setStroke( potionColor.fire, op );
-            if( playerweapon.currentlySelected == "ice")  canvas.setStroke( potionColor.ice, op );
-            if( playerweapon.currentlySelected == "acid") canvas.setStroke( potionColor.acid, op );
+            if( playerweapon.currentlySelected == "fire") canvas.setStroke( Color.fire, op );
+            if( playerweapon.currentlySelected == "ice")  canvas.setStroke( Color.ice, op );
+            if( playerweapon.currentlySelected == "acid") canvas.setStroke( Color.acid, op );
 
 
             // WTF is going on here?
@@ -138,9 +112,9 @@ var Trajectory = Class.$extend({
                 var colpointx = lastr.x + (r.x - lastr.x) * fraction;
                 var colpointy = lastr.y + (r.y - lastr.y) * fraction;
 
-                if( playerweapon.currentlySelected == "fire") canvas.setFill( potionColor.fire, op );
-                if( playerweapon.currentlySelected == "ice")  canvas.setFill( potionColor.ice, op );
-                if( playerweapon.currentlySelected == "acid") canvas.setFill( potionColor.acid, op );
+                if( playerweapon.currentlySelected == "fire") canvas.setFill( Color.fire, op );
+                if( playerweapon.currentlySelected == "ice")  canvas.setFill( Color.ice, op );
+                if( playerweapon.currentlySelected == "acid") canvas.setFill( Color.acid, op );
 
                 canvas.solidCircle(colpointx,colpointy,5)
                 canvas.line(lastr.x,lastr.y,colpointx,colpointy)

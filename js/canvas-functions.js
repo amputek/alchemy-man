@@ -1,7 +1,5 @@
 //most of these should be moved out of the global namespace
 
-function rgba(r,g,b,a){ return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ', ' + (a||1.0) + ')'; }
-
 function element(id){ return document.getElementById(id); }
 
 

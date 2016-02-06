@@ -14,7 +14,7 @@ var Splash = new JS.Class(Doodad,{
     },
 
     draw: function(ctx){
-        ctx.setStroke( 'rgba(255,255,255,' + (0.25 - (this.life/40)) + ')' );
+        ctx.setStroke( Color.white, 0.25 - (this.life/40) );
         ctx.line(this.drawpos.x,this.drawpos.y,this.drawpos.x - this.life,this.drawpos.y - this.life);
         ctx.line(this.drawpos.x,this.drawpos.y,this.drawpos.x + this.life,this.drawpos.y - this.life);
         ctx.line(this.drawpos.x,this.drawpos.y,this.drawpos.x,this.drawpos.y - this.life/2);
@@ -55,7 +55,7 @@ var Weather = new JS.Class({
 
     rain: function(ctx){
         for(var i = 1; i < 5; i++){
-            ctx.setStroke( {r:255,g:255,b:255} ,0.06 * i);
+            ctx.setStroke( Color.white ,0.06 * i );
             ctx.setWidth( i*0.6 );
             for (var n = 0; n < this.rainAmount; n++) {
                 var x = Math.randomFloat(3000);

@@ -56,7 +56,7 @@ var MovingPlatform = MobilePlatform.$extend({
 
     this.draw_canvas = new Canvas( sizeVector(this.physicssize.w*SCALE*2,500));
 
-    this.draw_canvas.fill("red")
+    this.draw_canvas.fill( Color.red );
     this.toppos = vector(0,0);
   },
 
@@ -108,7 +108,7 @@ var MovingPlatform = MobilePlatform.$extend({
 
   draw: function(ctx){
     this.draw_canvas.clear();
-    this.draw_canvas.setFill("black");
+    this.draw_canvas.setFill( Color.black );
 
     this.toppos.x = this.drawpos.x - this.physicssize.w*SCALE;
 
@@ -129,7 +129,7 @@ var MovingPlatform = MobilePlatform.$extend({
     this.draw_canvas.drawImage( images.env.triggered.chain_bottom, vector(lx-20, top-60));
     this.draw_canvas.drawImage( images.env.triggered.chain_bottom, vector(rx-20, top-60));
 
-    this.draw_canvas.setFill("white");
+    this.draw_canvas.setFill( Color.white );
 
     this.draw_canvas.drawImage( images.env.triggered.left, vector( 0, top-20 ) );
     for( var x = 40; x < (this.drawsize.w*2-40); x+=40){
