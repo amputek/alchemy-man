@@ -562,6 +562,7 @@ function LevelGenerator( callback ){
         //get json data from database
         var data = this.database.getLevel( index );
 
+        console.log("gameplay obj",gameplay);
         gameplay.name = data.name;
 
         gameplay.weather.setAmount(data.weather)

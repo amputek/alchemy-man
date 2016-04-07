@@ -1,6 +1,11 @@
 var debug = new JS.Singleton(JS.Class,{
 
+    initialize: function(){
+        this.now = Date.now();    
+    },
+
     init: function(){
+
 
         if( !debugging ) return;
 
@@ -47,7 +52,7 @@ var debug = new JS.Singleton(JS.Class,{
     logline: function(text,con){
         this.log(text,con);
         var line = "----------------------------";
-        var time = ((Date.now() - now)/1000).toFixed(3);
+        var time = ((Date.now() - this.now)/1000).toFixed(3);
         if(con != false){
             console.log("["+time+"]", line)
         } else {
@@ -58,7 +63,7 @@ var debug = new JS.Singleton(JS.Class,{
     },
 
     log: function(text,con){
-        var time = ((Date.now() - now)/1000).toFixed(3);
+        var time = ((Date.now() - this.now)/1000).toFixed(3);
         if(con != false){
             console.log("["+time+"]", text)
         } else {

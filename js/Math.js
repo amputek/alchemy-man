@@ -3,7 +3,7 @@
 function element(id){ return document.getElementById(id); }
 
 
-// types
+// types.. maybe get rid of these eventually
 function vector(x,y){  return {x:x,y:y} }
 function sizeVector(w,h){  return {w:w,h:h}; }
 
@@ -38,8 +38,9 @@ var Vector2 = new JS.Class({
         this.y = y;
     },
     extend : {
-        new      : function(x,y){ return {x:x,y:y}; },
-        size     : function(w,h){ return {w:w,h:h}; },
+        zero : {x:0,y:0},
+        new      : function(x,y){ return {x:x||0,y:y||0}; },
+        size     : function(w,h){ return {w:w||0,h:h||0}; },
 
         //creates a new vector for the box2d physics engine
         //this is now the only place b2vec2 is used
@@ -67,6 +68,12 @@ var Vector2 = new JS.Class({
         add : function(a,b){ return Vector2.new(a.x + b.x, a.y + b.y); }
     }
 });
+
+
+var poop = Vector2.zero;
+poop.x = 100;
+console.log("poop",poop);
+console.log("zero",Vector2.zero)
 
 
 // why is this here?

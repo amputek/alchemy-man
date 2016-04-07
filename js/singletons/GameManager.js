@@ -10,15 +10,10 @@ var player; // accessed everywhere apparently
 var playerweapon; //gamecanvas, player, trajectory, game, input
 var gameplay; //game, gameobjects, level, input. could probably be replaced by "game" eventually.
 
-var gamePaused = false;
-
 //GLOBAL VARIABLES
 var offset = vector(0,0); //canvas, player, camera (set), trajectory
-var now = Date.now();
 
 var debugging = false;
-
-var setup;
 
 window.onload = function(){
 	setup = new SetupGame( GameManager.startGame );
@@ -27,6 +22,8 @@ window.onload = function(){
 
 //main setup function. will do for now, but could do with cleaner callback structure!
 function SetupGame( finishedLoadingCallback ){
+
+	var setup = this;
 
 	GameManager.init();
 
@@ -90,7 +87,7 @@ var GameManager = new JS.Singleton( JS.Class, {
 		this.trajectory = null; //in gameplay manager?
 		this.playerDying = false; //in gameplay manager?
 		this.loop = null;
-
+		this.paused = false;
 	},
 
 	init: function(){
@@ -104,14 +101,13 @@ var GameManager = new JS.Singleton( JS.Class, {
 		GameManager.loadLevel( GameManager.levelIndex );
 		debug.logline("Load of level " + GameManager.levelIndex + ": '" + gameplay.name + "' complete. Starting GameManager.")
 		GameManager.update();
-		console.log(this);
 	},
 
 	// Main Game update function
 	update : function(){
 		this.loop = window.requestAnimationFrame( function(){ GameManager.update() } );
 
-		if(gamePaused) return;
+		if(this.paused) return;
 		if(debugging) debug.stats.begin();
 
 		//check if current level has finished
@@ -179,11 +175,11 @@ var GameManager = new JS.Singleton( JS.Class, {
 		},2100);
 
 		setTimeout(function(){
-			gameplay = null;
 			player = new Player( vector(0,0), GameManager.world );
 			GameManager.levelIndex = tempLevelIndex;
 			updateHealthDom(player.health);
-			setup.setupInputs();
+			input.addDomEvents();
+			GameManager.startGame();
 			GameManager.playerDying = false;
 		},2150);
 

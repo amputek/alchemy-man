@@ -100,7 +100,7 @@ var input = new JS.Singleton(JS.Class,{
             } else if(code == 51){
                 input.playerweapon.make(true, "acid");
             } else if(code == 80){
-                gamePaused = !gamePaused;
+                GameManager.paused = !GameManager.paused;
             }
 
         }

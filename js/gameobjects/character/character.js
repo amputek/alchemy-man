@@ -6,8 +6,8 @@ var Character = DynamicObject.$extend({
 		this.currentAction = "idle";
 		this.animation = [];
 
-		this.draw_final = new Canvas( vector(0,0) )
-		this.draw_fire = new Canvas( vector(0,0) )
+		this.draw_final = new Canvas( Vector2.new() )
+		this.draw_fire = new Canvas( Vector2.new() )
 
 		this.gridpos = vector(0,0);
 
