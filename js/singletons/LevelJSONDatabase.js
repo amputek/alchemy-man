@@ -34,7 +34,7 @@ var LevelJSONDatabase = new JS.Class({
 
 
     parseLevelsStatic: function(){
-        var filenames = ["blank.json","warehouse.json","warehouse-new.json"];
+        var filenames = ["blank.json","warehouse.json"];
         this.parseJSONlevels( filenames );
     },
 

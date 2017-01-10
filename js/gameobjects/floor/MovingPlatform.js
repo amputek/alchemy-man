@@ -56,7 +56,6 @@ var MovingPlatform = MobilePlatform.$extend({
 
     this.draw_canvas = new Canvas( sizeVector(this.physicssize.w*SCALE*2,500));
 
-    this.draw_canvas.fill( Color.red );
     this.toppos = vector(0,0);
   },
 
