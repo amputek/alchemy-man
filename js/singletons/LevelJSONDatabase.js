@@ -80,7 +80,7 @@ var LevelJSONDatabase = new JS.Class({
             var levellist = element("level-list")
     		for (var i = 0; i < levellist.children.length; i++) {
     			(function(i){
-    				levellist.children[i].addEventListener( "mousedown", function(){  game.loadLevel(i) }, false );
+    				levellist.children[i].addEventListener( "mousedown", function(){  GameManager.loadLevel(i) }, false );
     			}(i));
     		};
 

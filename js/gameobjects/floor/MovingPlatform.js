@@ -137,7 +137,7 @@ var MovingPlatform = MobilePlatform.$extend({
     }
     this.draw_canvas.drawImage( images.env.triggered.right, vector( (this.drawsize.w*2-40), top-20) );
 
-    ctx.drawImage( this.draw_canvas.getImage(), this.toppos);
+    //ctx.drawImage( this.draw_canvas.getImage(), this.toppos);
 
 
 
