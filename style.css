@@ -419,3 +419,30 @@ canvas{
 	padding: 0;
 	list-style: none;
 }
+
+#controls{
+	position: absolute;
+	left: 1090px;
+	top: 459px;
+	border: 1px solid white;
+	height: 80px;
+	width: 150px;
+	margin: 0;
+	padding: 0;
+	color: white;
+	padding: 5px;
+	font-family: Helvetica;
+	font-size: 12px;
+}
+
+
+#controls h3{
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+
+#controls p{
+	margin: 0;
+}
+
